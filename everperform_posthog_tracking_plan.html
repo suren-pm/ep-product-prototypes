@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Everperform — PostHog 360° Product Analytics</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f4f6fb; color: #1e293b; line-height: 1.6; }
+  .header { background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%); color: white; padding: 32px 48px; }
+  .header h1 { font-size: 1.6rem; font-weight: 700; }
+  .header p { font-size: 0.92rem; opacity: 0.8; margin: 4px 0 14px; }
+  .badges { display: flex; gap: 10px; flex-wrap: wrap; }
+  .badge { background: rgba(255,255,255,0.15); padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 500; }
+  .tabs { display: flex; gap: 2px; background: #e2e8f0; padding: 4px 48px; overflow-x: auto; }
+  .tab { padding: 10px 20px; border: none; background: transparent; cursor: pointer; font-size: 0.87rem; font-weight: 500; color: #64748b; border-radius: 8px 8px 0 0; white-space: nowrap; transition: all 0.2s; }
+  .tab:hover { background: rgba(255,255,255,0.6); color: #1e293b; }
+  .tab.active { background: #fff; color: #4338ca; font-weight: 600; box-shadow: 0 -2px 0 #4338ca inset; }
+  .panel { display: none; padding: 28px 48px; }
+  .panel.active { display: block; }
+  .bar { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; align-items: center; }
+  .bar input { padding: 10px 16px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 0.9rem; width: 320px; outline: none; }
+  .bar input:focus { border-color: #4338ca; box-shadow: 0 0 0 3px rgba(67,56,202,0.1); }
+  .bar select { padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 0.84rem; background: #fff; cursor: pointer; }
+  .bar .count { font-size: 0.84rem; color: #64748b; margin-left: auto; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 14px; margin-bottom: 26px; }
+  .stat { background: #fff; border-radius: 12px; padding: 18px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .stat .n { font-size: 2rem; font-weight: 700; color: #4338ca; }
+  .stat .l { font-size: 0.8rem; color: #64748b; margin-top: 2px; }
+  .cat { margin-bottom: 30px; }
+  .cat-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .cat-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; }
+  .cat-title { font-size: 1.1rem; font-weight: 600; }
+  .cat-sub { font-size: 0.83rem; color: #64748b; }
+  .cat-n { font-size: 0.78rem; color: #64748b; background: #f1f5f9; padding: 2px 10px; border-radius: 12px; }
+  .flow-callout { background: #fefce8; border: 1px solid #fde68a; border-radius: 10px; padding: 14px 18px; margin-bottom: 14px; font-size: 0.85rem; color: #854d0e; }
+  .flow-callout strong { color: #713f12; }
+  .flow-callout code { background: rgba(0,0,0,0.06); padding: 1px 5px; border-radius: 3px; font-size: 0.82rem; }
+  table { width: 100%; border-collapse: separate; border-spacing: 0; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.06); margin-bottom: 6px; }
+  thead { background: #f8fafc; }
+  th { padding: 11px 14px; text-align: left; font-size: 0.76rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+  td { padding: 11px 14px; font-size: 0.87rem; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover { background: #fafaff; }
+  tr.hidden { display: none; }
+  .ev { font-weight: 600; font-family: 'SF Mono','Fira Code',monospace; font-size: 0.83rem; color: #1e293b; }
+  .t { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.71rem; font-weight: 600; margin: 1px 2px; }
+  .t-fe { background: #dbeafe; color: #1d4ed8; }
+  .t-be { background: #fce7f3; color: #be185d; }
+  .t-both { background: #f3e8ff; color: #7c3aed; }
+  .t-p0 { background: #fef2f2; color: #dc2626; }
+  .t-p1 { background: #fff7ed; color: #ea580c; }
+  .t-p2 { background: #fefce8; color: #ca8a04; }
+  .pp { font-size: 0.79rem; color: #475569; font-family: 'SF Mono','Fira Code',monospace; }
+  .pp span { display: inline-block; background: #f1f5f9; padding: 1px 6px; border-radius: 3px; margin: 1px 2px; }
+  /* Metrics Tree */
+  .tree { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); margin-bottom: 20px; font-family: 'SF Mono',monospace; font-size: 0.88rem; line-height: 1.8; }
+  .tree .ns { color: #dc2626; font-weight: 700; font-size: 1rem; }
+  .tree .inp { color: #4338ca; font-weight: 600; }
+  .tree .hlth { color: #059669; }
+  .tree .ctr { color: #d97706; }
+  /* KPI */
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(340px,1fr)); gap: 14px; }
+  .kpi { background: #fff; border-radius: 12px; padding: 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); border-left: 4px solid; }
+  .kpi h4 { font-size: 0.93rem; font-weight: 600; margin-bottom: 4px; }
+  .kpi .f { font-size: 0.81rem; color: #64748b; font-family: 'SF Mono',monospace; background: #f8fafc; padding: 3px 8px; border-radius: 4px; margin: 5px 0; display: inline-block; }
+  .kpi .tgt { font-size: 0.81rem; color: #4338ca; font-weight: 500; }
+  .kpi .src { font-size: 0.76rem; color: #94a3b8; margin-top: 5px; }
+  .kpi.ns { border-left-color: #dc2626; }
+  .kpi.inp { border-left-color: #4338ca; }
+  .kpi.hlth { border-left-color: #059669; }
+  .kpi.ctr { border-left-color: #d97706; }
+  .kpi.funnel { border-left-color: #8b5cf6; }
+  /* Alert thresholds */
+  .alert-table { margin: 16px 0; }
+  .alert-table th { font-size: 0.74rem; }
+  .alert-table td { font-size: 0.83rem; }
+  .g { color: #059669; font-weight: 600; }
+  .y { color: #d97706; font-weight: 600; }
+  .r { color: #dc2626; font-weight: 600; }
+  /* Super props */
+  .sp-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(280px,1fr)); gap: 12px; margin: 16px 0; }
+  .sp { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; }
+  .sp-name { font-weight: 600; font-family: monospace; font-size: 0.85rem; color: #4338ca; }
+  .sp-desc { font-size: 0.82rem; color: #64748b; margin-top: 3px; }
+  /* Dashboard */
+  .db-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(320px,1fr)); gap: 14px; }
+  .db { background: #fff; border-radius: 12px; padding: 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .db h4 { font-size: 0.93rem; margin-bottom: 8px; }
+  .db ul { font-size: 0.84rem; color: #475569; padding-left: 18px; }
+  .db li { margin-bottom: 3px; }
+  /* Impl */
+  .impl { background: #fff; border-radius: 12px; padding: 22px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); margin-bottom: 14px; }
+  .impl h3 { font-size: 1rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .code { background: #1e293b; color: #e2e8f0; padding: 14px; border-radius: 8px; font-family: 'SF Mono','Fira Code',monospace; font-size: 0.81rem; overflow-x: auto; margin: 8px 0; white-space: pre; }
+  .note { font-size: 0.84rem; color: #64748b; padding: 8px 12px; background: #fffbeb; border-left: 3px solid #f59e0b; border-radius: 0 6px 6px 0; margin: 8px 0; }
+  /* Privacy */
+  .priv { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .priv-do { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 18px; }
+  .priv-dont { background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 18px; }
+  .priv-do h4, .priv-dont h4 { margin-bottom: 8px; }
+  .priv-do ul, .priv-dont ul { font-size: 0.84rem; padding-left: 18px; }
+  .priv-do li, .priv-dont li { margin-bottom: 3px; }
+  /* Review cadence */
+  .cadence { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin: 16px 0; }
+  .cadence-card { background: #fff; border-radius: 10px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); text-align: center; }
+  .cadence-card h5 { font-size: 0.85rem; color: #4338ca; margin-bottom: 6px; }
+  .cadence-card p { font-size: 0.8rem; color: #64748b; }
+  @media (max-width:768px) {
+    .header,.panel { padding: 20px; }
+    .tabs { padding: 4px 20px; }
+    .stats { grid-template-columns: repeat(2,1fr); }
+    .priv { grid-template-columns: 1fr; }
+    .cadence { grid-template-columns: repeat(2,1fr); }
+    .bar input { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Everperform V2 — PostHog 360° Product Analytics</h1>
+  <p>Fresh-eyes event taxonomy built from deep product knowledge · Every workflow, every user type, every moment</p>
+  <div class="badges">
+    <span class="badge">📅 March 19, 2026</span>
+    <span class="badge">🏗️ Rails 7.2 + Next.js 15</span>
+    <span class="badge" id="b-ev">🎯 0 Events</span>
+    <span class="badge" id="b-kpi">📈 0 KPIs</span>
+    <span class="badge">👤 Admin · Manager · Employee</span>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="sw('events')">🎯 Event Catalog</button>
+  <button class="tab" onclick="sw('metrics')">📐 Metrics Framework</button>
+  <button class="tab" onclick="sw('super')">🔗 Super Properties</button>
+  <button class="tab" onclick="sw('dash')">📊 Dashboards</button>
+  <button class="tab" onclick="sw('impl')">⚙️ Implementation</button>
+  <button class="tab" onclick="sw('privacy')">🔒 Privacy</button>
+</div>
+
+<!-- ===================== TAB 1: EVENT CATALOG ===================== -->
+<div id="p-events" class="panel active">
+
+  <div class="bar">
+    <input type="text" id="q" placeholder="Search events..." oninput="fil()">
+    <select id="fCat" onchange="fil()">
+      <option value="all">All Workflows</option>
+      <option value="auth">Access & Sessions</option>
+      <option value="pulse-admin">Pulse Admin (Setup)</option>
+      <option value="pulse-emp">Pulse Employee (Survey)</option>
+      <option value="pulse-close">Pulse Close & Processing</option>
+      <option value="ai">AI Summaries & Recommendations</option>
+      <option value="eli">ELI Chat</option>
+      <option value="inbox">Inbox & Ticket Lifecycle</option>
+      <option value="reports">Reports & Heatmaps</option>
+      <!-- Dashboard removed —  not ready yet -->
+      <option value="signals">Signals & Automations</option>
+      <option value="settings">Settings & Config</option>
+      <option value="notify">Notifications</option>
+      <option value="health">Customer Health</option>
+      <option value="errors">Errors & Performance</option>
+    </select>
+    <select id="fSrc" onchange="fil()">
+      <option value="all">All Sources</option>
+      <option value="fe">Frontend</option>
+      <option value="be">Backend</option>
+    </select>
+    <select id="fP" onchange="fil()">
+      <option value="all">All Priorities</option>
+      <option value="p0">P0 — Must Have</option>
+      <option value="p1">P1 — Core</option>
+      <option value="p2">P2 — Nice to Have</option>
+    </select>
+    <span class="count" id="cnt"></span>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="n" id="sT">0</div><div class="l">Total Events</div></div>
+    <div class="stat"><div class="n">14</div><div class="l">Workflows</div></div>
+    <div class="stat"><div class="n" id="sFe">0</div><div class="l">Frontend</div></div>
+    <div class="stat"><div class="n" id="sBe">0</div><div class="l">Backend</div></div>
+    <div class="stat"><div class="n" id="sP0">0</div><div class="l">P0 Must-Have</div></div>
+  </div>
+
+  <div id="cats">
+
+    <!-- 1. ACCESS & SESSIONS -->
+    <div class="cat" data-c="auth">
+      <div class="cat-head"><div class="cat-icon" style="background:#ede9fe">🔐</div><div><div class="cat-title">Access & Sessions</div><div class="cat-sub">Login, first access, session lifecycle (no signup — happens offline)</div></div><span class="cat-n" data-cn="auth"></span></div>
+      <table><thead><tr><th>Event</th><th>Source</th><th>Priority</th><th>Properties</th><th>Why</th></tr></thead><tbody>
+        <tr data-c="auth" data-s="be" data-p="p0"><td><span class="ev">user_logged_in</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>method</span><span>success</span><span>is_first_login</span></td><td><code>is_first_login</code> = activation start (replaces signup)</td></tr>
+        <tr data-c="auth" data-s="fe" data-p="p1"><td><span class="ev">user_logged_out</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p1">P1</span></td><td class="pp"><span>session_duration_s</span><span>pages_visited</span></td><td>Session length + depth</td></tr>
+        <tr data-c="auth" data-s="be" data-p="p1"><td><span class="ev">user_invitation_sent</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p1">P1</span></td><td class="pp"><span>invite_count</span><span>roles_assigned</span><span>method</span></td><td>Growth — invite volume and role distribution</td></tr>
+        <tr data-c="auth" data-s="be" data-p="p1"><td><span class="ev">user_invitation_accepted</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p1">P1</span></td><td class="pp"><span>time_to_accept_hrs</span><span>role</span></td><td>Invitation → first login conversion</td></tr>
+        <tr data-c="auth" data-s="be" data-p="p2"><td><span class="ev">user_password_reset</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p2">P2</span></td><td class="pp"><span>success</span></td><td>Friction signal</td></tr>
+        <tr data-c="auth" data-s="be" data-p="p2"><td><span class="ev">user_deactivated</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p2">P2</span></td><td class="pp"><span>reason</span><span>deactivated_by</span></td><td>User-level churn</td></tr>
+      </tbody></table>
+    </div>
+
+    <!-- 2. PULSE ADMIN -->
+    <div class="cat" data-c="pulse-admin">
+      <div class="cat-head"><div class="cat-icon" style="background:#fef3c7">⚙️💓</div><div><div class="cat-title">Pulse Admin — Setup & Send</div><div class="cat-sub">Admin configures schedule, enables feature toggles, triggers pulse sends</div></div><span class="cat-n" data-cn="pulse-admin"></span></div>
+      <div class="flow-callout"><strong>Golden Flow starts here:</strong> Admin enables pulse → configures schedule → toggles <code>auto_create_tickets</code>, <code>ai_summaries</code>, <code>generate_action_recommendations</code> → sends to employees</div>
+      <table><thead><tr><th>Event</th><th>Source</th><th>Priority</th><th>Properties</th><th>Why</th></tr></thead><tbody>
+        <tr data-c="pulse-admin" data-s="be" data-p="p0"><td><span class="ev">pulse_created</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>survey_type</span><span>recipient_count</span><span>schedule_type</span></td><td>How many orgs actively create pulses</td></tr>
+        <tr data-c="pulse-admin" data-s="fe" data-p="p0"><td><span class="ev">pulse_schedule_configured</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>frequency</span><span>action</span><span>recipient_count</span><span>day_of_week</span></td><td>Recurring schedule adoption</td></tr>
+        <tr data-c="pulse-admin" data-s="fe" data-p="p0"><td><span class="ev">feature_toggle_changed</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>toggle_name</span><span>enabled</span><span>scope</span></td><td>Every toggle flip: auto_create_tickets, ai_summaries, generate_action_recommendations, issue_chat</td></tr>
+        <tr data-c="pulse-admin" data-s="be" data-p="p0"><td><span class="ev">feature_toggle_snapshot</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>toggle_name</span><span>enabled_org_count</span><span>total_org_count</span></td><td>Daily snapshot — what % of orgs have each toggle ON</td></tr>
+        <tr data-c="pulse-admin" data-s="be" data-p="p0"><td><span class="ev">pulse_sent</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>survey_id</span><span>recipient_count</span><span>is_reminder</span></td><td>Survey delivery volume</td></tr>
+        <tr data-c="pulse-admin" data-s="be" data-p="p1"><td><span class="ev">pulse_reminder_sent</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p1">P1</span></td><td class="pp"><span>survey_id</span><span>reminder_number</span><span>pending_count</span></td><td>Reminder effectiveness</td></tr>
+      </tbody></table>
+    </div>
+
+    <!-- 3. PULSE EMPLOYEE -->
+    <div class="cat" data-c="pulse-emp">
+      <div class="cat-head"><div class="cat-icon" style="background:#d1fae5">📝</div><div><div class="cat-title">Pulse Employee — Survey Experience</div><div class="cat-sub">Email → pulse page → question-by-question → submit or abandon</div></div><span class="cat-n" data-cn="pulse-emp"></span></div>
+      <div class="flow-callout"><strong>Survey funnel:</strong> <code>pulse_email_delivered</code> → <code>pulse_email_opened</code> → <code>pulse_email_clicked</code> → <code>pulse_page_viewed</code> → <code>pulse_survey_started</code> → <code>pulse_question_answered</code> (×N) → <code>pulse_response_submitted</code> | <code>pulse_survey_abandoned</code><br><strong>Post-survey:</strong> <code>pulse_response_submitted</code> → <code>pulse_cta_go_to_everperform_clicked</code> → <code>pulse_post_survey_login_page_viewed</code> → <code>pulse_post_survey_logged_in</code> | <code>pulse_post_survey_login_abandoned</code> → <code>pulse_post_survey_first_action</code></div>
+      <table><thead><tr><th>Event</th><th>Source</th><th>Priority</th><th>Properties</th><th>Why</th></tr></thead><tbody>
+        <tr data-c="pulse-emp" data-s="be" data-p="p0"><td><span class="ev">pulse_email_delivered</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>survey_id</span><span>delivery_status</span><span>is_reminder</span></td><td>SES delivery confirmation</td></tr>
+        <tr data-c="pulse-emp" data-s="be" data-p="p0"><td><span class="ev">pulse_email_opened</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>survey_id</span><span>time_to_open_hrs</span></td><td>Email open rate</td></tr>
+        <tr data-c="pulse-emp" data-s="be" data-p="p0"><td><span class="ev">pulse_email_clicked</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>survey_id</span><span>cta_type</span></td><td>Email → pulse page click-through</td></tr>
+        <tr data-c="pulse-emp" data-s="fe" data-p="p0"><td><span class="ev">pulse_page_viewed</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>survey_id</span><span>total_questions</span><span>entry_source</span></td><td>Employee lands on pulse page</td></tr>
+        <tr data-c="pulse-emp" data-s="fe" data-p="p0"><td><span class="ev">pulse_survey_started</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>survey_id</span><span>total_questions</span><span>time_before_start_s</span></td><td>First interaction — hesitation time</td></tr>
+        <tr data-c="pulse-emp" data-s="fe" data-p="p0"><td><span class="ev">pulse_question_answered</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>survey_id</span><span>question_number</span><span>question_total</span><span>time_on_question_s</span><span>question_type</span></td><td>Per-question drop-off detection</td></tr>
+        <tr data-c="pulse-emp" data-s="be" data-p="p0"><td><span class="ev">pulse_response_submitted</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>survey_id</span><span>response_time_s</span><span>questions_answered</span><span>questions_total</span><span>is_complete</span></td><td>THE core employee value exchange</td></tr>
+        <tr data-c="pulse-emp" data-s="fe" data-p="p0"><td><span class="ev">pulse_survey_abandoned</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>survey_id</span><span>last_question_number</span><span>questions_completed</span><span>questions_total</span><span>time_spent_s</span></td><td>Where and why employees quit mid-survey</td></tr>
+        <!-- POST-SURVEY: Employee → Platform -->
+        <tr data-c="pulse-emp" data-s="fe" data-p="p0"><td><span class="ev">pulse_cta_go_to_everperform_clicked</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>survey_id</span><span>cta_location</span><span>time_since_submit_s</span></td><td>How many employees click "Go to Everperform" after submitting pulse</td></tr>
+        <tr data-c="pulse-emp" data-s="fe" data-p="p0"><td><span class="ev">pulse_post_survey_login_page_viewed</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>survey_id</span><span>referrer</span></td><td>Employee lands on login page after clicking CTA from pulse</td></tr>
+        <tr data-c="pulse-emp" data-s="be" data-p="p0"><td><span class="ev">pulse_post_survey_logged_in</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>survey_id</span><span>time_to_login_s</span><span>method</span></td><td>Employee successfully logged in after pulse — platform activated</td></tr>
+        <tr data-c="pulse-emp" data-s="fe" data-p="p0"><td><span class="ev">pulse_post_survey_login_abandoned</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>survey_id</span><span>time_on_login_page_s</span><span>reason</span></td><td>Employee saw login page but didn't log in — friction/forgot password/gave up</td></tr>
+        <tr data-c="pulse-emp" data-s="fe" data-p="p0"><td><span class="ev">pulse_post_survey_first_action</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>survey_id</span><span>first_page_visited</span><span>first_action_type</span><span>time_to_first_action_s</span></td><td>What does the employee do first after logging in from pulse? Reports? Inbox? Settings?</td></tr>
+      </tbody></table>
+    </div>
+
+    <!-- 4. PULSE CLOSE -->
+    <div class="cat" data-c="pulse-close">
+      <div class="cat-head"><div class="cat-icon" style="background:#fef9c3">⏱️</div><div><div class="cat-title">Pulse Close & Processing</div><div class="cat-sub">Pulse closes → scores → AI pipeline → tickets → signals</div></div><span class="cat-n" data-cn="pulse-close"></span></div>
+      <div class="flow-callout"><strong>THE critical trigger:</strong> <code>pulse_closed</code> fires everything downstream — score calculation, AI summary generation, ticket creation, signal evaluation</div>
+      <table><thead><tr><th>Event</th><th>Source</th><th>Priority</th><th>Properties</th><th>Why</th></tr></thead><tbody>
+        <tr data-c="pulse-close" data-s="be" data-p="p0"><td><span class="ev">pulse_closed</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>survey_id</span><span>response_rate</span><span>total_responses</span><span>total_recipients</span><span>duration_days</span></td><td>Master trigger event</td></tr>
+        <tr data-c="pulse-close" data-s="be" data-p="p0"><td><span class="ev">scores_calculated</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>survey_id</span><span>org_score</span><span>calculation_time_ms</span></td><td>Score pipeline health</td></tr>
+        <tr data-c="pulse-close" data-s="be" data-p="p1"><td><span class="ev">pulse_results_emailed</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p1">P1</span></td><td class="pp"><span>survey_id</span><span>recipient_count</span><span>recipient_roles</span></td><td>Results delivery tracking</td></tr>
+      </tbody></table>
+    </div>
+
+    <!-- 5. AI SUMMARIES & RECOMMENDATIONS -->
+    <div class="cat" data-c="ai">
+      <div class="cat-head"><div class="cat-icon" style="background:#fae8ff">🤖</div><div><div class="cat-title">AI Summaries & Recommendations</div><div class="cat-sub">Generation → viewing → expanding → accepting/dismissing recommendations</div></div><span class="cat-n" data-cn="ai"></span></div>
+      <div class="flow-callout"><strong>AI value chain:</strong> <code>ai_summary_generation_started</code> → <code>ai_summary_generated</code> → <code>ai_summary_viewed</code> → <code>ai_recommendations_viewed</code> → <code>ai_recommendation_expanded</code> → <code>ai_recommendation_accepted</code> (creates child ticket) | <code>ai_recommendation_dismissed</code></div>
+      <table><thead><tr><th>Event</th><th>Source</th><th>Priority</th><th>Properties</th><th>Why</th></tr></thead><tbody>
+        <tr data-c="ai" data-s="be" data-p="p0"><td><span class="ev">ai_summary_generation_started</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>survey_id</span><span>issue_id</span><span>lifecycle_state</span></td><td>Pipeline entry (Analysing → Identifying → Generating → Recommendations → Complete)</td></tr>
+        <tr data-c="ai" data-s="be" data-p="p0"><td><span class="ev">ai_summary_generated</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>survey_id</span><span>issue_id</span><span>generation_time_s</span><span>success</span><span>has_recommendations</span><span>recommendation_count</span></td><td>Pipeline completion — time, success, output count</td></tr>
+        <tr data-c="ai" data-s="fe" data-p="p0"><td><span class="ev">ai_summary_viewed</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>issue_id</span><span>time_since_generation_hrs</span><span>viewer_role</span></td><td>Are summaries being read? How fast?</td></tr>
+        <tr data-c="ai" data-s="fe" data-p="p0"><td><span class="ev">ai_recommendations_viewed</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>issue_id</span><span>recommendation_count</span><span>time_on_section_s</span></td><td>Do users look at recommended actions section?</td></tr>
+        <tr data-c="ai" data-s="fe" data-p="p0"><td><span class="ev">ai_recommendation_expanded</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>issue_id</span><span>recommendation_index</span><span>recommendation_total</span></td><td>Which recommendations get read before acting?</td></tr>
+        <tr data-c="ai" data-s="fe" data-p="p0"><td><span class="ev">ai_recommendation_accepted</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>issue_id</span><span>recommendation_id</span><span>child_issue_created</span><span>time_to_accept_s</span></td><td>THE AI conversion — accept creates child ticket</td></tr>
+        <tr data-c="ai" data-s="fe" data-p="p0"><td><span class="ev">ai_recommendation_dismissed</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>issue_id</span><span>recommendation_id</span></td><td>Dismiss rate — are recommendations useful?</td></tr>
+        <tr data-c="ai" data-s="be" data-p="p1"><td><span class="ev">ai_generation_failed</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p1">P1</span></td><td class="pp"><span>survey_id</span><span>error_type</span><span>pipeline_stage</span></td><td>AI reliability</td></tr>
+      </tbody></table>
+    </div>
+
+    <!-- 6. ELI CHAT -->
+    <div class="cat" data-c="eli">
+      <div class="cat-head"><div class="cat-icon" style="background:#e0e7ff">💬</div><div><div class="cat-title">ELI Chat (AI Coaching)</div><div class="cat-sub">Contextual AI chat on tickets — the coaching differentiator</div></div><span class="cat-n" data-cn="eli"></span></div>
+      <table><thead><tr><th>Event</th><th>Source</th><th>Priority</th><th>Properties</th><th>Why</th></tr></thead><tbody>
+        <tr data-c="eli" data-s="fe" data-p="p0"><td><span class="ev">eli_chat_opened</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>issue_id</span><span>issue_source</span><span>entry_point</span><span>has_ai_summary</span></td><td>ELI adoption — who opens, from where?</td></tr>
+        <tr data-c="eli" data-s="fe" data-p="p0"><td><span class="ev">eli_message_sent</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>issue_id</span><span>message_number</span><span>is_template</span><span>template_name</span></td><td>Engagement depth — template vs freeform</td></tr>
+        <tr data-c="eli" data-s="fe" data-p="p1"><td><span class="ev">eli_response_received</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p1">P1</span></td><td class="pp"><span>issue_id</span><span>response_time_ms</span></td><td>AI response latency</td></tr>
+        <tr data-c="eli" data-s="fe" data-p="p1"><td><span class="ev">eli_chat_closed</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p1">P1</span></td><td class="pp"><span>issue_id</span><span>total_messages</span><span>session_duration_s</span></td><td>Conversation depth and length</td></tr>
+      </tbody></table>
+    </div>
+
+    <!-- 7. INBOX & TICKET LIFECYCLE -->
+    <div class="cat" data-c="inbox">
+      <div class="cat-head"><div class="cat-icon" style="background:#fce7f3">📥</div><div><div class="cat-title">Inbox & Ticket Lifecycle</div><div class="cat-sub">Full ticket path: creation → every status → resolution (for PostHog Path Exploration)</div></div><span class="cat-n" data-cn="inbox"></span></div>
+      <div class="flow-callout"><strong>Ticket path:</strong> <code>issue_created</code> → <code>issue_entered_todo</code> → <code>issue_moved_to_in_progress</code> → <code>issue_moved_to_review</code> → <code>issue_resolved</code><br><strong>Sources:</strong> pulse_generated · signal_automation · ticket_automation · insights_automation · manual</div>
+      <table><thead><tr><th>Event</th><th>Source</th><th>Priority</th><th>Properties</th><th>Why</th></tr></thead><tbody>
+        <tr data-c="inbox" data-s="be" data-p="p0"><td><span class="ev">issue_created</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>issue_id</span><span>issue_type</span><span>source</span><span>priority</span><span>has_assignee</span><span>has_ai_summary</span></td><td>Volume by source — auto vs manual</td></tr>
+        <tr data-c="inbox" data-s="be" data-p="p0"><td><span class="ev">issue_assigned</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>issue_id</span><span>assigned_to_role</span><span>is_auto_assign</span><span>is_reassignment</span></td><td>Assignment patterns</td></tr>
+        <tr data-c="inbox" data-s="fe" data-p="p0"><td><span class="ev">issue_viewed</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>issue_id</span><span>time_since_creation_hrs</span><span>viewer_role</span></td><td>Time to first view</td></tr>
+        <tr data-c="inbox" data-s="be" data-p="p0"><td><span class="ev">issue_entered_todo</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>issue_id</span><span>issue_type</span><span>source</span></td><td>Lifecycle funnel start</td></tr>
+        <tr data-c="inbox" data-s="be" data-p="p0"><td><span class="ev">issue_moved_to_in_progress</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>issue_id</span><span>time_in_todo_hrs</span><span>moved_by_role</span></td><td>To Do → In Progress: pickup speed</td></tr>
+        <tr data-c="inbox" data-s="be" data-p="p0"><td><span class="ev">issue_moved_to_review</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>issue_id</span><span>time_in_progress_hrs</span><span>moved_by_role</span></td><td>In Progress → Review: work time</td></tr>
+        <tr data-c="inbox" data-s="be" data-p="p0"><td><span class="ev">issue_resolved</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>issue_id</span><span>total_lifecycle_hrs</span><span>resolution_type</span><span>issue_source</span></td><td>Full lifecycle: creation → resolution</td></tr>
+        <tr data-c="inbox" data-s="fe" data-p="p1"><td><span class="ev">issue_comment_added</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p1">P1</span></td><td class="pp"><span>issue_id</span><span>is_first_comment</span></td><td>Collaboration depth</td></tr>
+        <tr data-c="inbox" data-s="be" data-p="p1"><td><span class="ev">issue_reopened</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p1">P1</span></td><td class="pp"><span>issue_id</span><span>days_since_resolution</span></td><td>Reopening rate</td></tr>
+        <tr data-c="inbox" data-s="be" data-p="p1"><td><span class="ev">issue_stalled</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p1">P1</span></td><td class="pp"><span>issue_id</span><span>current_status</span><span>days_in_status</span></td><td>Bottleneck detection</td></tr>
+        <tr data-c="inbox" data-s="fe" data-p="p1"><td><span class="ev">inbox_view_changed</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p1">P1</span></td><td class="pp"><span>view_type</span><span>previous_view</span></td><td>Kanban vs Table preference</td></tr>
+        <tr data-c="inbox" data-s="fe" data-p="p1"><td><span class="ev">inbox_filtered</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p1">P1</span></td><td class="pp"><span>filter_types</span><span>has_search</span></td><td>How users find tickets</td></tr>
+        <tr data-c="inbox" data-s="fe" data-p="p2"><td><span class="ev">inbox_exported</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p2">P2</span></td><td class="pp"><span>export_format</span><span>issue_count</span></td><td>Export patterns</td></tr>
+      </tbody></table>
+    </div>
+
+    <!-- 8. REPORTS & HEATMAPS -->
+    <div class="cat" data-c="reports">
+      <div class="cat-head"><div class="cat-icon" style="background:#ccfbf1">📊</div><div><div class="cat-title">Reports & Heatmaps</div><div class="cat-sub">Report views, filters, exports, heatmap interactions</div></div><span class="cat-n" data-cn="reports"></span></div>
+      <table><thead><tr><th>Event</th><th>Source</th><th>Priority</th><th>Properties</th><th>Why</th></tr></thead><tbody>
+        <tr data-c="reports" data-s="fe" data-p="p0"><td><span class="ev">report_viewed</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>report_type</span><span>scope</span><span>filters_applied</span></td><td>Report adoption</td></tr>
+        <tr data-c="reports" data-s="fe" data-p="p1"><td><span class="ev">report_filter_applied</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p1">P1</span></td><td class="pp"><span>report_type</span><span>filter_type</span></td><td>What dimensions matter?</td></tr>
+        <tr data-c="reports" data-s="fe" data-p="p1"><td><span class="ev">report_exported</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p1">P1</span></td><td class="pp"><span>report_type</span><span>export_format</span><span>row_count</span></td><td>Export = value extraction</td></tr>
+        <tr data-c="reports" data-s="fe" data-p="p0"><td><span class="ev">heatmap_viewed</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>view_type</span><span>metric_selected</span></td><td>Heatmap adoption</td></tr>
+        <tr data-c="reports" data-s="fe" data-p="p1"><td><span class="ev">heatmap_cell_clicked</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p1">P1</span></td><td class="pp"><span>metric</span><span>team_id</span></td><td>Drill-down engagement</td></tr>
+        <tr data-c="reports" data-s="fe" data-p="p1"><td><span class="ev">report_scope_changed</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p1">P1</span></td><td class="pp"><span>from_scope</span><span>to_scope</span></td><td>Scope confusion signal</td></tr>
+      </tbody></table>
+    </div>
+
+    <!-- Dashboard category removed per Suren — dashboard not ready yet, per Wade's framework: reports first, dashboard last -->
+
+    <!-- 10. SIGNALS & AUTOMATIONS -->
+    <div class="cat" data-c="signals">
+      <div class="cat-head"><div class="cat-icon" style="background:#fed7aa">⚡</div><div><div class="cat-title">Signals & Automations</div><div class="cat-sub">3 pulse signals + 12 insights automations</div></div><span class="cat-n" data-cn="signals"></span></div>
+      <table><thead><tr><th>Event</th><th>Source</th><th>Priority</th><th>Properties</th><th>Why</th></tr></thead><tbody>
+        <tr data-c="signals" data-s="be" data-p="p0"><td><span class="ev">signal_evaluated</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>signal_type</span><span>triggered</span><span>employees_affected</span></td><td>Signal detection (compliance, risk_factors, progress)</td></tr>
+        <tr data-c="signals" data-s="be" data-p="p0"><td><span class="ev">signal_ticket_created</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>signal_type</span><span>assigned_to_role</span><span>is_batch</span></td><td>Signal → ticket conversion</td></tr>
+        <tr data-c="signals" data-s="be" data-p="p1"><td><span class="ev">insights_automation_triggered</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p1">P1</span></td><td class="pp"><span>automation_category</span><span>period</span><span>success</span></td><td>12 insight types (4 categories × 3 periods)</td></tr>
+        <tr data-c="signals" data-s="fe" data-p="p1"><td><span class="ev">signal_settings_changed</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p1">P1</span></td><td class="pp"><span>signal_type</span><span>enabled</span></td><td>Signal configuration</td></tr>
+      </tbody></table>
+    </div>
+
+    <!-- 11. SETTINGS -->
+    <div class="cat" data-c="settings">
+      <div class="cat-head"><div class="cat-icon" style="background:#e2e8f0">⚙️</div><div><div class="cat-title">Settings & Configuration</div><div class="cat-sub">Account, team management, org config</div></div><span class="cat-n" data-cn="settings"></span></div>
+      <table><thead><tr><th>Event</th><th>Source</th><th>Priority</th><th>Properties</th><th>Why</th></tr></thead><tbody>
+        <tr data-c="settings" data-s="fe" data-p="p1"><td><span class="ev">settings_page_viewed</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p1">P1</span></td><td class="pp"><span>settings_section</span></td><td>Settings discovery</td></tr>
+        <tr data-c="settings" data-s="be" data-p="p1"><td><span class="ev">team_managed</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p1">P1</span></td><td class="pp"><span>action</span><span>member_count</span></td><td>Team structure changes</td></tr>
+        <tr data-c="settings" data-s="be" data-p="p2"><td><span class="ev">user_role_changed</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p2">P2</span></td><td class="pp"><span>from_role</span><span>to_role</span></td><td>Permission changes</td></tr>
+      </tbody></table>
+    </div>
+
+    <!-- 12. NOTIFICATIONS -->
+    <div class="cat" data-c="notify">
+      <div class="cat-head"><div class="cat-icon" style="background:#fecdd3">🔔</div><div><div class="cat-title">Notifications & Digests</div><div class="cat-sub">All outbound comms — delivery, opens, clicks, actions</div></div><span class="cat-n" data-cn="notify"></span></div>
+      <table><thead><tr><th>Event</th><th>Source</th><th>Priority</th><th>Properties</th><th>Why</th></tr></thead><tbody>
+        <tr data-c="notify" data-s="be" data-p="p0"><td><span class="ev">notification_sent</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>notification_type</span><span>channel</span><span>recipient_role</span></td><td>Delivery volume</td></tr>
+        <tr data-c="notify" data-s="be" data-p="p0"><td><span class="ev">notification_opened</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>notification_type</span><span>time_to_open_hrs</span></td><td>Open rate</td></tr>
+        <tr data-c="notify" data-s="be" data-p="p0"><td><span class="ev">notification_clicked</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>notification_type</span><span>cta_type</span></td><td>Click-through rate</td></tr>
+        <tr data-c="notify" data-s="be" data-p="p1"><td><span class="ev">notification_action_taken</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p1">P1</span></td><td class="pp"><span>notification_type</span><span>action_type</span><span>time_to_action_hrs</span></td><td>Notification → meaningful action conversion</td></tr>
+        <tr data-c="notify" data-s="be" data-p="p1"><td><span class="ev">digest_sent</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p1">P1</span></td><td class="pp"><span>digest_type</span><span>recipient_role</span></td><td>Digest delivery</td></tr>
+        <tr data-c="notify" data-s="fe" data-p="p2"><td><span class="ev">notification_preferences_changed</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p2">P2</span></td><td class="pp"><span>notification_type</span><span>enabled</span></td><td>Opt-out tracking</td></tr>
+      </tbody></table>
+    </div>
+
+    <!-- 13. CUSTOMER HEALTH -->
+    <div class="cat" data-c="health">
+      <div class="cat-head"><div class="cat-icon" style="background:#fbcfe8">💼</div><div><div class="cat-title">Customer Health Signals</div><div class="cat-sub">Org health, churn risk, inactivity, expansion</div></div><span class="cat-n" data-cn="health"></span></div>
+      <table><thead><tr><th>Event</th><th>Source</th><th>Priority</th><th>Properties</th><th>Why</th></tr></thead><tbody>
+        <tr data-c="health" data-s="be" data-p="p0"><td><span class="ev">user_went_inactive</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>user_role</span><span>days_since_last_login</span></td><td>Inactivity detection (CJM dead end #8)</td></tr>
+        <tr data-c="health" data-s="be" data-p="p1"><td><span class="ev">org_pulse_cadence_gap</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p1">P1</span></td><td class="pp"><span>days_since_last_pulse</span><span>expected_frequency</span></td><td>Pulse rhythm health</td></tr>
+        <tr data-c="health" data-s="be" data-p="p1"><td><span class="ev">org_usage_declined</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p1">P1</span></td><td class="pp"><span>metric</span><span>decline_pct</span><span>period</span></td><td>Early churn signal</td></tr>
+        <tr data-c="health" data-s="be" data-p="p2"><td><span class="ev">org_expansion_signal</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p2">P2</span></td><td class="pp"><span>signal_type</span><span>new_users_added</span></td><td>Growth/upsell signal</td></tr>
+      </tbody></table>
+    </div>
+
+    <!-- 14. ERRORS -->
+    <div class="cat" data-c="errors">
+      <div class="cat-head"><div class="cat-icon" style="background:#fee2e2">🐛</div><div><div class="cat-title">Errors & Performance</div><div class="cat-sub">Client errors, API failures, slow responses, background jobs</div></div><span class="cat-n" data-cn="errors"></span></div>
+      <table><thead><tr><th>Event</th><th>Source</th><th>Priority</th><th>Properties</th><th>Why</th></tr></thead><tbody>
+        <tr data-c="errors" data-s="fe" data-p="p0"><td><span class="ev">client_error</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>error_type</span><span>page_path</span><span>action_attempted</span></td><td>Frontend error tracking</td></tr>
+        <tr data-c="errors" data-s="be" data-p="p0"><td><span class="ev">api_error</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>endpoint</span><span>status_code</span><span>error_class</span></td><td>Backend error rate</td></tr>
+        <tr data-c="errors" data-s="be" data-p="p1"><td><span class="ev">api_slow_response</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p1">P1</span></td><td class="pp"><span>endpoint</span><span>response_time_ms</span></td><td>Performance degradation (>2s)</td></tr>
+        <tr data-c="errors" data-s="be" data-p="p1"><td><span class="ev">background_job_failed</span></td><td><span class="t t-be">BE</span></td><td><span class="t t-p1">P1</span></td><td class="pp"><span>worker_name</span><span>error_class</span><span>queue</span></td><td>Sidekiq reliability</td></tr>
+      </tbody></table>
+    </div>
+
+    <!-- 15. NAVIGATION (auto) -->
+    <div class="cat" data-c="nav">
+      <div class="cat-head"><div class="cat-icon" style="background:#dbeafe">🧭</div><div><div class="cat-title">Navigation (Auto-captured)</div><div class="cat-sub">PostHog autocapture handles pageviews/clicks. These supplement.</div></div><span class="cat-n" data-cn="nav"></span></div>
+      <table><thead><tr><th>Event</th><th>Source</th><th>Priority</th><th>Properties</th><th>Why</th></tr></thead><tbody>
+        <tr data-c="nav" data-s="fe" data-p="p0"><td><span class="ev">$pageview</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p0">P0</span></td><td class="pp"><span>$current_url</span><span>page_category</span></td><td>Auto-captured — feature area usage</td></tr>
+        <tr data-c="nav" data-s="fe" data-p="p2"><td><span class="ev">search_performed</span></td><td><span class="t t-fe">FE</span></td><td><span class="t t-p2">P2</span></td><td class="pp"><span>search_query</span><span>results_count</span></td><td>Search and zero-result rate</td></tr>
+      </tbody></table>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===================== TAB 2: METRICS FRAMEWORK ===================== -->
+<div id="p-metrics" class="panel">
+  <h2 style="margin-bottom:6px">Metrics Framework</h2>
+  <p style="color:#64748b;margin-bottom:12px">Structured using the PM metrics-dashboard framework: North Star → Input Metrics → Health Metrics → Counter-Metrics → Alert Thresholds</p>
+  <div class="flow-callout" style="margin-bottom:22px"><strong>All metrics are org-filterable.</strong> Every event carries <code>org_id</code> as a super property + PostHog Group Analytics. Any KPI, funnel, or dashboard below can be scoped to a single org, a segment of orgs (by tier, size band), or all orgs.</div>
+
+  <!-- METRICS TREE -->
+  <div class="tree">
+    <div class="ns">⭐ NORTH STAR: Weekly Active Managers (WAM)</div>
+    <div style="padding-left:24px">
+      Unique managers with ≥1 meaningful action per week<br>
+      Current baseline: ~22% · Target: 50%<br><br>
+      <span class="inp">├── INPUT: Pulse Response Rate</span> → driven by employee engagement + reminder cadence<br>
+      <span class="inp">├── INPUT: AI Recommendation Accept Rate</span> → driven by relevance of AI outputs<br>
+      <span class="inp">├── INPUT: Ticket Resolution Rate</span> → driven by inbox workflow + assignment<br>
+      <span class="inp">├── INPUT: Feature Toggle Adoption</span> → driven by onboarding + CS enablement<br>
+      <span class="inp">└── INPUT: ELI Chat Adoption</span> → driven by AI coaching value + discoverability<br><br>
+      <span class="hlth">├── HEALTH: AI Pipeline Success Rate</span> → should stay >98%<br>
+      <span class="hlth">├── HEALTH: Pulse Email Delivery Rate</span> → should stay >99%<br>
+      <span class="hlth">├── HEALTH: API Error Rate</span> → should stay <1%<br>
+      <span class="hlth">└── HEALTH: Manager Inactivity Rate</span> → should stay <20%<br><br>
+      <span class="ctr">├── COUNTER: Session Duration</span> → if WAM rises but session time drops, engagement is shallow<br>
+      <span class="ctr">└── COUNTER: Ticket Stall Rate</span> → if resolution rate rises but stalls increase, tickets are being closed without action<br>
+    </div>
+  </div>
+
+  <h3 style="margin:20px 0 12px;color:#dc2626">⭐ North Star</h3>
+  <div class="kpi-grid" style="margin-bottom:28px">
+    <div class="kpi ns"><h4>Weekly Active Managers (WAM)</h4><div class="f">unique managers with ≥1 action (view report, move ticket, accept recommendation, use ELI) per week</div><div class="tgt">Baseline: ~22% · Target: 50%</div><div class="src">Why: Managers taking action = the core value loop working. Captures the "push, don't pull" vision.</div></div>
+  </div>
+
+  <h3 style="margin:0 0 12px;color:#4338ca">📊 Input Metrics (drive the North Star)</h3>
+  <div class="kpi-grid" style="margin-bottom:28px">
+    <div class="kpi inp"><h4>Pulse Response Rate</h4><div class="f">pulse_response_submitted / pulse_sent × 100</div><div class="tgt">Target: >75%</div><div class="src">No responses = no data = no AI summaries = no tickets = nothing for managers to act on</div></div>
+    <div class="kpi inp"><h4>AI Recommendation Accept Rate</h4><div class="f">ai_recommendation_accepted / (accepted + dismissed) × 100</div><div class="tgt">Target: >40%</div><div class="src">Accepted = child ticket created = actionable AI output. The highest-leverage conversion in the product.</div></div>
+    <div class="kpi inp"><h4>Ticket Resolution Rate</h4><div class="f">issue_resolved / issue_created × 100 (trailing 30 days)</div><div class="tgt">Target: >70%</div><div class="src">Tickets resolved = managers completing the action loop.</div></div>
+    <div class="kpi inp"><h4>Feature Toggle Adoption (%)</h4><div class="f">orgs with toggle ON / total active orgs (per toggle)</div><div class="tgt">auto_create_tickets: >60% · ai_summaries: >50% · recommendations: >40%</div><div class="src">Toggles OFF = features invisible. This gates the entire Golden Flow.</div></div>
+    <div class="kpi inp"><h4>ELI Chat Adoption</h4><div class="f">unique users with eli_chat_opened / MAU × 100</div><div class="tgt">Target: >30%</div><div class="src">ELI = coaching differentiator. Low adoption = discoverability problem.</div></div>
+  </div>
+
+  <h3 style="margin:0 0 12px;color:#059669">🛡️ Health Metrics (should stay stable)</h3>
+  <div class="kpi-grid" style="margin-bottom:28px">
+    <div class="kpi hlth"><h4>AI Pipeline Success Rate</h4><div class="f">ai_summary_generated(success) / ai_summary_generation_started × 100</div><div class="tgt">Target: >98%</div><div class="src">If AI breaks, the entire value chain stops.</div></div>
+    <div class="kpi hlth"><h4>Pulse Email Delivery Rate</h4><div class="f">pulse_email_delivered / pulse_sent × 100</div><div class="tgt">Target: >99%</div><div class="src">Emails not delivered = no survey = no data.</div></div>
+    <div class="kpi hlth"><h4>API Error Rate</h4><div class="f">api_error / total API calls × 100</div><div class="tgt">Target: <1%</div><div class="src">Backend reliability.</div></div>
+    <div class="kpi hlth"><h4>Manager Inactivity Rate</h4><div class="f">managers inactive >14 days / total managers × 100</div><div class="tgt">Alert: >20%</div><div class="src">Silent churn signal — managers disengaging.</div></div>
+  </div>
+
+  <h3 style="margin:0 0 12px;color:#d97706">⚠️ Counter-Metrics (prevent gaming)</h3>
+  <div class="kpi-grid" style="margin-bottom:28px">
+    <div class="kpi ctr"><h4>Session Duration</h4><div class="f">median(user_logged_out.session_duration_s)</div><div class="tgt">Watch: if WAM rises but session time drops below 2 min</div><div class="src">Prevents: empty logins counting as "active" without real engagement.</div></div>
+    <div class="kpi ctr"><h4>Ticket Stall Rate</h4><div class="f">issue_stalled / total open issues × 100</div><div class="tgt">Watch: if resolution rate rises but stall rate also rises</div><div class="src">Prevents: tickets being closed without meaningful action (fake resolution).</div></div>
+  </div>
+
+  <h3 style="margin:0 0 12px;color:#8b5cf6">🔬 Key Funnels (PostHog Path Exploration)</h3>
+  <div class="kpi-grid" style="margin-bottom:28px">
+    <div class="kpi funnel"><h4>Survey Funnel (Employee)</h4><div class="f">email_delivered → opened → clicked → page_viewed → started → question_answered(×N) → submitted</div><div class="tgt">Identify: which question causes biggest drop-off</div></div>
+    <div class="kpi funnel"><h4>AI Value Chain (Manager)</h4><div class="f">ai_summary_generated → viewed → recommendations_viewed → expanded → accepted/dismissed</div><div class="tgt">Identify: where AI value leaks (generated but never viewed?)</div></div>
+    <div class="kpi funnel"><h4>Ticket Lifecycle (Manager)</h4><div class="f">created → entered_todo → in_progress → review → resolved</div><div class="tgt">Identify: which status transition has longest dwell time</div></div>
+    <div class="kpi funnel"><h4>Golden Flow End-to-End (Admin→Manager)</h4><div class="f">pulse_created → pulse_sent → pulse_closed → ai_summary_generated → issue_created → issue_viewed → issue_resolved</div><div class="tgt">Identify: where the full value chain breaks</div></div>
+  </div>
+
+  <!-- ALERT THRESHOLDS -->
+  <h3 style="margin:0 0 12px">🚨 Alert Thresholds</h3>
+  <table class="alert-table">
+    <thead><tr><th>Metric</th><th class="g">Green (Healthy)</th><th class="y">Yellow (Investigate)</th><th class="r">Red (Act Now)</th><th>Check</th></tr></thead>
+    <tbody>
+      <tr><td>WAM (North Star)</td><td class="g">>40%</td><td class="y">25–40%</td><td class="r"><25%</td><td>Weekly</td></tr>
+      <tr><td>Pulse Response Rate</td><td class="g">>75%</td><td class="y">50–75%</td><td class="r"><50%</td><td>Per pulse</td></tr>
+      <tr><td>AI Pipeline Success</td><td class="g">>98%</td><td class="y">95–98%</td><td class="r"><95%</td><td>Daily</td></tr>
+      <tr><td>AI Recommendation Accept</td><td class="g">>40%</td><td class="y">20–40%</td><td class="r"><20%</td><td>Weekly</td></tr>
+      <tr><td>Ticket Resolution Rate</td><td class="g">>70%</td><td class="y">50–70%</td><td class="r"><50%</td><td>Weekly</td></tr>
+      <tr><td>Manager Inactivity</td><td class="g"><15%</td><td class="y">15–25%</td><td class="r">>25%</td><td>Weekly</td></tr>
+      <tr><td>API Error Rate</td><td class="g"><0.5%</td><td class="y">0.5–2%</td><td class="r">>2%</td><td>Hourly</td></tr>
+      <tr><td>Email Delivery Rate</td><td class="g">>99%</td><td class="y">97–99%</td><td class="r"><97%</td><td>Per send</td></tr>
+    </tbody>
+  </table>
+
+  <!-- REVIEW CADENCE -->
+  <h3 style="margin:20px 0 12px">📅 Review Cadence</h3>
+  <div class="cadence">
+    <div class="cadence-card"><h5>Daily</h5><p>Glance at North Star + health metrics. Check for red alerts.</p></div>
+    <div class="cadence-card"><h5>Weekly</h5><p>Review input metrics trends. Discuss in team standup. Check funnel conversion.</p></div>
+    <div class="cadence-card"><h5>Monthly</h5><p>Deep dive: are inputs driving WAM as expected? Feature toggle adoption trends.</p></div>
+    <div class="cadence-card"><h5>Quarterly</h5><p>Reassess the metrics framework itself. Update targets based on baselines.</p></div>
+  </div>
+</div>
+
+<!-- ===================== TAB 3: SUPER PROPERTIES ===================== -->
+<div id="p-super" class="panel">
+  <h2 style="margin-bottom:6px">Super Properties</h2>
+  <p style="color:#64748b;margin-bottom:18px">Auto-attached to every event via <code>posthog.register()</code>. Enables segmentation without repeating properties.</p>
+  <div class="flow-callout" style="margin-bottom:18px"><strong>Every metric is filterable by Org.</strong> Because <code>org_id</code> is a super property, it's automatically on every single event. Combined with PostHog Group Analytics (organisation), you can filter any insight, funnel, path exploration, or dashboard by organisation — no extra work needed. Just add a filter <code>org_id = X</code> or use the Group Analytics breakdown.</div>
+  <div class="sp-grid">
+    <div class="sp"><div class="sp-name">source</div><div class="sp-desc">"product" | "website" — same PostHog project, differentiated by source</div></div>
+    <div class="sp"><div class="sp-name">user_role</div><div class="sp-desc">"admin" | "manager" | "employee"</div></div>
+    <div class="sp"><div class="sp-name">org_id</div><div class="sp-desc">Organisation ID — PostHog Groups for org-level analytics</div></div>
+    <div class="sp"><div class="sp-name">org_name</div><div class="sp-desc">Human-readable org name</div></div>
+    <div class="sp"><div class="sp-name">org_tier</div><div class="sp-desc">"standard" | "pro" | "pro_plus" | "enterprise"</div></div>
+    <div class="sp"><div class="sp-name">org_size_band</div><div class="sp-desc">"small" (<50) | "medium" (50-200) | "large" (200+)</div></div>
+    <div class="sp"><div class="sp-name">team_id</div><div class="sp-desc">User's primary team</div></div>
+    <div class="sp"><div class="sp-name">environment</div><div class="sp-desc">"production" | "staging"</div></div>
+    <div class="sp"><div class="sp-name">app_version</div><div class="sp-desc">Release version for regression tracking</div></div>
+    <div class="sp"><div class="sp-name">is_demo_account</div><div class="sp-desc">Exclude demo/test accounts</div></div>
+  </div>
+  <div class="impl" style="margin-top:20px">
+    <h3>PostHog Group Analytics</h3>
+    <div class="code">posthog.group('organisation', org.id, {
+  name: org.name, plan_tier: org.subscription_tier,
+  total_users: org.users_count, total_teams: org.teams_count,
+  created_at: org.created_at
+});</div>
+  </div>
+</div>
+
+<!-- ===================== TAB 4: DASHBOARDS ===================== -->
+<div id="p-dash" class="panel">
+  <h2 style="margin-bottom:6px">PostHog Dashboards</h2>
+  <p style="color:#64748b;margin-bottom:22px">9 dashboards to build. Aligned with Wade's framework: reports first, dashboard last.</p>
+  <div class="db-grid">
+    <div class="db"><h4>🏠 Executive Overview</h4><ul><li>WAM trend (North Star)</li><li>Pulse response rate</li><li>AI recommendation accept rate</li><li>Ticket resolution rate</li><li>Feature toggle adoption %</li><li>Active vs at-risk orgs</li></ul></div>
+    <div class="db"><h4>💓 Pulse Health</h4><ul><li>Survey funnel (email → submit)</li><li>Per-question drop-off</li><li>Response rate by org</li><li>Reminder effectiveness</li><li>Abandonment by question</li><li>Pulse cadence gaps</li></ul></div>
+    <div class="db"><h4>🤖 AI & ELI</h4><ul><li>AI value chain funnel</li><li>Pipeline success rate</li><li>Generation time (p50/p95)</li><li>Accept vs dismiss ratio</li><li>ELI adoption %</li><li>Messages per ELI session</li></ul></div>
+    <div class="db"><h4>📥 Inbox & Tickets</h4><ul><li>Ticket lifecycle funnel</li><li>Volume by source</li><li>Time to first view</li><li>Time to close (trend)</li><li>Stall rate by status</li><li>Reopening rate</li></ul></div>
+    <div class="db"><h4>⚙️ Feature Toggles</h4><ul><li>% orgs with each toggle ON</li><li>Toggle change events over time</li><li>Correlation: toggle → metric lift</li></ul></div>
+    <div class="db"><h4>📊 Reports & Heatmaps</h4><ul><li>Views by report type</li><li>Heatmap adoption</li><li>Export volume</li><li>Scope changes</li></ul></div>
+    <div class="db"><h4>🔔 Notifications</h4><ul><li>Open/click rates by type</li><li>Notification → action conversion</li><li>Opt-out trends</li></ul></div>
+    <div class="db"><h4>💼 Customer Health</h4><ul><li>Inactive managers</li><li>Usage decline trends</li><li>Pulse cadence gaps</li><li>Expansion signals</li></ul></div>
+    <div class="db"><h4>🐛 Reliability</h4><ul><li>Client + API error rates</li><li>Slow responses (>2s)</li><li>Job failure rate</li><li>AI generation failures</li></ul></div>
+  </div>
+
+  <h3 style="margin:28px 0 14px;color:#4338ca">🏆 Org Leaderboard Dashboard (General Overview)</h3>
+  <p style="color:#64748b;margin-bottom:16px">Cross-org comparison dashboard using PostHog Group Analytics. Filterable by org tier, size band, and date range. Built using <code>posthog.group('organisation', org_id)</code> on every event.</p>
+  <div class="db-grid">
+    <div class="db" style="border-left:4px solid #6366f1"><h4>🏅 Most Active Organisations</h4><ul><li>Ranked by WAM % (Weekly Active Managers)</li><li>DAU/WAU/MAU per org</li><li>Total logins per org (trailing 30 days)</li><li>Average session duration per org</li><li>Feature breadth score (how many features used)</li></ul></div>
+    <div class="db" style="border-left:4px solid #f59e0b"><h4>💓 Top Engaging — Pulse Response Rate</h4><ul><li>Ranked by average pulse response rate</li><li>Response rate trend (improving / declining / stable)</li><li>Avg time to respond (hours)</li><li>Survey completion rate (started → submitted)</li><li>Reminder effectiveness per org (lift per reminder)</li></ul></div>
+    <div class="db" style="border-left:4px solid #10b981"><h4>✅ Most Compliant</h4><ul><li>Ranked by compliance signal pass rate</li><li>Pulse cadence adherence (on-schedule %)</li><li>90-day participation rate per org</li><li>Signal trigger frequency (fewer = healthier)</li><li>Risk signal resolution rate</li></ul></div>
+    <div class="db" style="border-left:4px solid #8b5cf6"><h4>🚀 Most Progressive (Ticket Velocity)</h4><ul><li>Ranked by ticket resolution rate</li><li>Avg time to close (hours)</li><li>Ticket stall rate (lower = better)</li><li>Tickets resolved per manager per week</li><li>AI recommendation accept rate per org</li></ul></div>
+    <div class="db" style="border-left:4px solid #ec4899"><h4>🤖 AI Adoption Leaders</h4><ul><li>Ranked by AI feature toggle adoption (all 3 toggles ON)</li><li>AI summary view rate per org</li><li>Recommendation accept rate per org</li><li>ELI chat sessions per org per week</li><li>ELI conversation depth (avg messages)</li></ul></div>
+    <div class="db" style="border-left:4px solid #ef4444"><h4>⚠️ At-Risk Organisations</h4><ul><li>Orgs with declining WAM (week-over-week drop)</li><li>Orgs with inactive managers (>14 days)</li><li>Orgs with pulse cadence gaps</li><li>Orgs with usage decline >20% month-over-month</li><li>Orgs with <50% ticket resolution rate</li></ul></div>
+  </div>
+</div>
+
+<!-- ===================== TAB 5: IMPLEMENTATION ===================== -->
+<div id="p-impl" class="panel">
+  <h2 style="margin-bottom:6px">Implementation Guide</h2>
+  <p style="color:#64748b;margin-bottom:22px">PostHog setup for Everperform V2. Frontend (Next.js 15) + Backend (Rails 7.2).</p>
+  <div class="impl">
+    <h3>📦 Frontend Init</h3>
+    <div class="code">import posthog from 'posthog-js'
+
+if (typeof window !== 'undefined') {
+  posthog.init('phc_YOUR_KEY', {
+    api_host: 'https://eu.posthog.com',
+    capture_pageview: true,
+    capture_pageleave: true,
+    autocapture: true,
+    session_recording: { maskAllInputs: true, maskTextContent: true },
+    person_profiles: 'identified_only',
+  })
+  posthog.register({ source: 'product', environment: process.env.NEXT_PUBLIC_APP_ENV })
+}</div>
+  </div>
+  <div class="impl">
+    <h3>🔐 User Identification</h3>
+    <div class="code">posthog.identify(user.id, {
+  email: user.email, name: user.name, role: user.role_name,
+  org_id: user.org_id, org_tier: user.subscription_tier,
+  is_admin: user.is_admin, created_at: user.created_at,
+})
+posthog.group('organisation', user.org_id, {
+  name: user.org_name, plan_tier: user.subscription_tier
+})
+posthog.register({
+  user_role: user.role_name, org_id: user.org_id,
+  org_tier: user.subscription_tier, is_demo_account: user.is_demo
+})</div>
+  </div>
+  <div class="impl">
+    <h3>💎 Backend (Rails)</h3>
+    <div class="code">gem 'posthog-ruby'
+
+$posthog = PostHog::Client.new({
+  api_key: ENV['POSTHOG_API_KEY'],
+  host: 'https://eu.posthog.com',
+  on_error: proc { |s, m| Rails.logger.error("PostHog: #{s} #{m}") }
+})
+
+# Example: state machine hook
+$posthog.capture({
+  distinct_id: user.id,
+  event: 'pulse_closed',
+  properties: { survey_id: id, response_rate: response_rate },
+  groups: { organisation: organisation_id }
+})</div>
+  </div>
+  <div class="impl">
+    <h3>⚡ Code Integration Points</h3>
+    <div class="code"># STATE MACHINE → pulse_closed, scores_calculated, ai_summary_generation_started
+# FEATURE FLAGS (Configurable) → feature_toggle_changed
+# ISSUE AASM → issue_entered_todo, issue_moved_to_*, issue_resolved
+# AI PIPELINE → ai_summary_generated, ai_generation_failed
+# MAILER → pulse_email_delivered, notification_sent
+# SIDEKIQ MIDDLEWARE → background_job_failed
+# CRON (daily) → feature_toggle_snapshot, user_went_inactive</div>
+  </div>
+</div>
+
+<!-- ===================== TAB 6: PRIVACY ===================== -->
+<div id="p-privacy" class="panel">
+  <h2 style="margin-bottom:6px">Privacy & Compliance</h2>
+  <p style="color:#64748b;margin-bottom:22px">What we track, what we never track, and technical safeguards.</p>
+  <div class="priv">
+    <div class="priv-do"><h4>✅ DO Track</h4><ul><li>User ID, email, name</li><li>Role and permissions</li><li>Organisation ID and name</li><li>Subscription tier</li><li>Feature usage events</li><li>Timing and durations</li><li>Counts and rates</li><li>Error types and codes</li></ul></div>
+    <div class="priv-dont"><h4>❌ NEVER Track</h4><ul><li>Survey response text (free text)</li><li>AI summary content</li><li>ELI chat message content</li><li>Ticket descriptions/comments</li><li>Individual score values tied to people</li><li>Employee names in properties</li><li>Passwords, tokens, credentials</li><li>IP addresses (disable in PostHog)</li></ul></div>
+  </div>
+  <div class="impl" style="margin-top:16px">
+    <h3>🛡️ Technical Safeguards</h3>
+    <div class="code">posthog.init('key', {
+  sanitize_properties: (props) => {
+    delete props['survey_response_text']
+    delete props['ai_summary_content']
+    delete props['chat_message_content']
+    return props
+  }
+})
+
+// Per-org opt-out
+if (org.analytics_opt_out) posthog.opt_out_capturing()
+
+// PostHog settings: Discard IP, EU instance, 12-month retention</div>
+  </div>
+</div>
+
+<script>
+function sw(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('p-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+function fil(){
+  const q=document.getElementById('q').value.toLowerCase();
+  const c=document.getElementById('fCat').value;
+  const s=document.getElementById('fSrc').value;
+  const p=document.getElementById('fP').value;
+  let v=0;const rows=document.querySelectorAll('#cats tbody tr');
+  rows.forEach(r=>{
+    const mc=c==='all'||r.dataset.c===c;
+    const ms=s==='all'||r.dataset.s===s;
+    const mp=p==='all'||r.dataset.p===p;
+    const mq=!q||r.textContent.toLowerCase().includes(q);
+    if(mc&&ms&&mp&&mq){r.classList.remove('hidden');v++}else{r.classList.add('hidden')}
+  });
+  document.querySelectorAll('.cat').forEach(s=>{s.style.display=s.querySelectorAll('tbody tr:not(.hidden)').length>0?'block':'none'});
+  document.getElementById('cnt').textContent=`Showing ${v} of ${rows.length}`;
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  const all=document.querySelectorAll('#cats tbody tr');
+  const t=all.length;
+  document.getElementById('sT').textContent=t;
+  document.getElementById('sFe').textContent=document.querySelectorAll('[data-s="fe"]').length;
+  document.getElementById('sBe').textContent=document.querySelectorAll('[data-s="be"]').length;
+  document.getElementById('sP0').textContent=document.querySelectorAll('[data-p="p0"]').length;
+  document.getElementById('b-ev').textContent='🎯 '+t+' Events';
+  document.getElementById('b-kpi').textContent='📈 '+document.querySelectorAll('.kpi').length+' KPIs';
+  document.getElementById('cnt').textContent=`Showing ${t} of ${t}`;
+  document.querySelectorAll('[data-cn]').forEach(el=>{el.textContent=document.querySelectorAll(`[data-c="${el.dataset.cn}"]`).length+' events'});
+});
+</script>
+</body>
+</html>
