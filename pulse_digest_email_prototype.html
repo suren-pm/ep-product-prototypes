@@ -215,9 +215,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .action-pri-row{display:flex;align-items:center;gap:7px;margin-bottom:4px}
 /* Timeframe pill */
 .timeframe-pill{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:#7c3aed;background:#ede9fe;border-radius:20px;padding:3px 10px;font-weight:600}
-/* Logo placeholder */
-.logo-placeholder{background:#fff;border-bottom:1px solid #f1f5f9;padding:14px 28px;display:flex;align-items:center;justify-content:center}
-.logo-placeholder-box{width:140px;height:44px;border:2px dashed #cbd5e1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#94a3b8;font-weight:600;letter-spacing:.5px;background:#f8fafc}
+/* Logo placeholder — inside email header */
+.e-logo-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;position:relative;z-index:1}
+.e-logo-img-placeholder{width:120px;height:40px;border:2px dashed rgba(255,255,255,0.4);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:10px;color:rgba(255,255,255,0.6);font-weight:600;letter-spacing:.5px;background:rgba(255,255,255,0.1)}
 
 /* Team Pulse Summary (Employee) */
 .pulse-summary-banner{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:16px;margin-bottom:18px}
@@ -292,15 +292,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <!-- Email -->
 <div class="email">
 
-  <!-- Logo placeholder -->
-  <div class="logo-placeholder">
-    <div class="logo-placeholder-box">📷 Company Logo</div>
-  </div>
-
   <!-- Header — Org-branded -->
   <div class="e-head">
-    <div class="e-logo" id="eLogo">AFS SOLUTIONS</div>
-    <div class="e-subhead" id="eSubhead">Pulse Digest: Engagement Monthly</div>
+    <div class="e-logo-wrap">
+      <div class="e-logo-img-placeholder">📷 Company Logo</div>
+      <div class="e-subhead" id="eSubhead">Pulse Digest: Engagement Monthly</div>
+    </div>
     <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:10px;position:relative;z-index:1;letter-spacing:.3px">Powered by Everperform</div>
   </div>
 
@@ -371,17 +368,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         <p style="font-size:11.5px;color:#94a3b8;margin-top:10px;font-style:italic;line-height:1.5">✦ These scores are yours alone — derived from your responses and never visible to anyone else.</p>
       </div>
 
-      <!-- 3. Team Pulse Summary -->
-      <div class="pulse-summary-banner">
-        <div class="ps-title">📊 Your Team's Pulse Summary</div>
-        <div class="ps-text">Your team's overall engagement is <strong>trending positively</strong> this pulse. Product direction is well understood and team connection is strong. Workload pressure remains the primary watch area.</div>
-        <ul class="ps-bullets">
-          <li>Team morale improved — positive energy around recent product launch</li>
-          <li>Workload balance flagged by multiple team members — worth addressing in your next 1:1</li>
-        </ul>
-      </div>
-
-      <!-- 4. ELI's personal note — rule-based, mapped to lowest dimension -->
+      <!-- 3. ELI's personal note — rule-based, mapped to lowest dimension -->
       <div class="eli-msg">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
           <div class="eli-avatar">🤖</div>
@@ -397,7 +384,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         </div>
       </div>
 
-      <!-- 5. Your one action this week — rule-based template -->
+      <!-- 4. Your one action this week — rule-based template -->
       <div class="one-action">
         <div class="one-action-header">
           <div class="one-action-icon">🎯</div>
@@ -417,7 +404,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         </div>
       </div>
 
-      <!-- 6. Your journey / streak -->
+      <!-- 5. Your journey / streak -->
       <div class="journey-card">
         <div class="card-head">
           <div class="card-icon" style="background:#fefce8">🔥</div>
@@ -452,6 +439,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           </div>
         </div>
         <div class="journey-trend">📈 Score up <strong>+6% across your last 3 pulses</strong> — you're heading in the right direction.</div>
+      </div>
+
+      <!-- 6. Your team's pulse summary -->
+      <div class="pulse-summary-banner">
+        <div class="ps-title">📊 How Your Team Is Tracking</div>
+        <div class="ps-text">Here's a high-level picture of where your team landed this pulse — shown as a group, never linked to individual responses.</div>
+        <ul class="ps-bullets">
+          <li>Team morale is trending positively — shared energy around recent product momentum</li>
+          <li>Workload pressure is a shared theme across the team — you're not alone in feeling it</li>
+          <li>Your manager has been flagged to support the team on this — no action needed from you</li>
+        </ul>
       </div>
 
       <!-- 7. What happens next — trust-building -->
@@ -621,14 +619,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         </div>
 
         <div class="alert-section">
-          <div class="alert-label compliance"><span class="alert-dot red"></span> Compliance Alerts (Top 3)</div>
+          <div class="alert-label compliance"><span class="alert-dot red"></span> Compliance Alerts</div>
           <div class="alert-item">
             <div class="badge red">!</div>
-            <div><div class="name">Jordan Park</div><div class="reason">90-day participation rate 67% (below 80% threshold)</div></div>
+            <div><div class="name">Jordan Park</div><div class="reason">90-day participation 67% — below 80% threshold</div></div>
           </div>
           <div class="alert-item">
             <div class="badge red">!</div>
-            <div><div class="name">Priya Sharma</div><div class="reason">90-day participation rate 72% (below 80% threshold)</div></div>
+            <div><div class="name">Priya Sharma</div><div class="reason">90-day participation 72% — below 80% threshold</div></div>
           </div>
           <a href="#" class="view-all">View All Compliance Alerts →</a>
         </div>
@@ -636,10 +634,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         <div class="sep"></div>
 
         <div class="alert-section">
-          <div class="alert-label risk"><span class="alert-dot orange"></span> Risk Factor Alerts (Top 3)</div>
+          <div class="alert-label risk"><span class="alert-dot orange"></span> Risk Factor Alerts</div>
           <div class="alert-item">
             <div class="badge orange">⚡</div>
-            <div><div class="name">Sarah Chen</div><div class="reason">Workload balance score 2.1 (below threshold 3.0)</div></div>
+            <div><div class="name">Sarah Chen</div><div class="reason">Workload balance 42% — below 60% threshold</div></div>
           </div>
           <a href="#" class="view-all">View All Risk Factor Alerts →</a>
         </div>
@@ -933,18 +931,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         </div>
 
         <div class="alert-section">
-          <div class="alert-label compliance"><span class="alert-dot red"></span> Compliance Alerts (Top 3)</div>
+          <div class="alert-label compliance"><span class="alert-dot red"></span> Compliance Alerts</div>
           <div class="alert-item">
             <div class="badge red">!</div>
-            <div><div class="name">Jordan Park</div><div class="reason">90-day participation 67% · Team: Product & Design · Manager: Sarah Mitchell</div></div>
+            <div><div class="name">Jordan Park</div><div class="reason">90-day participation 67% — below 80% threshold · Product &amp; Design · Manager: Sarah Mitchell</div></div>
           </div>
           <div class="alert-item">
             <div class="badge red">!</div>
-            <div><div class="name">Priya Sharma</div><div class="reason">90-day participation 72% · Team: Engineering · Manager: David Nguyen</div></div>
+            <div><div class="name">Priya Sharma</div><div class="reason">90-day participation 72% — below 80% threshold · Engineering · Manager: David Nguyen</div></div>
           </div>
           <div class="alert-item">
             <div class="badge red">!</div>
-            <div><div class="name">Marcus Lee</div><div class="reason">90-day participation 74% · Team: Sales · Manager: Aisha Thompson</div></div>
+            <div><div class="name">Marcus Lee</div><div class="reason">90-day participation 74% — below 80% threshold · Sales · Manager: Aisha Thompson</div></div>
           </div>
           <a href="#" class="view-all">View All Compliance Alerts →</a>
         </div>
@@ -952,14 +950,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         <div class="sep"></div>
 
         <div class="alert-section">
-          <div class="alert-label risk"><span class="alert-dot orange"></span> Risk Factor Alerts (Top 3)</div>
+          <div class="alert-label risk"><span class="alert-dot orange"></span> Risk Factor Alerts</div>
           <div class="alert-item">
             <div class="badge orange">⚡</div>
-            <div><div class="name">Sarah Chen</div><div class="reason">Workload balance 2.1 (threshold 3.0) · Team: Product & Design</div></div>
+            <div><div class="name">Sarah Chen</div><div class="reason">Workload balance 42% — below 60% threshold · Product &amp; Design</div></div>
           </div>
           <div class="alert-item">
             <div class="badge orange">⚡</div>
-            <div><div class="name">Casey Williams</div><div class="reason">Engagement score 2.4 (threshold 3.0) · Team: Engineering</div></div>
+            <div><div class="name">Casey Williams</div><div class="reason">Engagement score 48% — below 60% threshold · Engineering</div></div>
           </div>
           <a href="#" class="view-all">View All Risk Factor Alerts →</a>
         </div>
