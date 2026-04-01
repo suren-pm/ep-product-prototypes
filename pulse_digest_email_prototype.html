@@ -209,6 +209,63 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .e-foot a{color:#6366f1;text-decoration:none;font-weight:500}
 .hidden{display:none}
 @media(max-width:600px){.metrics{grid-template-columns:1fr}.e-body{padding:20px 16px}body{padding:12px}}
+
+/* ── ESB-1405 Enhanced Pulse Report additions ── */
+/* Priority + timeframe row */
+.action-pri-row{display:flex;align-items:center;gap:7px;margin-bottom:4px}
+/* Timeframe pill */
+.timeframe-pill{display:inline-flex;align-items:center;font-size:10px;color:#7c3aed;background:#ede9fe;border-radius:20px;padding:2px 9px;font-weight:600}
+
+/* Team Pulse Summary (Employee) */
+.pulse-summary-banner{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:16px;margin-bottom:18px}
+.pulse-summary-banner .ps-title{font-size:11px;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.pulse-summary-banner .ps-text{font-size:13px;color:#166534;line-height:1.55;margin-bottom:10px}
+.ps-bullets{margin:0;padding-left:16px;list-style:disc}
+.ps-bullets li{font-size:12.5px;color:#15803d;margin-bottom:5px;line-height:1.5}
+
+/* What's Working / Needs Attention two-column */
+.wa-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.wa-col{border-radius:10px;padding:14px}
+.wa-col.working{background:#f0fdf4;border:1px solid #bbf7d0}
+.wa-col.attention{background:#fff7ed;border:1px solid #fed7aa}
+.wa-col-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.wa-col.working .wa-col-title{color:#15803d}
+.wa-col.attention .wa-col-title{color:#c2410c}
+.wa-col ul{margin:0;padding-left:16px;list-style:disc}
+.wa-col ul li{font-size:12px;line-height:1.5;margin-bottom:4px}
+.wa-col.working ul li{color:#166534}
+.wa-col.attention ul li{color:#9a3412}
+@media(max-width:600px){.wa-grid{grid-template-columns:1fr}}
+
+/* Critical Risk Areas / Org Strengths two-column (Admin) */
+.risk-strength-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.rs-col{border-radius:10px;padding:14px}
+.rs-col.risk{background:#fff1f2;border:1px solid #fecdd3}
+.rs-col.strength{background:#f0fdf4;border:1px solid #bbf7d0}
+.rs-col-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.rs-col.risk .rs-col-title{color:#be123c}
+.rs-col.strength .rs-col-title{color:#15803d}
+.rs-item{margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(0,0,0,.06)}
+.rs-item:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.rs-item-name{font-size:12.5px;font-weight:700;margin-bottom:2px}
+.rs-col.risk .rs-item-name{color:#9f1239}
+.rs-col.strength .rs-item-name{color:#166534}
+.rs-item-desc{font-size:11.5px;color:#64748b;line-height:1.4}
+@media(max-width:600px){.risk-strength-grid{grid-template-columns:1fr}}
+
+/* Who to Talk To cards */
+.talk-to-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.talk-to-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px;display:flex;align-items:flex-start;gap:12px}
+.talk-to-avatar{width:38px;height:38px;border-radius:50%;background:#ede9fe;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.talk-to-body{flex:1}
+.talk-to-name{font-size:13px;font-weight:700;color:#1e293b;margin-bottom:2px}
+.talk-to-summary{font-size:12px;color:#475569;line-height:1.45;margin-bottom:7px}
+.talk-to-footer{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.talk-to-priority{font-size:10px;font-weight:700;border-radius:20px;padding:2px 9px}
+.talk-to-priority.high{background:#fee2e2;color:#b91c1c}
+.talk-to-priority.medium{background:#fef3c7;color:#92400e}
+.talk-to-priority.low{background:#f0fdf4;color:#166634}
+.talk-to-dp{font-size:10.5px;color:#7c3aed;background:#ede9fe;border-radius:20px;padding:2px 8px}
 </style>
 </head>
 <body>
@@ -306,7 +363,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         <p style="font-size:11.5px;color:#94a3b8;margin-top:10px;font-style:italic;line-height:1.5">✦ These scores are yours alone — derived from your responses and never visible to anyone else.</p>
       </div>
 
-      <!-- 3. ELI's personal note — rule-based, mapped to lowest dimension -->
+      <!-- 3. Team Pulse Summary -->
+      <div class="pulse-summary-banner">
+        <div class="ps-title">📊 Your Team's Pulse Summary</div>
+        <div class="ps-text">Your team's overall engagement is <strong>trending positively</strong> this pulse. Product direction is well understood and team connection is strong. Workload pressure remains the primary watch area.</div>
+        <ul class="ps-bullets">
+          <li>Team morale improved — positive energy around recent product launch</li>
+          <li>Workload balance flagged by multiple team members — worth addressing in your next 1:1</li>
+        </ul>
+      </div>
+
+      <!-- 4. ELI's personal note — rule-based, mapped to lowest dimension -->
       <div class="eli-msg">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
           <div class="eli-avatar">🤖</div>
@@ -322,13 +389,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         </div>
       </div>
 
-      <!-- 4. Your one action this week — rule-based template -->
+      <!-- 5. Your one action this week — rule-based template -->
       <div class="one-action">
         <div class="one-action-header">
           <div class="one-action-icon">🎯</div>
           <div>
             <div class="one-action-title">Your One Action This Week</div>
-            <div class="one-action-tag">Workload Balance — Score 2.6/5</div>
+            <div class="one-action-tag">Workload Balance — Score 50%</div>
           </div>
         </div>
         <p style="font-size:13px;color:#7c2d12;margin-bottom:12px;line-height:1.55">One thing — not a list. Research shows a single focused action is 3× more likely to be acted on.</p>
@@ -342,7 +409,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         </div>
       </div>
 
-      <!-- 5. Your journey / streak -->
+      <!-- 6. Your journey / streak -->
       <div class="journey-card">
         <div class="card-head">
           <div class="card-icon" style="background:#fefce8">🔥</div>
@@ -379,7 +446,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         <div class="journey-trend">📈 Score up <strong>+6% across your last 3 pulses</strong> — you're heading in the right direction.</div>
       </div>
 
-      <!-- 6. What happens next — trust-building -->
+      <!-- 7. What happens next — trust-building -->
       <div class="next-card">
         <div class="card-head">
           <div class="card-icon" style="background:#f0f9ff">🔄</div>
@@ -425,52 +492,120 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         <a href="#" class="cta">View Full Report →</a>
       </div>
 
-      <!-- 2. ELI Insights -->
+      <!-- 2. Key Findings -->
       <div class="card">
         <div class="card-head">
           <div class="card-icon" style="background:#fae8ff">🤖</div>
-          <div class="card-title">ELI Insights</div>
+          <div class="card-title">Key Findings</div>
         </div>
         <div class="insight">Team morale is strong with positive sentiment about recent wins and product direction</div>
         <div class="insight">Work-life balance concerns expressed by 3 team members, particularly around deadline pressure</div>
         <div class="insight">Career development is a priority — team members want clearer growth paths and mentorship</div>
-        <a href="#" class="cta">View ELI Summary →</a>
+        <a href="#" class="cta">View Full Report →</a>
       </div>
 
-      <!-- 3. ELI Recommended Actions -->
+      <!-- 3. What's Working / What Needs Attention -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon" style="background:#f0fdf4">✅</div>
+          <div class="card-title">What's Working &amp; What Needs Attention</div>
+        </div>
+        <div class="wa-grid">
+          <div class="wa-col working">
+            <div class="wa-col-title">✅ What's Working</div>
+            <ul>
+              <li>Team connection and peer trust are high across the board</li>
+              <li>Strong alignment on product direction and recent sprint delivery</li>
+              <li>Manager accessibility rated positively by 6 of 7 respondents</li>
+            </ul>
+          </div>
+          <div class="wa-col attention">
+            <div class="wa-col-title">⚠️ Needs Attention</div>
+            <ul>
+              <li>Workload balance declining — 3 members below comfort threshold</li>
+              <li>Career progression clarity lacking — 2 unanswered development requests</li>
+              <li>Deadline pressure increasing across sprint cycles</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Priority Recommendations -->
       <div class="card">
         <div class="card-head">
           <div class="card-icon" style="background:#fef3c7">⚡</div>
-          <div class="card-title">ELI Recommended Actions</div>
+          <div class="card-title">Priority Recommendations</div>
         </div>
         <div class="action">
           <div class="action-num high">1</div>
           <div class="action-body">
-            <div class="action-pri high">High Priority</div>
+            <div class="action-pri-row">
+              <div class="action-pri high">High Priority</div>
+              <span class="timeframe-pill">30 days</span>
+            </div>
             <div class="action-title">Schedule 1:1 with Sarah Chen re: workload balance concerns</div>
-            <div class="action-scope">Affects: 3 team members · Workload balance flagged</div>
           </div>
         </div>
         <div class="action">
           <div class="action-num med">2</div>
           <div class="action-body">
-            <div class="action-pri med">Medium Priority</div>
+            <div class="action-pri-row">
+              <div class="action-pri med">Medium Priority</div>
+              <span class="timeframe-pill">60 days</span>
+            </div>
             <div class="action-title">Review sprint capacity for next 2 sprints to reduce deadline pressure</div>
-            <div class="action-scope">Affects: Product & Design team</div>
           </div>
         </div>
         <div class="action">
           <div class="action-num low">3</div>
           <div class="action-body">
-            <div class="action-pri low">Low Priority</div>
+            <div class="action-pri-row">
+              <div class="action-pri low">Low Priority</div>
+              <span class="timeframe-pill">30 days</span>
+            </div>
             <div class="action-title">Recognise recent product launch achievements in next team standup</div>
-            <div class="action-scope">Affects: Entire team · Morale boost</div>
           </div>
         </div>
         <a href="#" class="cta">Review All Actions →</a>
       </div>
 
-      <!-- 4. Signal Alerts -->
+      <!-- 5. Who to Talk To -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon" style="background:#f0f9ff">🗣️</div>
+          <div class="card-title">Who to Talk To</div>
+        </div>
+        <p style="font-size:12.5px;color:#64748b;margin-bottom:14px;line-height:1.5">ELI has identified team members who may benefit from a 1:1 check-in based on their pulse signals:</p>
+        <div class="talk-to-list">
+          <div class="talk-to-card">
+            <div class="talk-to-avatar">👤</div>
+            <div class="talk-to-body">
+              <div class="talk-to-name">Sarah Chen</div>
+              <div class="talk-to-summary">Workload balance score has declined across two consecutive pulses. Showing signs of sustained pressure — a short check-in conversation recommended before it escalates.</div>
+              <div class="talk-to-footer">
+                <span class="talk-to-priority high">🔴 High Priority</span>
+                <span class="talk-to-dp">Workload: 50%</span>
+                <span class="talk-to-dp">↓ 2 pulses</span>
+              </div>
+            </div>
+          </div>
+          <div class="talk-to-card">
+            <div class="talk-to-avatar">👤</div>
+            <div class="talk-to-body">
+              <div class="talk-to-name">Jordan Park</div>
+              <div class="talk-to-summary">Career growth and purpose scores are below team average. Has raised development questions twice without resolution — risk of disengagement if left unaddressed.</div>
+              <div class="talk-to-footer">
+                <span class="talk-to-priority medium">🟡 Medium Priority</span>
+                <span class="talk-to-dp">Growth: 52%</span>
+                <span class="talk-to-dp">Participation: 67%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a href="#" class="cta">View Full Who to Talk To Report →</a>
+      </div>
+
+      <!-- 6. Signal Alerts -->
       <div class="alert-card">
         <div class="card-head" style="margin-bottom:14px">
           <div class="card-icon" style="background:#fee2e2">⚠️</div>
@@ -504,7 +639,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         <a href="#" class="cta" style="margin-top:16px">View All in Inbox →</a>
       </div>
 
-      <!-- 5. Comments — Negative Sentiment Flagged -->
+      <!-- 7. Comments — Negative Sentiment Flagged -->
       <div class="comment-card">
         <div class="card-head">
           <div class="card-icon" style="background:#fef3c7">💬</div>
@@ -557,7 +692,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         <a href="#" class="cta">View All Comments →</a>
       </div>
 
-      <!-- 6. Tickets Created -->
+      <!-- 8. Tickets Created -->
       <div class="card">
         <div class="card-head">
           <div class="card-icon" style="background:#dbeafe">📥</div>
@@ -614,61 +749,175 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         <a href="#" class="cta">View Full Report →</a>
       </div>
 
-      <!-- 2. ELI Insights -->
+      <!-- 2. Key Findings -->
       <div class="card">
         <div class="card-head">
           <div class="card-icon" style="background:#fae8ff">🤖</div>
-          <div class="card-title">ELI Insights</div>
+          <div class="card-title">Key Findings</div>
         </div>
         <div class="insight">Company direction is clear and well-communicated — positive sentiment across all 5 teams</div>
         <div class="insight">Remote work flexibility highly valued; newer hires raising concerns about office culture integration</div>
         <div class="insight">Cross-functional collaboration barriers detected between Engineering and Sales teams</div>
         <div class="insight">Professional development budgets underutilised — team members requesting access to external training</div>
-        <a href="#" class="cta">View ELI Summary →</a>
+        <a href="#" class="cta">View Full Report →</a>
       </div>
 
-      <!-- 3. ELI Recommended Actions -->
+      <!-- 3. Critical Risk Areas / Org Strengths -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon" style="background:#fff1f2">🔍</div>
+          <div class="card-title">Critical Risk Areas &amp; Org Strengths</div>
+        </div>
+        <div class="risk-strength-grid">
+          <div class="rs-col risk">
+            <div class="rs-col-title">🔴 Critical Risk Areas</div>
+            <div class="rs-item">
+              <div class="rs-item-name">Cross-team Collaboration</div>
+              <div class="rs-item-desc">Eng–Sales misalignment is creating delivery failures and client trust erosion. Two teams, 22 people affected.</div>
+            </div>
+            <div class="rs-item">
+              <div class="rs-item-name">Workload Burnout Risk</div>
+              <div class="rs-item-desc">Sustained workload pressure in Product & Design is approaching burnout threshold for at least 3 individuals.</div>
+            </div>
+          </div>
+          <div class="rs-col strength">
+            <div class="rs-col-title">✅ Org Strengths</div>
+            <div class="rs-item">
+              <div class="rs-item-name">Strategic Clarity</div>
+              <div class="rs-item-desc">Company direction is well understood across all teams — high confidence in leadership vision.</div>
+            </div>
+            <div class="rs-item">
+              <div class="rs-item-name">Flexible Work Culture</div>
+              <div class="rs-item-desc">Remote work policies are driving strong satisfaction scores, particularly among senior contributors.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. What's Working / What Needs Attention -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon" style="background:#f0fdf4">✅</div>
+          <div class="card-title">What's Working &amp; What Needs Attention</div>
+        </div>
+        <div class="wa-grid">
+          <div class="wa-col working">
+            <div class="wa-col-title">✅ What's Working</div>
+            <ul>
+              <li>Strategic alignment high — company direction clear across all 5 teams</li>
+              <li>Remote flexibility valued and driving satisfaction for majority of workforce</li>
+              <li>Engineering team morale and delivery confidence trending up</li>
+            </ul>
+          </div>
+          <div class="wa-col attention">
+            <div class="wa-col-title">⚠️ Needs Attention</div>
+            <ul>
+              <li>Engineering–Sales collaboration breakdown causing delivery and trust issues</li>
+              <li>Professional development access gap across multiple teams</li>
+              <li>Onboarding experience insufficient for remote-first culture — newer hires struggling</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Priority Recommendations -->
       <div class="card">
         <div class="card-head">
           <div class="card-icon" style="background:#fef3c7">⚡</div>
-          <div class="card-title">ELI Recommended Actions</div>
+          <div class="card-title">Priority Recommendations</div>
         </div>
         <div class="action">
           <div class="action-num high">1</div>
           <div class="action-body">
-            <div class="action-pri high">High Priority</div>
+            <div class="action-pri-row">
+              <div class="action-pri high">High Priority</div>
+              <span class="timeframe-pill">30–60 days</span>
+            </div>
             <div class="action-title">Establish cross-functional sync between Engineering and Sales</div>
-            <div class="action-scope">Affects: 22 people across 2 teams</div>
           </div>
         </div>
         <div class="action">
           <div class="action-num high">2</div>
           <div class="action-body">
-            <div class="action-pri high">High Priority</div>
+            <div class="action-pri-row">
+              <div class="action-pri high">High Priority</div>
+              <span class="timeframe-pill">60–90 days</span>
+            </div>
             <div class="action-title">Review and promote professional development programs org-wide</div>
-            <div class="action-scope">Affects: All teams (41 people)</div>
           </div>
         </div>
         <div class="action">
           <div class="action-num med">3</div>
           <div class="action-body">
-            <div class="action-pri med">Medium Priority</div>
+            <div class="action-pri-row">
+              <div class="action-pri med">Medium Priority</div>
+              <span class="timeframe-pill">30 days</span>
+            </div>
             <div class="action-title">Strengthen onboarding for remote-first culture</div>
-            <div class="action-scope">Affects: New hires (8 people)</div>
           </div>
         </div>
         <div class="action">
           <div class="action-num low">4</div>
           <div class="action-body">
-            <div class="action-pri low">Low Priority</div>
+            <div class="action-pri-row">
+              <div class="action-pri low">Low Priority</div>
+              <span class="timeframe-pill">90 days</span>
+            </div>
             <div class="action-title">Expand office social events for remote team engagement</div>
-            <div class="action-scope">Affects: All teams</div>
           </div>
         </div>
         <a href="#" class="cta">Review All Actions →</a>
       </div>
 
-      <!-- 4. Signal Alerts -->
+      <!-- 6. Who to Talk To (Org-wide) -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon" style="background:#f0f9ff">🗣️</div>
+          <div class="card-title">Who to Talk To</div>
+        </div>
+        <p style="font-size:12.5px;color:#64748b;margin-bottom:14px;line-height:1.5">ELI has flagged the following individuals org-wide as priority conversations based on pulse signal patterns:</p>
+        <div class="talk-to-list">
+          <div class="talk-to-card">
+            <div class="talk-to-avatar">👤</div>
+            <div class="talk-to-body">
+              <div class="talk-to-name">Sarah Chen · Product &amp; Design</div>
+              <div class="talk-to-summary">Persistent workload pressure across two pulses — below threshold and trending further down. Manager: Sarah Mitchell.</div>
+              <div class="talk-to-footer">
+                <span class="talk-to-priority high">🔴 High Priority</span>
+                <span class="talk-to-dp">Workload: 50%</span>
+                <span class="talk-to-dp">↓ 2 pulses</span>
+              </div>
+            </div>
+          </div>
+          <div class="talk-to-card">
+            <div class="talk-to-avatar">👤</div>
+            <div class="talk-to-body">
+              <div class="talk-to-name">Casey Williams · Engineering</div>
+              <div class="talk-to-summary">Engagement score at 2.4 — below the 3.0 risk threshold. Cross-team frustration is contributing to declining engagement. Manager: David Nguyen.</div>
+              <div class="talk-to-footer">
+                <span class="talk-to-priority high">🔴 High Priority</span>
+                <span class="talk-to-dp">Engagement: 2.4</span>
+                <span class="talk-to-dp">Cross-team friction</span>
+              </div>
+            </div>
+          </div>
+          <div class="talk-to-card">
+            <div class="talk-to-avatar">👤</div>
+            <div class="talk-to-body">
+              <div class="talk-to-name">Jordan Park · Product &amp; Design</div>
+              <div class="talk-to-summary">Participation at 67% and growth score flagged. Disengagement risk if career development needs remain unaddressed. Manager: Sarah Mitchell.</div>
+              <div class="talk-to-footer">
+                <span class="talk-to-priority medium">🟡 Medium Priority</span>
+                <span class="talk-to-dp">Participation: 67%</span>
+                <span class="talk-to-dp">Growth concern</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a href="#" class="cta">View Full Who to Talk To Report →</a>
+      </div>
+
+      <!-- 7. Signal Alerts -->
       <div class="alert-card">
         <div class="card-head" style="margin-bottom:14px">
           <div class="card-icon" style="background:#fee2e2">⚠️</div>
@@ -710,7 +959,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         <a href="#" class="cta" style="margin-top:16px">View All in Inbox →</a>
       </div>
 
-      <!-- 5. Comments — Negative Sentiment Flagged (Org-wide) -->
+      <!-- 8. Comments — Negative Sentiment Flagged (Org-wide) -->
       <div class="comment-card">
         <div class="card-head">
           <div class="card-icon" style="background:#fef3c7">💬</div>
@@ -764,7 +1013,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         <a href="#" class="cta cta-ghost">Export Comments Report →</a>
       </div>
 
-      <!-- 6. Tickets Created -->
+      <!-- 9. Tickets Created -->
       <div class="card">
         <div class="card-head">
           <div class="card-icon" style="background:#dbeafe">📥</div>
