@@ -471,10 +471,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           <div class="card-title">Your Team's Pulse Results</div>
         </div>
         <div class="metrics">
-          <div class="metric"><div class="val green">72%</div><div class="lbl">Team Score</div><div class="sub">▲ +4% from last pulse</div></div>
-          <div class="metric"><div class="val">87%</div><div class="lbl">Participation Rate</div><div class="sub">7 of 8 responded</div></div>
-          <div class="metric"><div class="val">Product &amp; Design</div><div class="lbl">Team</div><div class="sub">8 members</div></div>
-          <div class="metric"><div class="val">3</div><div class="lbl">New Tickets</div><div class="sub">2 signals · 1 experience</div></div>
+          <div class="metric"><div class="val">8</div><div class="lbl">Team Members</div><div class="sub">Product &amp; Design</div></div>
+          <div class="metric"><div class="val">7</div><div class="lbl">Respondents</div><div class="sub">Of 8 members</div></div>
+          <div class="metric"><div class="val">87%</div><div class="lbl">Response Rate</div><div class="sub">▲ +5% from last pulse</div></div>
+          <div class="metric"><div class="val green">72%<br><span style="display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:2px 8px;border-radius:4px;background:#dcfce7;color:#15803d;margin-top:4px">Low Risk</span></div><div class="lbl">Overall Score</div><div class="sub">▲ +4% from last pulse</div></div>
         </div>
         <a href="#" class="cta">View Full Report →</a>
       </div>
@@ -485,21 +485,54 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           <div class="card-icon" style="background:#fae8ff">🤖</div>
           <div class="card-title">Key Findings</div>
         </div>
+        <div style="font-size:12px;color:#6366f1;margin:-4px 0 12px 50px;font-weight:600">✨ AI summary of 7 participants</div>
         <div class="insight">Team morale is strong with positive sentiment about recent wins and product direction</div>
         <div class="insight">Work-life balance concerns expressed by 3 team members, particularly around deadline pressure</div>
         <div class="insight">Career development is a priority — team members want clearer growth paths and mentorship</div>
         <a href="#" class="cta">View ELI Summary →</a>
       </div>
 
-      <!-- 3. What's Working & Needs Attention -->
+      <!-- 3. Critical Risk Areas & Team Strengths -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon" style="background:#fef3c7">🎯</div>
+          <div class="card-title">Critical Risk Areas &amp; Team Strengths</div>
+        </div>
+        <div class="rs-grid">
+          <div class="rs-col risk">
+            <div class="rs-col-title">🔴 Critical Risk Areas</div>
+            <div class="rs-item">
+              <div class="rs-item-name">Workload Balance <span style="font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;background:#fee2e2;color:#dc2626;margin-left:6px">Critical</span></div>
+              <div class="rs-item-desc">Score 42% (down 18% from last pulse). Three team members below comfort threshold — sustained pressure across sprint cycles.</div>
+            </div>
+            <div class="rs-item">
+              <div class="rs-item-name">Career Progression Clarity <span style="font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;background:#fef3c7;color:#92400e;margin-left:6px">High</span></div>
+              <div class="rs-item-desc">Score 52%. Two team members have raised development questions without resolution — risk of disengagement if left unaddressed.</div>
+            </div>
+          </div>
+          <div class="rs-col strength">
+            <div class="rs-col-title">✅ Team Strengths</div>
+            <div class="rs-item">
+              <div class="rs-item-name">Team Connection <span style="font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;background:#dcfce7;color:#15803d;margin-left:6px">Strength</span></div>
+              <div class="rs-item-desc">Score 82%. Strong peer trust and collaboration across the board — team morale remains a clear positive.</div>
+            </div>
+            <div class="rs-item">
+              <div class="rs-item-name">Manager Accessibility <span style="font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;background:#dcfce7;color:#15803d;margin-left:6px">Strength</span></div>
+              <div class="rs-item-desc">Rated positively by 6 of 7 respondents. Open-door consistency is being noticed and appreciated.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. What's Working Well & Attention Required -->
       <div class="card">
         <div class="card-head">
           <div class="card-icon" style="background:#f0fdf4">📋</div>
-          <div class="card-title">What's Working &amp; What Needs Attention</div>
+          <div class="card-title">What's Working Well &amp; Attention Required</div>
         </div>
         <div class="wa-grid">
           <div class="wa-col working">
-            <div class="wa-col-title">✅ What's Working</div>
+            <div class="wa-col-title">✅ What's Working Well <span style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;background:#dcfce7;color:#15803d;margin-left:6px;text-transform:none;letter-spacing:0">3 items</span></div>
             <ul>
               <li>Team connection and peer trust are high across the board</li>
               <li>Strong alignment on product direction and recent sprint delivery</li>
@@ -507,7 +540,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
             </ul>
           </div>
           <div class="wa-col attention">
-            <div class="wa-col-title">⚠️ Needs Attention</div>
+            <div class="wa-col-title">⚠️ Attention Required <span style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;background:#fed7aa;color:#c2410c;margin-left:6px;text-transform:none;letter-spacing:0">3 items</span></div>
             <ul>
               <li>Workload balance declining — 3 members below comfort threshold</li>
               <li>Career progression clarity lacking — 2 unanswered development requests</li>
@@ -560,9 +593,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               <div class="talk-to-name">Sarah Chen <span class="talk-to-priority high">High</span></div>
               <div class="talk-to-summary">Workload balance score has declined across two consecutive pulses. Showing signs of sustained pressure — a short check-in conversation recommended before it escalates.</div>
               <div class="talk-to-footer">
-                <span class="talk-to-dp">Workload: 50%</span>
-                <span class="talk-to-dp">↓ 2 pulses</span>
+                <span class="talk-to-dp">Score: 42%</span>
+                <span class="talk-to-dp">↓ 22% drop</span>
+                <span class="talk-to-dp">Comment: "burning out"</span>
               </div>
+              <div style="margin-top:10px"><a href="#" style="font-size:12px;color:#0ea5e9;font-weight:600;text-decoration:none">✓ View ticket →</a></div>
             </div>
           </div>
           <div class="talk-to-card">
@@ -571,9 +606,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               <div class="talk-to-name">Jordan Park <span class="talk-to-priority medium">Medium</span></div>
               <div class="talk-to-summary">Career growth and purpose scores are below team average. Has raised development questions twice without resolution — risk of disengagement if left unaddressed.</div>
               <div class="talk-to-footer">
-                <span class="talk-to-dp">Growth: 52%</span>
+                <span class="talk-to-dp">Score: 52%</span>
                 <span class="talk-to-dp">Participation: 67%</span>
+                <span class="talk-to-dp">Comment: "no clarity"</span>
               </div>
+              <div style="margin-top:10px"><a href="#" style="font-size:12px;color:#6366f1;font-weight:600;text-decoration:none;border:1px solid #c7d2fe;padding:4px 10px;border-radius:6px;display:inline-block">+ Create Action →</a></div>
             </div>
           </div>
         </div>
@@ -694,10 +731,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           <div class="card-title">Your Group's Pulse Results</div>
         </div>
         <div class="metrics">
-          <div class="metric"><div class="val green">69%</div><div class="lbl">Group Score</div><div class="sub">▲ +2% from last pulse</div></div>
-          <div class="metric"><div class="val">81%</div><div class="lbl">Participation</div><div class="sub">52 of 64 responded</div></div>
-          <div class="metric"><div class="val">8</div><div class="lbl">Teams</div><div class="sub">8 managers · 56 indirect</div></div>
-          <div class="metric"><div class="val">4</div><div class="lbl">New Tickets</div><div class="sub">2 signals · 1 risk · 1 ELI</div></div>
+          <div class="metric"><div class="val">56</div><div class="lbl">Total Group</div><div class="sub">8 teams · 8 managers</div></div>
+          <div class="metric"><div class="val">52</div><div class="lbl">Respondents</div><div class="sub">Of 64 in group</div></div>
+          <div class="metric"><div class="val">81%</div><div class="lbl">Response Rate</div><div class="sub">▲ +3% from last pulse</div></div>
+          <div class="metric"><div class="val green">69%<br><span style="display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:2px 8px;border-radius:4px;background:#fef3c7;color:#92400e;margin-top:4px">Medium Risk</span></div><div class="lbl">Overall Score</div><div class="sub">▲ +2% from last pulse</div></div>
         </div>
         <a href="#" class="cta">View Full Report →</a>
       </div>
@@ -708,21 +745,54 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           <div class="card-icon" style="background:#fae8ff">🤖</div>
           <div class="card-title">Key Findings</div>
         </div>
+        <div style="font-size:12px;color:#6366f1;margin:-4px 0 12px 50px;font-weight:600">✨ AI summary of 52 participants</div>
         <div class="insight">Product &amp; Design and Engineering teams are showing declining scores — workload pressure is the common theme</div>
         <div class="insight">Sales &amp; Partnerships and Customer Success are performing strongly with scores above 75%</div>
         <div class="insight">Cross-team collaboration barriers flagged between Engineering and Sales — impacting delivery and trust</div>
         <a href="#" class="cta">View ELI Summary →</a>
       </div>
 
-      <!-- 3. What's Working & Needs Attention -->
+      <!-- 3. Critical Risk Areas & Group Strengths -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon" style="background:#fef3c7">🎯</div>
+          <div class="card-title">Critical Risk Areas &amp; Group Strengths</div>
+        </div>
+        <div class="rs-grid">
+          <div class="rs-col risk">
+            <div class="rs-col-title">🔴 Critical Risk Areas</div>
+            <div class="rs-item">
+              <div class="rs-item-name">Product &amp; Engineering Workload <span style="font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;background:#fee2e2;color:#dc2626;margin-left:6px">Critical</span></div>
+              <div class="rs-item-desc">Workload pressure scoring 44% on average across two teams — sustained drop signals capacity strain, not a one-pulse blip.</div>
+            </div>
+            <div class="rs-item">
+              <div class="rs-item-name">Cross-Team Handoff Friction <span style="font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;background:#fef3c7;color:#92400e;margin-left:6px">High</span></div>
+              <div class="rs-item-desc">Engineering–Sales misalignment flagged in comments and signals — impacting delivery commitments and trust between teams.</div>
+            </div>
+          </div>
+          <div class="rs-col strength">
+            <div class="rs-col-title">✅ Group Strengths</div>
+            <div class="rs-item">
+              <div class="rs-item-name">Sales &amp; Customer Success Morale <span style="font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;background:#dcfce7;color:#15803d;margin-left:6px">Strength</span></div>
+              <div class="rs-item-desc">Both teams scoring above 75% with stable participation — strong cultural and engagement foundation across customer-facing roles.</div>
+            </div>
+            <div class="rs-item">
+              <div class="rs-item-name">Strategic Clarity Across Group <span style="font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;background:#dcfce7;color:#15803d;margin-left:6px">Strength</span></div>
+              <div class="rs-item-desc">Company direction is well understood across all 8 teams — high confidence in leadership vision and roadmap.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. What's Working Well & Attention Required -->
       <div class="card">
         <div class="card-head">
           <div class="card-icon" style="background:#f0fdf4">📋</div>
-          <div class="card-title">What's Working &amp; What Needs Attention</div>
+          <div class="card-title">What's Working Well &amp; Attention Required</div>
         </div>
         <div class="wa-grid">
           <div class="wa-col working">
-            <div class="wa-col-title">✅ What's Working</div>
+            <div class="wa-col-title">✅ What's Working Well <span style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;background:#dcfce7;color:#15803d;margin-left:6px;text-transform:none;letter-spacing:0">3 items</span></div>
             <ul>
               <li>Sales &amp; Customer Success morale high</li>
               <li>Company direction clear across teams</li>
@@ -730,7 +800,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
             </ul>
           </div>
           <div class="wa-col attention">
-            <div class="wa-col-title">⚠️ Needs Attention</div>
+            <div class="wa-col-title">⚠️ Attention Required <span style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;background:#fed7aa;color:#c2410c;margin-left:6px;text-transform:none;letter-spacing:0">3 items</span></div>
             <ul>
               <li>Product &amp; Engineering workload pressure</li>
               <li>Cross-team handoff friction</li>
@@ -787,9 +857,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               <div class="talk-to-summary">Team score dropped 8% with participation at 63%. Three open signals unresolved — needs a direct check-in to assess team dynamics.</div>
               <div class="talk-to-footer">
                 <span class="talk-to-dp">Team score: 58%</span>
-                <span class="talk-to-dp">↓ 8%</span>
-                <span class="talk-to-dp">3 signals</span>
+                <span class="talk-to-dp">↓ 8% drop</span>
+                <span class="talk-to-dp">3 signals open</span>
               </div>
+              <div style="margin-top:10px"><a href="#" style="font-size:12px;color:#0ea5e9;font-weight:600;text-decoration:none">✓ View ticket →</a></div>
             </div>
           </div>
           <div class="talk-to-card">
@@ -799,8 +870,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               <div class="talk-to-summary">Two risk factor alerts in Engineering team. Cross-team friction flagged between his team and Sales — needs coordination support.</div>
               <div class="talk-to-footer">
                 <span class="talk-to-dp">2 risk alerts</span>
+                <span class="talk-to-dp">Comment: "blocked on Sales"</span>
                 <span class="talk-to-dp">Cross-team friction</span>
               </div>
+              <div style="margin-top:10px"><a href="#" style="font-size:12px;color:#6366f1;font-weight:600;text-decoration:none;border:1px solid #c7d2fe;padding:4px 10px;border-radius:6px;display:inline-block">+ Create Action →</a></div>
             </div>
           </div>
         </div>
@@ -903,10 +976,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           <div class="card-title">Organisation Pulse Results</div>
         </div>
         <div class="metrics">
-          <div class="metric"><div class="val green">69%</div><div class="lbl">Org Score</div><div class="sub">▲ +2% from last pulse</div></div>
-          <div class="metric"><div class="val">78%</div><div class="lbl">Participation Rate</div><div class="sub">32 of 41 responded</div></div>
-          <div class="metric"><div class="val">41</div><div class="lbl">Org Strength</div><div class="sub">5 teams</div></div>
-          <div class="metric"><div class="val">7</div><div class="lbl">New Tickets</div><div class="sub">3 signals · 3 experience · 1 ELI</div></div>
+          <div class="metric"><div class="val">41</div><div class="lbl">Total Workforce</div><div class="sub">5 teams</div></div>
+          <div class="metric"><div class="val">32</div><div class="lbl">Respondents</div><div class="sub">Of 41 employees</div></div>
+          <div class="metric"><div class="val">78%</div><div class="lbl">Response Rate</div><div class="sub">▲ +4% from last pulse</div></div>
+          <div class="metric"><div class="val green">69%<br><span style="display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:2px 8px;border-radius:4px;background:#fef3c7;color:#92400e;margin-top:4px">Medium Risk</span></div><div class="lbl">Overall Score</div><div class="sub">▲ +2% from last pulse</div></div>
         </div>
         <a href="#" class="cta">View Full Report →</a>
       </div>
@@ -917,6 +990,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           <div class="card-icon" style="background:#fae8ff">🤖</div>
           <div class="card-title">Key Findings</div>
         </div>
+        <div style="font-size:12px;color:#6366f1;margin:-4px 0 12px 50px;font-weight:600">✨ AI summary of 32 participants</div>
         <div class="insight">Company direction is clear and well-communicated — positive sentiment across all 5 teams</div>
         <div class="insight">Cross-functional collaboration barriers detected between Engineering and Sales teams</div>
         <div class="insight">Professional development budgets underutilised — team members requesting access to external training</div>
@@ -933,37 +1007,37 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           <div class="rs-col risk">
             <div class="rs-col-title">🔴 Critical Risk Areas</div>
             <div class="rs-item">
-              <div class="rs-item-name">Cross-team Collaboration</div>
+              <div class="rs-item-name">Cross-team Collaboration <span style="font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;background:#fee2e2;color:#dc2626;margin-left:6px">Critical</span></div>
               <div class="rs-item-desc">Eng–Sales misalignment is creating delivery failures and client trust erosion. Two teams, 22 people affected.</div>
             </div>
             <div class="rs-item">
-              <div class="rs-item-name">Workload Burnout Risk</div>
+              <div class="rs-item-name">Workload Burnout Risk <span style="font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;background:#fef3c7;color:#92400e;margin-left:6px">High</span></div>
               <div class="rs-item-desc">Sustained workload pressure in Product &amp; Design is approaching burnout threshold for at least 3 individuals.</div>
             </div>
           </div>
           <div class="rs-col strength">
             <div class="rs-col-title">✅ Org Strengths</div>
             <div class="rs-item">
-              <div class="rs-item-name">Strategic Clarity</div>
+              <div class="rs-item-name">Strategic Clarity <span style="font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;background:#dcfce7;color:#15803d;margin-left:6px">Strength</span></div>
               <div class="rs-item-desc">Company direction is well understood across all teams — high confidence in leadership vision.</div>
             </div>
             <div class="rs-item">
-              <div class="rs-item-name">Flexible Work Culture</div>
+              <div class="rs-item-name">Flexible Work Culture <span style="font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;background:#dcfce7;color:#15803d;margin-left:6px">Strength</span></div>
               <div class="rs-item-desc">Remote work policies are driving strong satisfaction scores, particularly among senior contributors.</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- 4. What's Working & Needs Attention -->
+      <!-- 4. What's Working Well & Attention Required -->
       <div class="card">
         <div class="card-head">
           <div class="card-icon" style="background:#f0fdf4">📋</div>
-          <div class="card-title">What's Working &amp; What Needs Attention</div>
+          <div class="card-title">What's Working Well &amp; Attention Required</div>
         </div>
         <div class="wa-grid">
           <div class="wa-col working">
-            <div class="wa-col-title">✅ What's Working</div>
+            <div class="wa-col-title">✅ What's Working Well <span style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;background:#dcfce7;color:#15803d;margin-left:6px;text-transform:none;letter-spacing:0">3 items</span></div>
             <ul>
               <li>Company vision clearly communicated</li>
               <li>Remote flexibility driving satisfaction</li>
@@ -971,7 +1045,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
             </ul>
           </div>
           <div class="wa-col attention">
-            <div class="wa-col-title">⚠️ Needs Attention</div>
+            <div class="wa-col-title">⚠️ Attention Required <span style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;background:#fed7aa;color:#c2410c;margin-left:6px;text-transform:none;letter-spacing:0">3 items</span></div>
             <ul>
               <li>Cross-team collaboration (Eng × Sales)</li>
               <li>Professional development utilisation</li>
@@ -1024,9 +1098,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               <div class="talk-to-name">Sarah Chen <span class="talk-to-priority high">High</span></div>
               <div class="talk-to-summary">Persistent workload pressure across two pulses — below threshold and trending further down. Manager: Sarah Mitchell.</div>
               <div class="talk-to-footer">
-                <span class="talk-to-dp">Workload: 50%</span>
-                <span class="talk-to-dp">↓ 2 pulses</span>
+                <span class="talk-to-dp">Score: 42%</span>
+                <span class="talk-to-dp">↓ 22% drop</span>
+                <span class="talk-to-dp">Comment: "burning out"</span>
               </div>
+              <div style="margin-top:10px"><a href="#" style="font-size:12px;color:#0ea5e9;font-weight:600;text-decoration:none">✓ View ticket →</a></div>
             </div>
           </div>
           <div class="talk-to-card">
@@ -1036,8 +1112,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               <div class="talk-to-summary">Engagement score at 48% — lowest in the Engineering team. Manager: David Nguyen.</div>
               <div class="talk-to-footer">
                 <span class="talk-to-dp">Engagement: 48%</span>
+                <span class="talk-to-dp">↓ 12% drop</span>
                 <span class="talk-to-dp">Team: Engineering</span>
               </div>
+              <div style="margin-top:10px"><a href="#" style="font-size:12px;color:#6366f1;font-weight:600;text-decoration:none;border:1px solid #c7d2fe;padding:4px 10px;border-radius:6px;display:inline-block">+ Create Action →</a></div>
             </div>
           </div>
           <div class="talk-to-card">
@@ -1048,7 +1126,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               <div class="talk-to-footer">
                 <span class="talk-to-dp">Participation: 67%</span>
                 <span class="talk-to-dp">Compliance flag</span>
+                <span class="talk-to-dp">Team: Product &amp; Design</span>
               </div>
+              <div style="margin-top:10px"><a href="#" style="font-size:12px;color:#6366f1;font-weight:600;text-decoration:none;border:1px solid #c7d2fe;padding:4px 10px;border-radius:6px;display:inline-block">+ Create Action →</a></div>
             </div>
           </div>
         </div>
