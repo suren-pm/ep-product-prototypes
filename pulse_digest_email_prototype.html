@@ -22,8 +22,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .e-head{background:linear-gradient(135deg,#312e81 0%,#4338CA 50%,#6366f1 100%);padding:32px 32px 28px;text-align:center;position:relative;overflow:hidden}
 .e-head::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:rgba(255,255,255,.06);border-radius:50%}
 .e-head::after{content:'';position:absolute;bottom:-60px;left:-30px;width:200px;height:200px;background:rgba(255,255,255,.04);border-radius:50%}
-.e-logo{font-size:22px;font-weight:700;color:#fff;letter-spacing:1px;position:relative;z-index:1}
-.e-logo span{font-weight:300;opacity:.7}
+.e-logo-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;position:relative;z-index:1}
+.e-logo-img-placeholder{width:120px;height:40px;border:2px dashed rgba(255,255,255,0.4);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:10px;color:rgba(255,255,255,0.6);font-weight:600;letter-spacing:.5px;background:rgba(255,255,255,0.1)}
 .e-subhead{font-size:13px;color:#c7d2fe;margin-top:6px;position:relative;z-index:1;letter-spacing:.3px}
 /* Body */
 .e-body{padding:28px 28px 20px;background:#f8fafc}
@@ -40,6 +40,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .metric{background:#f8fafc;border-radius:10px;padding:14px;text-align:center;border:1px solid #f1f5f9}
 .metric .val{font-size:24px;font-weight:700;color:#4338CA;line-height:1.2}
 .metric .val.green{color:#059669}
+.metric .val.red{color:#dc2626}
 .metric .lbl{font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-top:4px;font-weight:600}
 .metric .sub{font-size:12px;color:#64748b;margin-top:2px}
 /* CTA button */
@@ -56,10 +57,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .action-num.med{background:linear-gradient(135deg,#f59e0b,#d97706)}
 .action-num.low{background:linear-gradient(135deg,#6366f1,#4338CA)}
 .action-body{flex:1}
-.action-pri{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+.action-pri-row{display:flex;align-items:center;gap:8px;margin-bottom:2px}
+.action-pri{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
 .action-pri.high{color:#dc2626}
 .action-pri.med{color:#d97706}
 .action-pri.low{color:#4338CA}
+.timeframe-pill{font-size:10px;font-weight:600;color:#6366f1;background:#ede9fe;padding:2px 8px;border-radius:10px;letter-spacing:.3px}
 .action-title{font-size:13.5px;font-weight:600;color:#1e293b}
 .action-scope{font-size:12px;color:#94a3b8;margin-top:3px}
 /* Alerts */
@@ -97,7 +100,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .comment.positive{background:#fafaff;border-color:#f1f5f9}
 .comment.neutral{background:#f8fafc;border-color:#f1f5f9}
 .comment-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.comment-author{font-size:13px;font-weight:600;color:#1e293b}
 .comment-anon{font-size:13px;font-weight:600;color:#64748b;font-style:italic}
 .sentiment-badge{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:3px 10px;border-radius:12px;display:inline-flex;align-items:center;gap:4px}
 .sentiment-badge.negative{background:#fee2e2;color:#dc2626}
@@ -123,34 +125,35 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .streak-bar .streak-icon{font-size:24px}
 .streak-bar .streak-text{font-size:13px;color:#854d0e;font-weight:500;line-height:1.4}
 .streak-bar .streak-text strong{color:#713f12}
-/* Psychosocial employee view — Results arrived card */
+/* Results Arrived card (Employee) */
 .results-arrived{background:#fff;border-radius:14px;padding:22px;margin-bottom:18px;border:1px solid #e8ecf1;box-shadow:0 1px 4px rgba(0,0,0,.04)}
-.results-meta{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#94a3b8;margin-bottom:14px}
-.results-score-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}
-.results-score-block{background:#f8fafc;border-radius:10px;padding:14px;text-align:center;border:1px solid #f1f5f9}
-.results-score-val{font-size:22px;font-weight:800;color:#4338CA;line-height:1.1}
+.results-meta{font-size:12px;color:#64748b;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.results-status-pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px;margin-bottom:16px}
+.results-status-pill.amber{background:#fff7ed;color:#c2410c;border:1px solid #fed7aa}
+.results-status-pill.green{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0}
+.results-status-pill.red{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
+.results-score-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px}
+.results-score-block{text-align:center;padding:14px 8px;background:#f8fafc;border-radius:10px;border:1px solid #f1f5f9}
+.results-score-val{font-size:28px;font-weight:800;color:#4338CA;line-height:1.1}
 .results-score-val.green{color:#059669}
 .results-score-val.amber{color:#d97706}
-.results-score-lbl{font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-top:4px;font-weight:600}
+.results-score-val.red{color:#dc2626}
+.results-score-lbl{font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-top:6px;font-weight:600}
 .results-score-sub{font-size:11px;color:#64748b;margin-top:3px}
-.results-status-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:12px}
-.results-status-pill.amber{background:#fffbeb;border:1.5px solid #fde68a;color:#92400e}
-.results-status-pill.green{background:#f0fdf4;border:1.5px solid #bbf7d0;color:#14532d}
-.results-status-pill.red{background:#fef2f2;border:1.5px solid #fecaca;color:#7f1d1d}
-.results-privacy{font-size:11px;color:#94a3b8;display:flex;align-items:center;gap:5px;margin-top:4px}
-/* Dimension cards */
-.dim-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px}
-.dim-item{border-radius:10px;padding:14px 12px;border:1.5px solid transparent;position:relative;overflow:hidden}
-.dim-item.strong{background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border-color:#bbf7d0}
-.dim-item.watch{background:linear-gradient(135deg,#fffbeb,#fefce8);border-color:#fde68a}
-.dim-item.low{background:linear-gradient(135deg,#fef2f2,#fff5f5);border-color:#fecaca}
-.dim-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px}
-.dim-label.strong{color:#059669}
-.dim-label.watch{color:#d97706}
+.results-privacy{font-size:11px;color:#94a3b8;font-style:italic;padding-top:6px;border-top:1px solid #f1f5f9}
+/* Wellbeing dimension grid (Employee) */
+.dim-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.dim-item{padding:14px;border-radius:10px;border:1px solid #f1f5f9;background:#fafaff}
+.dim-item.strong{border-color:#bbf7d0;background:#f0fdf4}
+.dim-item.watch{border-color:#fed7aa;background:#fff7ed}
+.dim-item.low{border-color:#fecaca;background:#fef2f2}
+.dim-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.dim-label.strong{color:#15803d}
+.dim-label.watch{color:#c2410c}
 .dim-label.low{color:#dc2626}
-.dim-name{font-size:13px;font-weight:600;color:#1e293b;margin-bottom:6px}
-.dim-bar-bg{height:4px;background:rgba(0,0,0,0.07);border-radius:4px;overflow:hidden}
-.dim-bar-fill{height:4px;border-radius:4px;transition:width .3s}
+.dim-name{font-size:13px;font-weight:600;color:#1e293b;margin-bottom:8px}
+.dim-bar-bg{height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden;margin-bottom:4px}
+.dim-bar-fill{height:100%;border-radius:3px;transition:width .6s ease}
 .dim-bar-fill.strong{background:linear-gradient(90deg,#34d399,#10b981)}
 .dim-bar-fill.watch{background:linear-gradient(90deg,#fbbf24,#f59e0b)}
 .dim-bar-fill.low{background:linear-gradient(90deg,#f87171,#ef4444)}
@@ -163,69 +166,42 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .eli-bubble em{font-style:normal;font-weight:600;color:#6d28d9}
 /* One action */
 .one-action{border-radius:14px;padding:22px;margin-bottom:18px;background:linear-gradient(135deg,#fff7ed,#fffbeb);border:1.5px solid #fed7aa}
-.one-action-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.one-action-icon{width:38px;height:38px;background:linear-gradient(135deg,#f97316,#ea580c);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-.one-action-title{font-size:14px;font-weight:700;color:#7c2d12;text-transform:uppercase;letter-spacing:.5px}
-.one-action-tag{font-size:10px;color:#9a3412;background:#fed7aa;padding:2px 8px;border-radius:6px;font-weight:600;margin-top:2px;display:inline-block}
-.action-step{display:flex;gap:12px;align-items:flex-start;padding:12px;background:rgba(255,255,255,0.7);border-radius:10px;margin-bottom:8px;border:1px solid #fed7aa}
-.action-step-num{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-.action-step-text{font-size:13px;color:#431407;line-height:1.55}
-.action-step-text strong{color:#9a3412}
-/* Journey / streak */
+.one-action-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.one-action-icon{width:36px;height:36px;border-radius:10px;background:#ffedd5;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.one-action-title{font-size:14px;font-weight:700;color:#9a3412;text-transform:uppercase;letter-spacing:.5px}
+.one-action-tag{font-size:10px;font-weight:600;color:#c2410c;background:#fff7ed;border:1px solid #fed7aa;padding:2px 8px;border-radius:10px;margin-left:auto;white-space:nowrap}
+.action-step{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px}
+.action-step:last-child{margin-bottom:0}
+.action-step-num{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#ea580c,#c2410c);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.action-step-text{font-size:13.5px;color:#78350f;line-height:1.6}
+.action-step-text strong{color:#451a03}
+/* Journey card (Employee) */
 .journey-card{background:#fff;border-radius:14px;padding:22px;margin-bottom:18px;border:1px solid #e8ecf1;box-shadow:0 1px 4px rgba(0,0,0,.04)}
-.journey-streak{display:flex;align-items:center;gap:12px;padding:12px 16px;background:#fefce8;border-radius:10px;border:1px solid #fef08a;margin-bottom:16px}
-.streak-flames{font-size:22px;letter-spacing:-2px}
-.streak-info .streak-num{font-size:15px;font-weight:800;color:#92400e}
-.streak-info .streak-txt{font-size:12px;color:#78350f;margin-top:1px}
-/* Pulse history tiles */
-.pulse-history{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.pulse-tile{border-radius:10px;padding:12px;text-align:center;border:1.5px solid transparent;position:relative}
-.pulse-tile.past{background:#f8fafc;border-color:#e2e8f0}
-.pulse-tile.current{background:linear-gradient(135deg,#f0f9ff,#eff6ff);border-color:#bfdbfe}
-.pulse-tile .pt-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#94a3b8;margin-bottom:6px}
-.pulse-tile.current .pt-label{color:#3b82f6}
-.pulse-tile .pt-score{font-size:22px;font-weight:800;color:#4338CA;line-height:1}
-.pulse-tile.past .pt-score{color:#94a3b8}
-.pulse-tile .pt-change{font-size:11px;margin-top:4px;font-weight:600}
-.pulse-tile .pt-change.up{color:#059669}
-.pulse-tile .pt-change.down{color:#dc2626}
-.pulse-tile .pt-change.neutral{color:#94a3b8}
-.pulse-tile .pt-date{font-size:10px;color:#94a3b8;margin-top:4px}
-.pulse-tile .pt-badge{position:absolute;top:-6px;right:-6px;background:linear-gradient(135deg,#4338CA,#6366f1);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:6px;letter-spacing:.3px}
-.journey-trend{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px;padding:10px;background:#f8fafc;border-radius:8px;font-size:12px;color:#64748b}
-.journey-trend strong{color:#059669}
-/* Next step */
+.journey-streak{display:flex;align-items:center;gap:8px;padding:12px 14px;background:#fefce8;border-radius:10px;border:1px solid #fef08a;margin-bottom:16px;font-size:13px;color:#854d0e;font-weight:500;line-height:1.4}
+.pulse-history{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}
+.pulse-tile{padding:14px;border-radius:10px;text-align:center;border:1px solid #f1f5f9;background:#f8fafc;position:relative}
+.pulse-tile.current{border-color:#c7d2fe;background:#f5f3ff}
+.pt-label{font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;font-weight:600;margin-bottom:6px}
+.pt-score{font-size:24px;font-weight:800;color:#4338CA;line-height:1.1}
+.pt-change{font-size:11px;color:#64748b;margin-top:4px}
+.pt-date{font-size:10px;color:#94a3b8;margin-top:4px}
+.pt-badge{position:absolute;top:-6px;right:-6px;font-size:9px;font-weight:700;color:#fff;background:linear-gradient(135deg,#4338CA,#6366f1);padding:2px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:.5px}
+.journey-trend{font-size:13px;color:#334155;line-height:1.5;padding:10px 14px;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0}
+/* Pulse summary banner */
+.pulse-summary-banner{padding:18px;background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border:1px solid #bbf7d0;border-radius:14px;margin-bottom:18px}
+.pulse-summary-banner .ps-title{font-size:14px;font-weight:700;color:#15803d;margin-bottom:8px}
+.pulse-summary-banner .ps-text{font-size:13px;color:#166534;line-height:1.55;margin-bottom:10px}
+.ps-bullets{margin:0;padding-left:16px;list-style:disc}
+.ps-bullets li{font-size:12.5px;color:#15803d;margin-bottom:5px;line-height:1.5}
+/* Next card (Employee) */
 .next-card{background:#fff;border-radius:14px;padding:22px;margin-bottom:18px;border:1px solid #e8ecf1}
 .next-step-row{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #f1f5f9}
 .next-step-row:last-child{border-bottom:none}
 .next-num{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#4338CA,#6366f1);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
 .next-text{font-size:13px;color:#334155;line-height:1.55}
 .next-text strong{color:#1e293b}
-/* Divider */
-.sep{height:1px;background:linear-gradient(90deg,transparent,#e2e8f0,transparent);margin:4px 0}
-/* Footer */
-.e-foot{padding:20px 28px;background:#fff;text-align:center;border-top:1px solid #f1f5f9}
-.e-foot p{font-size:12px;color:#94a3b8;line-height:1.6}
-.e-foot a{color:#6366f1;text-decoration:none;font-weight:500}
-.hidden{display:none}
-@media(max-width:600px){.metrics{grid-template-columns:1fr}.e-body{padding:20px 16px}body{padding:12px}}
 
 /* ── ESB-1405 Enhanced Pulse Report additions ── */
-/* Priority + timeframe row */
-.action-pri-row{display:flex;align-items:center;gap:7px;margin-bottom:4px}
-/* Timeframe pill */
-.timeframe-pill{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:#7c3aed;background:#ede9fe;border-radius:20px;padding:3px 10px;font-weight:600}
-/* Logo placeholder — inside email header */
-.e-logo-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;position:relative;z-index:1}
-.e-logo-img-placeholder{width:120px;height:40px;border:2px dashed rgba(255,255,255,0.4);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:10px;color:rgba(255,255,255,0.6);font-weight:600;letter-spacing:.5px;background:rgba(255,255,255,0.1)}
-
-/* Team Pulse Summary (Employee) */
-.pulse-summary-banner{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:16px;margin-bottom:18px}
-.pulse-summary-banner .ps-title{font-size:11px;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
-.pulse-summary-banner .ps-text{font-size:13px;color:#166534;line-height:1.55;margin-bottom:10px}
-.ps-bullets{margin:0;padding-left:16px;list-style:disc}
-.ps-bullets li{font-size:12.5px;color:#15803d;margin-bottom:5px;line-height:1.5}
-
 /* What's Working / Needs Attention two-column */
 .wa-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
 .wa-col{border-radius:10px;padding:14px}
@@ -240,35 +216,53 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .wa-col.attention ul li{color:#9a3412}
 @media(max-width:600px){.wa-grid{grid-template-columns:1fr}}
 
-/* Critical Risk Areas / Org Strengths two-column (Admin) */
-.risk-strength-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+/* Risk / Strength grid (Admin) */
+.rs-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
 .rs-col{border-radius:10px;padding:14px}
-.rs-col.risk{background:#fff1f2;border:1px solid #fecdd3}
+.rs-col.risk{background:#fef2f2;border:1px solid #fecaca}
 .rs-col.strength{background:#f0fdf4;border:1px solid #bbf7d0}
 .rs-col-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
-.rs-col.risk .rs-col-title{color:#be123c}
+.rs-col.risk .rs-col-title{color:#dc2626}
 .rs-col.strength .rs-col-title{color:#15803d}
-.rs-item{margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(0,0,0,.06)}
-.rs-item:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
-.rs-item-name{font-size:12.5px;font-weight:700;margin-bottom:2px}
-.rs-col.risk .rs-item-name{color:#9f1239}
-.rs-col.strength .rs-item-name{color:#166534}
-.rs-item-desc{font-size:11.5px;color:#64748b;line-height:1.4}
-@media(max-width:600px){.risk-strength-grid{grid-template-columns:1fr}}
+.rs-item{padding:10px 12px;background:rgba(255,255,255,.6);border-radius:8px;margin-bottom:8px}
+.rs-item:last-child{margin-bottom:0}
+.rs-item-name{font-size:13px;font-weight:600;color:#1e293b;margin-bottom:3px}
+.rs-item-desc{font-size:12px;color:#64748b;line-height:1.45}
 
-/* Who to Talk To cards */
-.talk-to-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
-.talk-to-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px;display:flex;align-items:flex-start;gap:12px}
-.talk-to-avatar{width:38px;height:38px;border-radius:50%;background:#ede9fe;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+/* Who to Talk To — enhanced */
+.talk-to-list{margin-bottom:10px}
+.talk-to-card{display:flex;align-items:flex-start;gap:12px;padding:14px;background:#fafaff;border-radius:10px;margin-bottom:10px;border:1px solid #f1f5f9}
+.talk-to-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:#ede9fe}
 .talk-to-body{flex:1}
-.talk-to-name{font-size:13px;font-weight:700;color:#1e293b;margin-bottom:2px}
-.talk-to-summary{font-size:12px;color:#475569;line-height:1.45;margin-bottom:7px}
-.talk-to-footer{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.talk-to-priority{font-size:10px;font-weight:700;border-radius:20px;padding:2px 9px}
-.talk-to-priority.high{background:#fee2e2;color:#b91c1c}
-.talk-to-priority.medium{background:#fef3c7;color:#92400e}
-.talk-to-priority.low{background:#f0fdf4;color:#166634}
-.talk-to-dp{font-size:10.5px;color:#7c3aed;background:#ede9fe;border-radius:20px;padding:2px 8px}
+.talk-to-name{font-size:13.5px;font-weight:600;color:#1e293b}
+.talk-to-priority{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:2px 8px;border-radius:10px;display:inline-block;margin-left:6px}
+.talk-to-priority.high{background:#fee2e2;color:#dc2626}
+.talk-to-priority.medium{background:#fef3c7;color:#d97706}
+.talk-to-summary{font-size:12.5px;color:#64748b;line-height:1.5;margin-top:6px}
+.talk-to-footer{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.talk-to-dp{font-size:11px;color:#6d28d9;background:#ede9fe;padding:3px 10px;border-radius:12px;font-weight:600}
+
+/* Multi-Manager specific */
+.mm-manager-card{display:flex;align-items:flex-start;gap:12px;padding:14px;border-radius:10px;margin-bottom:10px;border:1px solid #f1f5f9;background:#fafaff}
+.mm-manager-card.flagged{background:linear-gradient(135deg,#fef2f2,#fff8f8);border-color:#fecaca}
+.mm-manager-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;background:linear-gradient(135deg,#6366f1,#4338CA)}
+.mm-manager-avatar.flagged{background:linear-gradient(135deg,#ef4444,#dc2626)}
+.mm-manager-body{flex:1}
+.mm-manager-name{font-size:13.5px;font-weight:600;color:#1e293b}
+.mm-manager-team{font-size:12px;color:#64748b;margin-top:2px}
+.mm-manager-stats{display:flex;gap:12px;margin-top:6px;flex-wrap:wrap}
+.mm-manager-stats span{font-size:11px;color:#64748b;background:#f1f5f9;padding:2px 8px;border-radius:4px}
+.mm-manager-stats span.warn{background:#fee2e2;color:#dc2626}
+.mm-flag-badge{font-size:10px;font-weight:700;text-transform:uppercase;padding:2px 8px;border-radius:10px;background:#fee2e2;color:#dc2626;margin-left:6px}
+
+/* Divider */
+.sep{height:1px;background:linear-gradient(90deg,transparent,#e2e8f0,transparent);margin:4px 0}
+/* Footer */
+.e-foot{padding:20px 28px;background:#fff;text-align:center;border-top:1px solid #f1f5f9}
+.e-foot p{font-size:12px;color:#94a3b8;line-height:1.6}
+.e-foot a{color:#6366f1;text-decoration:none;font-weight:500}
+.hidden{display:none}
+@media(max-width:600px){.metrics{grid-template-columns:1fr}.rs-grid{grid-template-columns:1fr}.e-body{padding:20px 16px}body{padding:12px}}
 </style>
 </head>
 <body>
@@ -277,9 +271,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <div class="proto-bar">
   <h1>Pulse Digest — Email Prototype</h1>
   <div class="toggles">
-    <button class="tog" onclick="sw('emp')" id="tog-emp">Employee View</button>
-    <button class="tog on" onclick="sw('mgr')" id="tog-mgr">Manager View</button>
-    <button class="tog" onclick="sw('admin')" id="tog-admin">Admin View</button>
+    <button class="tog on" onclick="sw('emp')" id="tog-emp">Employee</button>
+    <button class="tog" onclick="sw('mgr')" id="tog-mgr">Manager</button>
+    <button class="tog" onclick="sw('mm')" id="tog-mm">Multi-Manager</button>
+    <button class="tog" onclick="sw('admin')" id="tog-admin">Admin</button>
   </div>
 </div>
 
@@ -289,26 +284,28 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   <span class="val" id="subj">AFS Solutions — Pulse Digest: Engagement Monthly</span>
 </div>
 
+<!-- Org logo — above email card, matching real EP email layout -->
+<div style="max-width:620px;margin:0 auto 14px;text-align:center">
+  <div style="display:inline-flex;align-items:center;justify-content:center;width:148px;height:48px;border:2px dashed #c7d2fe;border-radius:10px;font-size:11px;color:#4338CA;font-weight:700;letter-spacing:.5px;background:#f5f3ff">COMPANY LOGO</div>
+</div>
+
 <!-- Email -->
 <div class="email">
 
-  <!-- Header — Org-branded -->
+  <!-- Header — Pulse name + branding -->
   <div class="e-head">
-    <div class="e-logo-wrap">
-      <div class="e-logo-img-placeholder">📷 Company Logo</div>
-      <div class="e-subhead" id="eSubhead">Pulse Digest: Engagement Monthly</div>
-    </div>
+    <div class="e-subhead" id="eSubhead" style="font-size:15px;font-weight:700;color:#fff;letter-spacing:.3px">Pulse Digest: Engagement Monthly</div>
     <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:10px;position:relative;z-index:1;letter-spacing:.3px">Powered by Everperform</div>
   </div>
 
   <div class="e-body">
 
     <!-- ========== EMPLOYEE VIEW ========== -->
-    <div id="v-emp" class="hidden">
+    <div id="v-emp">
       <div class="greeting">Hi Jordan,</div>
-      <div class="greeting-sub" style="margin-bottom:20px">The Engagement Monthly pulse has closed. ELI has finished processing the results — here's your personal picture.</div>
+      <div class="greeting-sub">Thanks for completing the pulse! Here's a snapshot of how things are tracking for you.</div>
 
-      <!-- 1. Results arrived — personal status card -->
+      <!-- 1. Results Arrived -->
       <div class="results-arrived">
         <div class="results-meta">Engagement Monthly · Results in · 31 Mar 2026</div>
         <div class="results-status-pill amber">⚡ Workload balance needs attention</div>
@@ -332,13 +329,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         <div class="results-privacy">🔒 Your individual responses are private — never shared with your manager or team</div>
       </div>
 
-      <!-- 2. Your Wellbeing Dimensions -->
+      <!-- 2. Your Wellbeing Snapshot -->
       <div class="card">
         <div class="card-head">
-          <div class="card-icon" style="background:#f0fdf4">🧠</div>
+          <div class="card-icon" style="background:#ede9fe">🧭</div>
           <div class="card-title">Your Wellbeing Snapshot</div>
         </div>
-        <p style="font-size:12.5px;color:#64748b;margin-bottom:14px;line-height:1.5">Based on your answers this pulse, ELI mapped how you're tracking across 4 key areas of psychosocial wellbeing:</p>
         <div class="dim-grid">
           <div class="dim-item strong">
             <div class="dim-label strong">● Strong</div>
@@ -360,88 +356,74 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           </div>
           <div class="dim-item watch">
             <div class="dim-label watch">● Watch</div>
-            <div class="dim-name">Growth & Purpose</div>
+            <div class="dim-name">Growth &amp; Purpose</div>
             <div class="dim-bar-bg"><div class="dim-bar-fill watch" style="width:57%"></div></div>
             <div class="dim-score">57% — stable</div>
           </div>
         </div>
-        <p style="font-size:11.5px;color:#94a3b8;margin-top:10px;font-style:italic;line-height:1.5">✦ These scores are yours alone — derived from your responses and never visible to anyone else.</p>
+        <a href="#" class="cta">View My Full Report →</a>
       </div>
 
-      <!-- 3. ELI's personal note — rule-based, mapped to lowest dimension -->
+      <!-- 3. ELI's read on your results -->
       <div class="eli-msg">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-          <div class="eli-avatar">🤖</div>
-          <div>
-            <div class="eli-name">ELI's read on your results</div>
-            <div style="font-size:10px;color:#a78bfa;margin-top:2px">Matched to your Workload Balance score · No AI call required</div>
-          </div>
-        </div>
+        <div class="eli-avatar">🤖</div>
+        <div class="eli-name">ELI's read on your results</div>
         <div class="eli-bubble">
-          Your workload balance has dipped across <em>two consecutive pulses now</em>. That's a pattern worth paying attention to — pressure builds quietly before it becomes obvious.<br><br>
-          The good news: your <em>team connection score is genuinely strong (82%)</em>. Research on psychosocial safety shows that strong peer connection is one of the most protective factors when workload gets heavy. You're not isolated in this.<br><br>
+          Your workload balance has dipped across <em>two consecutive pulses now</em>. That's a pattern worth paying attention to — pressure builds quietly before it becomes obvious.
+          The good news: your <em>team connection score is genuinely strong (82%)</em>. Research on psychosocial safety shows that strong peer connection is one of the most protective factors when workload gets heavy. You're not isolated in this.
           Your overall score is still trending up. Keep going — and act on the workload before it slides further.
         </div>
       </div>
 
-      <!-- 4. Your one action this week — rule-based template -->
+      <!-- 4. Your One Action This Week -->
       <div class="one-action">
         <div class="one-action-header">
           <div class="one-action-icon">🎯</div>
-          <div>
-            <div class="one-action-title">Your One Action This Week</div>
-            <div class="one-action-tag">Workload Balance — Score 50%</div>
-          </div>
+          <div class="one-action-title">Your One Action This Week</div>
+          <div class="one-action-tag">Workload Balance — Score 50%</div>
         </div>
-        <p style="font-size:13px;color:#7c2d12;margin-bottom:12px;line-height:1.55">One thing — not a list. Research shows a single focused action is 3× more likely to be acted on.</p>
         <div class="action-step">
           <div class="action-step-num">1</div>
           <div class="action-step-text"><strong>This week, protect one hour.</strong> Block it in your calendar as "Focus time." No meetings, no Slack. You don't need to explain it to anyone. Consistently protected time reduces burnout risk by up to 30%.</div>
         </div>
         <div class="action-step">
           <div class="action-step-num">2</div>
-          <div class="action-step-text"><strong>Optional:</strong> If the pressure persists, one sentence is enough to start a conversation with your manager — <em>"Can we spend 15 minutes on my workload priorities this week?"</em> That's it.</div>
+          <div class="action-step-text"><strong>Optional:</strong> If the pressure persists, one sentence is enough to start a conversation with your manager — "Can we spend 15 minutes on my workload priorities this week?" That's it.</div>
         </div>
       </div>
 
-      <!-- 5. Your journey / streak -->
+      <!-- 5. Your Pulse Journey -->
       <div class="journey-card">
         <div class="card-head">
           <div class="card-icon" style="background:#fefce8">🔥</div>
           <div class="card-title">Your Pulse Journey</div>
         </div>
-        <div class="journey-streak">
-          <div class="streak-flames">🔥🔥🔥🔥🔥</div>
-          <div class="streak-info">
-            <div class="streak-num">5-pulse streak!</div>
-            <div class="streak-txt">You've completed every pulse so far. Keep the momentum going!</div>
-          </div>
-        </div>
+        <div class="journey-streak">🔥🔥🔥🔥🔥 5-pulse streak! You've completed every pulse so far. Keep the momentum going!</div>
         <div class="pulse-history">
           <div class="pulse-tile past">
             <div class="pt-label">Pulse 3</div>
             <div class="pt-score">68%</div>
-            <div class="pt-change neutral">—</div>
+            <div class="pt-change">—</div>
             <div class="pt-date">Pulse 3 of 5</div>
           </div>
           <div class="pulse-tile past">
             <div class="pt-label">Pulse 4</div>
             <div class="pt-score">71%</div>
-            <div class="pt-change up">▲ +3%</div>
+            <div class="pt-change">▲ +3%</div>
             <div class="pt-date">Pulse 4 of 5</div>
           </div>
           <div class="pulse-tile current">
             <div class="pt-badge">NOW</div>
             <div class="pt-label">Pulse 5</div>
             <div class="pt-score">74%</div>
-            <div class="pt-change up">▲ +3%</div>
+            <div class="pt-change">▲ +3%</div>
             <div class="pt-date">Pulse 5 of 5</div>
           </div>
         </div>
-        <div class="journey-trend">📈 Score up <strong>+6% across your last 3 pulses</strong> — you're heading in the right direction.</div>
+        <div class="journey-trend">📈 Score up +6% across your last 3 pulses — you're heading in the right direction.</div>
       </div>
 
-      <!-- 6. Your team's pulse summary -->
+      <!-- 6. How Your Team Is Tracking -->
       <div class="pulse-summary-banner">
         <div class="ps-title">📊 How Your Team Is Tracking</div>
         <div class="ps-text">Here's a high-level picture of where your team landed this pulse — shown as a group, never linked to individual responses.</div>
@@ -452,10 +434,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         </ul>
       </div>
 
-      <!-- 7. What happens next — trust-building -->
+      <!-- 7. What Happens With Your Responses -->
       <div class="next-card">
         <div class="card-head">
-          <div class="card-icon" style="background:#f0f9ff">🔄</div>
+          <div class="card-icon" style="background:#ede9fe">🔒</div>
           <div class="card-title">What Happens With Your Responses</div>
         </div>
         <div class="next-step-row">
@@ -475,11 +457,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           <div class="next-text"><strong>Your personal data is always yours.</strong> Your scores, trends, and history are visible only to you in your own Everperform reports.</div>
         </div>
       </div>
-
     </div>
 
     <!-- ========== MANAGER VIEW ========== -->
-    <div id="v-mgr">
+    <div id="v-mgr" class="hidden">
       <div class="greeting">Hi Sarah,</div>
       <div class="greeting-sub">Your latest pulse results are in. Here's everything you need to know about your team's feedback.</div>
 
@@ -490,9 +471,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           <div class="card-title">Your Team's Pulse Results</div>
         </div>
         <div class="metrics">
-          <div class="metric"><div class="val green">72.4</div><div class="lbl">Team Score</div><div class="sub">▲ +2.1 from last pulse</div></div>
+          <div class="metric"><div class="val green">72%</div><div class="lbl">Team Score</div><div class="sub">▲ +4% from last pulse</div></div>
           <div class="metric"><div class="val">87%</div><div class="lbl">Participation Rate</div><div class="sub">7 of 8 responded</div></div>
-          <div class="metric"><div class="val">Product & Design</div><div class="lbl">Team</div><div class="sub">8 members</div></div>
+          <div class="metric"><div class="val">Product &amp; Design</div><div class="lbl">Team</div><div class="sub">8 members</div></div>
           <div class="metric"><div class="val">3</div><div class="lbl">New Tickets</div><div class="sub">2 signals · 1 experience</div></div>
         </div>
         <a href="#" class="cta">View Full Report →</a>
@@ -507,13 +488,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         <div class="insight">Team morale is strong with positive sentiment about recent wins and product direction</div>
         <div class="insight">Work-life balance concerns expressed by 3 team members, particularly around deadline pressure</div>
         <div class="insight">Career development is a priority — team members want clearer growth paths and mentorship</div>
-        <a href="#" class="cta">View Full Report →</a>
+        <a href="#" class="cta">View ELI Summary →</a>
       </div>
 
-      <!-- 3. What's Working / What Needs Attention -->
+      <!-- 3. What's Working & Needs Attention -->
       <div class="card">
         <div class="card-head">
-          <div class="card-icon" style="background:#f0fdf4">✅</div>
+          <div class="card-icon" style="background:#f0fdf4">📋</div>
           <div class="card-title">What's Working &amp; What Needs Attention</div>
         </div>
         <div class="wa-grid">
@@ -545,30 +526,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         <div class="action">
           <div class="action-num high">1</div>
           <div class="action-body">
-            <div class="action-pri-row">
-              <div class="action-pri high">High Priority</div>
-              <span class="timeframe-pill">⏱ Implement within 30 days</span>
-            </div>
+            <div class="action-pri-row"><span class="action-pri high">High Priority</span><span class="timeframe-pill">⏱ Within 7 days</span></div>
             <div class="action-title">Schedule 1:1 with Sarah Chen re: workload balance concerns</div>
           </div>
         </div>
         <div class="action">
           <div class="action-num med">2</div>
           <div class="action-body">
-            <div class="action-pri-row">
-              <div class="action-pri med">Medium Priority</div>
-              <span class="timeframe-pill">⏱ Implement within 30–60 days</span>
-            </div>
+            <div class="action-pri-row"><span class="action-pri med">Medium Priority</span><span class="timeframe-pill">⏱ Within 30 days</span></div>
             <div class="action-title">Review sprint capacity for next 2 sprints to reduce deadline pressure</div>
           </div>
         </div>
         <div class="action">
           <div class="action-num low">3</div>
           <div class="action-body">
-            <div class="action-pri-row">
-              <div class="action-pri low">Low Priority</div>
-              <span class="timeframe-pill">⏱ Implement within 60–90 days</span>
-            </div>
+            <div class="action-pri-row"><span class="action-pri low">Low Priority</span><span class="timeframe-pill">⏱ Within 30 days</span></div>
             <div class="action-title">Recognise recent product launch achievements in next team standup</div>
           </div>
         </div>
@@ -578,18 +550,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
       <!-- 5. Who to Talk To -->
       <div class="card">
         <div class="card-head">
-          <div class="card-icon" style="background:#f0f9ff">🗣️</div>
+          <div class="card-icon" style="background:#ede9fe">👤</div>
           <div class="card-title">Who to Talk To</div>
         </div>
-        <p style="font-size:12.5px;color:#64748b;margin-bottom:14px;line-height:1.5">ELI has identified team members who may benefit from a 1:1 check-in based on their pulse signals:</p>
         <div class="talk-to-list">
           <div class="talk-to-card">
             <div class="talk-to-avatar">👤</div>
             <div class="talk-to-body">
-              <div class="talk-to-name">Sarah Chen</div>
+              <div class="talk-to-name">Sarah Chen <span class="talk-to-priority high">High</span></div>
               <div class="talk-to-summary">Workload balance score has declined across two consecutive pulses. Showing signs of sustained pressure — a short check-in conversation recommended before it escalates.</div>
               <div class="talk-to-footer">
-                <span class="talk-to-priority high">🔴 High Priority</span>
                 <span class="talk-to-dp">Workload: 50%</span>
                 <span class="talk-to-dp">↓ 2 pulses</span>
               </div>
@@ -598,17 +568,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           <div class="talk-to-card">
             <div class="talk-to-avatar">👤</div>
             <div class="talk-to-body">
-              <div class="talk-to-name">Jordan Park</div>
+              <div class="talk-to-name">Jordan Park <span class="talk-to-priority medium">Medium</span></div>
               <div class="talk-to-summary">Career growth and purpose scores are below team average. Has raised development questions twice without resolution — risk of disengagement if left unaddressed.</div>
               <div class="talk-to-footer">
-                <span class="talk-to-priority medium">🟡 Medium Priority</span>
                 <span class="talk-to-dp">Growth: 52%</span>
                 <span class="talk-to-dp">Participation: 67%</span>
               </div>
             </div>
           </div>
         </div>
-        <a href="#" class="cta">View Full Who to Talk To Report →</a>
+        <a href="#" class="cta">View All Team Members →</a>
       </div>
 
       <!-- 6. Signal Alerts -->
@@ -617,7 +586,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           <div class="card-icon" style="background:#fee2e2">⚠️</div>
           <div class="card-title" style="color:#991b1b">Signal Alerts</div>
         </div>
-
         <div class="alert-section">
           <div class="alert-label compliance"><span class="alert-dot red"></span> Compliance Alerts</div>
           <div class="alert-item">
@@ -630,9 +598,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           </div>
           <a href="#" class="view-all">View All Compliance Alerts →</a>
         </div>
-
         <div class="sep"></div>
-
         <div class="alert-section">
           <div class="alert-label risk"><span class="alert-dot orange"></span> Risk Factor Alerts</div>
           <div class="alert-item">
@@ -641,11 +607,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           </div>
           <a href="#" class="view-all">View All Risk Factor Alerts →</a>
         </div>
-
         <a href="#" class="cta" style="margin-top:16px">View All in Inbox →</a>
       </div>
 
-      <!-- 7. Comments — Negative Sentiment Flagged -->
+      <!-- 7. Comments — Negative Sentiment -->
       <div class="comment-card">
         <div class="card-head">
           <div class="card-icon" style="background:#fef3c7">💬</div>
@@ -655,12 +620,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           <span class="neg-icon">🚩</span>
           <span>2 comments flagged with negative sentiment</span>
         </div>
-
         <div class="comment negative">
           <div class="sentiment-flag negative"></div>
           <div class="comment-header">
             <span class="comment-anon">Anonymous</span>
-            <span class="sentiment-badge negative">🔴 Negative</span>
+            <span class="sentiment-badge negative">Negative</span>
           </div>
           <div class="comment-text">"The deadlines keep moving forward but the scope never shrinks. I'm burning out and it feels like nobody cares."</div>
           <div class="comment-meta">
@@ -668,12 +632,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
             <span>Question: Work-life balance</span>
           </div>
         </div>
-
         <div class="comment negative">
           <div class="sentiment-flag negative"></div>
           <div class="comment-header">
             <span class="comment-anon">Anonymous</span>
-            <span class="sentiment-badge negative">🔴 Negative</span>
+            <span class="sentiment-badge negative">Negative</span>
           </div>
           <div class="comment-text">"I've asked about career progression twice now and still don't have any clarity on what the path looks like here."</div>
           <div class="comment-meta">
@@ -681,20 +644,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
             <span>Question: Professional development</span>
           </div>
         </div>
-
-        <div class="comment positive">
-          <div class="sentiment-flag positive"></div>
-          <div class="comment-header">
-            <span class="comment-anon">Anonymous</span>
-            <span class="sentiment-badge positive">🟢 Positive</span>
-          </div>
-          <div class="comment-text">"Really proud of what we shipped last sprint. Feels like the team is clicking and the direction is right."</div>
-          <div class="comment-meta">
-            <span class="comment-topic">Team Morale</span>
-            <span>Question: Team satisfaction</span>
-          </div>
-        </div>
-
         <a href="#" class="cta">View All Comments →</a>
       </div>
 
@@ -705,12 +654,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           <div class="card-title">Tickets Created</div>
         </div>
         <div style="font-size:13px;color:#64748b;margin-bottom:14px">3 new tickets created from this pulse:</div>
-
         <div class="ticket">
           <div class="ticket-icon pulse">📋</div>
           <div class="ticket-body">
             <div class="ticket-id">EXP-142</div>
-            <div class="ticket-title">Team Experience Review — Product & Design</div>
+            <div class="ticket-title">Team Experience Review — Product &amp; Design</div>
             <div class="ticket-meta"><span>📁 pulse_generated</span><span>👤 Assigned to you</span></div>
           </div>
         </div>
@@ -730,9 +678,217 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
             <div class="ticket-meta"><span>📁 signal_automation</span><span>👤 Assigned to you</span></div>
           </div>
         </div>
-
         <a href="#" class="cta">Open Inbox →</a>
       </div>
+    </div>
+
+    <!-- ========== MULTI-MANAGER VIEW ========== -->
+    <div id="v-mm" class="hidden">
+      <div class="greeting">Hi Rebecca,</div>
+      <div class="greeting-sub">Your pulse results are in across all 8 teams. Here's what needs your attention.</div>
+
+      <!-- 1. Group Overview -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon" style="background:#ede9fe">💓</div>
+          <div class="card-title">Your Group's Pulse Results</div>
+        </div>
+        <div class="metrics">
+          <div class="metric"><div class="val green">69%</div><div class="lbl">Group Score</div><div class="sub">▲ +2% from last pulse</div></div>
+          <div class="metric"><div class="val">81%</div><div class="lbl">Participation</div><div class="sub">52 of 64 responded</div></div>
+          <div class="metric"><div class="val">8</div><div class="lbl">Teams</div><div class="sub">8 managers · 56 indirect</div></div>
+          <div class="metric"><div class="val">4</div><div class="lbl">New Tickets</div><div class="sub">2 signals · 1 risk · 1 ELI</div></div>
+        </div>
+        <a href="#" class="cta">View Full Report →</a>
+      </div>
+
+      <!-- 2. Key Findings -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon" style="background:#fae8ff">🤖</div>
+          <div class="card-title">Key Findings</div>
+        </div>
+        <div class="insight">Product &amp; Design and Engineering teams are showing declining scores — workload pressure is the common theme</div>
+        <div class="insight">Sales &amp; Partnerships and Customer Success are performing strongly with scores above 75%</div>
+        <div class="insight">Cross-team collaboration barriers flagged between Engineering and Sales — impacting delivery and trust</div>
+        <a href="#" class="cta">View ELI Summary →</a>
+      </div>
+
+      <!-- 3. What's Working & Needs Attention -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon" style="background:#f0fdf4">📋</div>
+          <div class="card-title">What's Working &amp; What Needs Attention</div>
+        </div>
+        <div class="wa-grid">
+          <div class="wa-col working">
+            <div class="wa-col-title">✅ What's Working</div>
+            <ul>
+              <li>Sales &amp; Customer Success morale high</li>
+              <li>Company direction clear across teams</li>
+              <li>Remote flexibility valued</li>
+            </ul>
+          </div>
+          <div class="wa-col attention">
+            <div class="wa-col-title">⚠️ Needs Attention</div>
+            <ul>
+              <li>Product &amp; Engineering workload pressure</li>
+              <li>Cross-team handoff friction</li>
+              <li>Career development consistency</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Priority Recommendations -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon" style="background:#fef3c7">⚡</div>
+          <div class="card-title">Priority Recommendations</div>
+        </div>
+        <div class="action">
+          <div class="action-num high">1</div>
+          <div class="action-body">
+            <div class="action-pri-row"><span class="action-pri high">High Priority</span><span class="timeframe-pill">⏱ Within 7 days</span></div>
+            <div class="action-title">Product &amp; Design team score dropped 8% with participation below threshold — team-level intervention needed</div>
+            <div class="action-scope">📍 Product &amp; Design · Score 58% · Participation 63%</div>
+          </div>
+        </div>
+        <div class="action">
+          <div class="action-num high">2</div>
+          <div class="action-body">
+            <div class="action-pri-row"><span class="action-pri high">High Priority</span><span class="timeframe-pill">⏱ Within 14 days</span></div>
+            <div class="action-title">Engineering × Sales cross-team friction requires a coordinated sync — handoff breakdowns impacting delivery and trust</div>
+            <div class="action-scope">📍 Engineering · Sales &amp; Partnerships · 2 teams affected</div>
+          </div>
+        </div>
+        <div class="action">
+          <div class="action-num med">3</div>
+          <div class="action-body">
+            <div class="action-pri-row"><span class="action-pri med">Medium Priority</span><span class="timeframe-pill">⏱ Within 30 days</span></div>
+            <div class="action-title">Capacity review recommended across Product &amp; Engineering — workload pressure emerging as a shared systemic theme</div>
+            <div class="action-scope">📍 Product &amp; Design · Engineering · 2 teams flagged</div>
+          </div>
+        </div>
+        <a href="#" class="cta">Review All Recommendations →</a>
+      </div>
+
+      <!-- 5. Who to Talk To -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon" style="background:#ede9fe">👤</div>
+          <div class="card-title">Who to Talk To</div>
+        </div>
+        <div class="talk-to-list">
+          <div class="talk-to-card">
+            <div class="talk-to-avatar">👤</div>
+            <div class="talk-to-body">
+              <div class="talk-to-name">Sarah Mitchell <span class="talk-to-priority high">High</span></div>
+              <div class="talk-to-summary">Team score dropped 8% with participation at 63%. Three open signals unresolved — needs a direct check-in to assess team dynamics.</div>
+              <div class="talk-to-footer">
+                <span class="talk-to-dp">Team score: 58%</span>
+                <span class="talk-to-dp">↓ 8%</span>
+                <span class="talk-to-dp">3 signals</span>
+              </div>
+            </div>
+          </div>
+          <div class="talk-to-card">
+            <div class="talk-to-avatar">👤</div>
+            <div class="talk-to-body">
+              <div class="talk-to-name">James Torres <span class="talk-to-priority medium">Medium</span></div>
+              <div class="talk-to-summary">Two risk factor alerts in Engineering team. Cross-team friction flagged between his team and Sales — needs coordination support.</div>
+              <div class="talk-to-footer">
+                <span class="talk-to-dp">2 risk alerts</span>
+                <span class="talk-to-dp">Cross-team friction</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a href="#" class="view-all">View all 8 managers in dashboard →</a>
+      </div>
+
+      <!-- 6. Escalated Signals -->
+      <div class="alert-card">
+        <div class="card-head" style="margin-bottom:14px">
+          <div class="card-icon" style="background:#fee2e2">⚠️</div>
+          <div class="card-title" style="color:#991b1b">Escalated Signals</div>
+        </div>
+        <div class="alert-section">
+          <div class="alert-label compliance"><span class="alert-dot red"></span> Compliance Alerts</div>
+          <div class="alert-item">
+            <div class="badge red">!</div>
+            <div><div class="name">Sarah Mitchell · Product &amp; Design</div><div class="reason">Team participation 63% — below 80% threshold · Manager follow-up required</div></div>
+          </div>
+          <a href="#" class="view-all">View All Compliance Alerts →</a>
+        </div>
+        <div class="sep"></div>
+        <div class="alert-section">
+          <div class="alert-label risk"><span class="alert-dot orange"></span> Risk Factor Alerts</div>
+          <div class="alert-item">
+            <div class="badge orange">⚡</div>
+            <div><div class="name">James Torres · Engineering</div><div class="reason">2 team members with workload scores below 60% · Cross-team friction also flagged</div></div>
+          </div>
+          <a href="#" class="view-all">View All Risk Alerts →</a>
+        </div>
+        <div class="sep"></div>
+        <div class="alert-section">
+          <div class="alert-label" style="color:#7c3aed"><span class="alert-dot" style="background:#7c3aed"></span> Major Movers</div>
+          <div class="alert-item">
+            <div class="badge" style="background:#ede9fe;color:#7c3aed">↓</div>
+            <div><div class="name">Sarah Mitchell · Product &amp; Design</div><div class="reason">Largest score drop this pulse — down 8% from previous</div></div>
+          </div>
+          <div class="alert-item">
+            <div class="badge" style="background:#f0fdf4;color:#059669">↑</div>
+            <div><div class="name">Lisa Park · Customer Success</div><div class="reason">Strongest improvement this pulse — up 6% from previous</div></div>
+          </div>
+          <a href="#" class="view-all">View All Team Trends →</a>
+        </div>
+        <a href="#" class="cta" style="margin-top:16px">View All in Inbox →</a>
+      </div>
+
+      <!-- 7. Tickets Created -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon" style="background:#dbeafe">📥</div>
+          <div class="card-title">Tickets Created</div>
+        </div>
+        <div style="font-size:13px;color:#64748b;margin-bottom:14px">4 new tickets created from this pulse across your 8 teams:</div>
+        <div class="ticket">
+          <div class="ticket-icon signal">⚠️</div>
+          <div class="ticket-body">
+            <div class="ticket-id">SIG-091</div>
+            <div class="ticket-title">Compliance Alert — Product &amp; Design (Sarah Mitchell)</div>
+            <div class="ticket-meta"><span>📁 signal_automation</span><span>👤 Assigned to Sarah Mitchell</span></div>
+          </div>
+        </div>
+        <div class="ticket">
+          <div class="ticket-icon signal">⚡</div>
+          <div class="ticket-body">
+            <div class="ticket-id">SIG-092</div>
+            <div class="ticket-title">Risk Factor Alert — Engineering (James Torres)</div>
+            <div class="ticket-meta"><span>📁 signal_automation</span><span>👤 Assigned to James Torres</span></div>
+          </div>
+        </div>
+        <div class="ticket">
+          <div class="ticket-icon pulse">📋</div>
+          <div class="ticket-body">
+            <div class="ticket-id">EXP-143</div>
+            <div class="ticket-title">Team Experience Review — Engineering × Sales Friction</div>
+            <div class="ticket-meta"><span>📁 pulse_generated</span><span>👤 Assigned to you</span></div>
+          </div>
+        </div>
+        <div class="ticket">
+          <div class="ticket-icon eli">🤖</div>
+          <div class="ticket-body">
+            <div class="ticket-id">ELI-012</div>
+            <div class="ticket-title">ELI Insight — Group-level capacity recommendation</div>
+            <div class="ticket-meta"><span>📁 eli_generated</span><span>👤 Assigned to you</span></div>
+          </div>
+        </div>
+        <a href="#" class="cta">Open Inbox →</a>
+      </div>
+
+      <p style="font-size:12px;color:#94a3b8;text-align:center;margin-bottom:12px;font-style:italic">You also receive a separate Team Manager digest for your 8 direct reports. <a href="#" style="color:#6366f1;font-weight:600">View your team digest →</a></p>
     </div>
 
     <!-- ========== ADMIN VIEW ========== -->
@@ -740,14 +896,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
       <div class="greeting">Hi Wade,</div>
       <div class="greeting-sub">Your organisation's latest pulse results are in. Here's a summary of what ELI found across all teams.</div>
 
-      <!-- 1. Pulse Summary -->
+      <!-- 1. Org Pulse Summary -->
       <div class="card">
         <div class="card-head">
           <div class="card-icon" style="background:#ede9fe">💓</div>
           <div class="card-title">Organisation Pulse Results</div>
         </div>
         <div class="metrics">
-          <div class="metric"><div class="val green">68.9</div><div class="lbl">Org Score</div><div class="sub">▲ +1.4 from last pulse</div></div>
+          <div class="metric"><div class="val green">69%</div><div class="lbl">Org Score</div><div class="sub">▲ +2% from last pulse</div></div>
           <div class="metric"><div class="val">78%</div><div class="lbl">Participation Rate</div><div class="sub">32 of 41 responded</div></div>
           <div class="metric"><div class="val">41</div><div class="lbl">Org Strength</div><div class="sub">5 teams</div></div>
           <div class="metric"><div class="val">7</div><div class="lbl">New Tickets</div><div class="sub">3 signals · 3 experience · 1 ELI</div></div>
@@ -762,19 +918,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           <div class="card-title">Key Findings</div>
         </div>
         <div class="insight">Company direction is clear and well-communicated — positive sentiment across all 5 teams</div>
-        <div class="insight">Remote work flexibility highly valued; newer hires raising concerns about office culture integration</div>
         <div class="insight">Cross-functional collaboration barriers detected between Engineering and Sales teams</div>
         <div class="insight">Professional development budgets underutilised — team members requesting access to external training</div>
-        <a href="#" class="cta">View Full Report →</a>
+        <a href="#" class="cta">View ELI Summary →</a>
       </div>
 
-      <!-- 3. Critical Risk Areas / Org Strengths -->
+      <!-- 3. Critical Risk Areas & Org Strengths -->
       <div class="card">
         <div class="card-head">
-          <div class="card-icon" style="background:#fff1f2">🔍</div>
+          <div class="card-icon" style="background:#fef3c7">🎯</div>
           <div class="card-title">Critical Risk Areas &amp; Org Strengths</div>
         </div>
-        <div class="risk-strength-grid">
+        <div class="rs-grid">
           <div class="rs-col risk">
             <div class="rs-col-title">🔴 Critical Risk Areas</div>
             <div class="rs-item">
@@ -783,7 +938,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
             </div>
             <div class="rs-item">
               <div class="rs-item-name">Workload Burnout Risk</div>
-              <div class="rs-item-desc">Sustained workload pressure in Product & Design is approaching burnout threshold for at least 3 individuals.</div>
+              <div class="rs-item-desc">Sustained workload pressure in Product &amp; Design is approaching burnout threshold for at least 3 individuals.</div>
             </div>
           </div>
           <div class="rs-col strength">
@@ -800,27 +955,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         </div>
       </div>
 
-      <!-- 4. What's Working / What Needs Attention -->
+      <!-- 4. What's Working & Needs Attention -->
       <div class="card">
         <div class="card-head">
-          <div class="card-icon" style="background:#f0fdf4">✅</div>
+          <div class="card-icon" style="background:#f0fdf4">📋</div>
           <div class="card-title">What's Working &amp; What Needs Attention</div>
         </div>
         <div class="wa-grid">
           <div class="wa-col working">
             <div class="wa-col-title">✅ What's Working</div>
             <ul>
-              <li>Strategic alignment high — company direction clear across all 5 teams</li>
-              <li>Remote flexibility valued and driving satisfaction for majority of workforce</li>
-              <li>Engineering team morale and delivery confidence trending up</li>
+              <li>Company vision clearly communicated</li>
+              <li>Remote flexibility driving satisfaction</li>
+              <li>Recent product delivery quality</li>
             </ul>
           </div>
           <div class="wa-col attention">
             <div class="wa-col-title">⚠️ Needs Attention</div>
             <ul>
-              <li>Engineering–Sales collaboration breakdown causing delivery and trust issues</li>
-              <li>Professional development access gap across multiple teams</li>
-              <li>Onboarding experience insufficient for remote-first culture — newer hires struggling</li>
+              <li>Cross-team collaboration (Eng × Sales)</li>
+              <li>Professional development utilisation</li>
+              <li>New hire onboarding for remote culture</li>
             </ul>
           </div>
         </div>
@@ -835,61 +990,40 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         <div class="action">
           <div class="action-num high">1</div>
           <div class="action-body">
-            <div class="action-pri-row">
-              <div class="action-pri high">High Priority</div>
-              <span class="timeframe-pill">⏱ Implement within 30–60 days</span>
-            </div>
+            <div class="action-pri-row"><span class="action-pri high">High Priority</span><span class="timeframe-pill">⏱ Within 30 days</span></div>
             <div class="action-title">Establish cross-functional sync between Engineering and Sales</div>
           </div>
         </div>
         <div class="action">
           <div class="action-num high">2</div>
           <div class="action-body">
-            <div class="action-pri-row">
-              <div class="action-pri high">High Priority</div>
-              <span class="timeframe-pill">⏱ Implement within 60–90 days</span>
-            </div>
+            <div class="action-pri-row"><span class="action-pri high">High Priority</span><span class="timeframe-pill">⏱ Within 60 days</span></div>
             <div class="action-title">Review and promote professional development programs org-wide</div>
           </div>
         </div>
         <div class="action">
           <div class="action-num med">3</div>
           <div class="action-body">
-            <div class="action-pri-row">
-              <div class="action-pri med">Medium Priority</div>
-              <span class="timeframe-pill">⏱ Implement within 30–60 days</span>
-            </div>
+            <div class="action-pri-row"><span class="action-pri med">Medium Priority</span><span class="timeframe-pill">⏱ Within 60 days</span></div>
             <div class="action-title">Strengthen onboarding for remote-first culture</div>
-          </div>
-        </div>
-        <div class="action">
-          <div class="action-num low">4</div>
-          <div class="action-body">
-            <div class="action-pri-row">
-              <div class="action-pri low">Low Priority</div>
-              <span class="timeframe-pill">⏱ Implement within 90–120 days</span>
-            </div>
-            <div class="action-title">Expand office social events for remote team engagement</div>
           </div>
         </div>
         <a href="#" class="cta">Review All Actions →</a>
       </div>
 
-      <!-- 6. Who to Talk To (Org-wide) -->
+      <!-- 6. Who to Talk To -->
       <div class="card">
         <div class="card-head">
-          <div class="card-icon" style="background:#f0f9ff">🗣️</div>
+          <div class="card-icon" style="background:#ede9fe">👤</div>
           <div class="card-title">Who to Talk To</div>
         </div>
-        <p style="font-size:12.5px;color:#64748b;margin-bottom:14px;line-height:1.5">ELI has flagged the following individuals org-wide as priority conversations based on pulse signal patterns:</p>
         <div class="talk-to-list">
           <div class="talk-to-card">
             <div class="talk-to-avatar">👤</div>
             <div class="talk-to-body">
-              <div class="talk-to-name">Sarah Chen · Product &amp; Design</div>
+              <div class="talk-to-name">Sarah Chen <span class="talk-to-priority high">High</span></div>
               <div class="talk-to-summary">Persistent workload pressure across two pulses — below threshold and trending further down. Manager: Sarah Mitchell.</div>
               <div class="talk-to-footer">
-                <span class="talk-to-priority high">🔴 High Priority</span>
                 <span class="talk-to-dp">Workload: 50%</span>
                 <span class="talk-to-dp">↓ 2 pulses</span>
               </div>
@@ -898,29 +1032,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           <div class="talk-to-card">
             <div class="talk-to-avatar">👤</div>
             <div class="talk-to-body">
-              <div class="talk-to-name">Casey Williams · Engineering</div>
-              <div class="talk-to-summary">Engagement score at 2.4 — below the 3.0 risk threshold. Cross-team frustration is contributing to declining engagement. Manager: David Nguyen.</div>
+              <div class="talk-to-name">Casey Williams <span class="talk-to-priority high">High</span></div>
+              <div class="talk-to-summary">Engagement score at 48% — lowest in the Engineering team. Manager: David Nguyen.</div>
               <div class="talk-to-footer">
-                <span class="talk-to-priority high">🔴 High Priority</span>
-                <span class="talk-to-dp">Engagement: 2.4</span>
-                <span class="talk-to-dp">Cross-team friction</span>
+                <span class="talk-to-dp">Engagement: 48%</span>
+                <span class="talk-to-dp">Team: Engineering</span>
               </div>
             </div>
           </div>
           <div class="talk-to-card">
             <div class="talk-to-avatar">👤</div>
             <div class="talk-to-body">
-              <div class="talk-to-name">Jordan Park · Product &amp; Design</div>
-              <div class="talk-to-summary">Participation at 67% and growth score flagged. Disengagement risk if career development needs remain unaddressed. Manager: Sarah Mitchell.</div>
+              <div class="talk-to-name">Jordan Park <span class="talk-to-priority medium">Medium</span></div>
+              <div class="talk-to-summary">Participation at 67% with compliance flag. Team: Product &amp; Design.</div>
               <div class="talk-to-footer">
-                <span class="talk-to-priority medium">🟡 Medium Priority</span>
                 <span class="talk-to-dp">Participation: 67%</span>
-                <span class="talk-to-dp">Growth concern</span>
+                <span class="talk-to-dp">Compliance flag</span>
               </div>
             </div>
           </div>
         </div>
-        <a href="#" class="cta">View Full Who to Talk To Report →</a>
+        <a href="#" class="cta">View All Flagged People →</a>
       </div>
 
       <!-- 7. Signal Alerts -->
@@ -929,43 +1061,39 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           <div class="card-icon" style="background:#fee2e2">⚠️</div>
           <div class="card-title" style="color:#991b1b">Signal Alerts</div>
         </div>
-
         <div class="alert-section">
           <div class="alert-label compliance"><span class="alert-dot red"></span> Compliance Alerts</div>
           <div class="alert-item">
             <div class="badge red">!</div>
-            <div><div class="name">Jordan Park</div><div class="reason">90-day participation 67% — below 80% threshold · Product &amp; Design · Manager: Sarah Mitchell</div></div>
+            <div><div class="name">Jordan Park</div><div class="reason">90-day participation 67% · Team: Product &amp; Design · Manager: Sarah Mitchell</div></div>
           </div>
           <div class="alert-item">
             <div class="badge red">!</div>
-            <div><div class="name">Priya Sharma</div><div class="reason">90-day participation 72% — below 80% threshold · Engineering · Manager: David Nguyen</div></div>
+            <div><div class="name">Priya Sharma</div><div class="reason">90-day participation 72% · Team: Engineering · Manager: David Nguyen</div></div>
           </div>
           <div class="alert-item">
             <div class="badge red">!</div>
-            <div><div class="name">Marcus Lee</div><div class="reason">90-day participation 74% — below 80% threshold · Sales · Manager: Aisha Thompson</div></div>
+            <div><div class="name">Marcus Lee</div><div class="reason">90-day participation 74% · Team: Sales · Manager: Aisha Thompson</div></div>
           </div>
           <a href="#" class="view-all">View All Compliance Alerts →</a>
         </div>
-
         <div class="sep"></div>
-
         <div class="alert-section">
           <div class="alert-label risk"><span class="alert-dot orange"></span> Risk Factor Alerts</div>
           <div class="alert-item">
             <div class="badge orange">⚡</div>
-            <div><div class="name">Sarah Chen</div><div class="reason">Workload balance 42% — below 60% threshold · Product &amp; Design</div></div>
+            <div><div class="name">Sarah Chen</div><div class="reason">Workload balance 42% — below 60% threshold · Team: Product &amp; Design</div></div>
           </div>
           <div class="alert-item">
             <div class="badge orange">⚡</div>
-            <div><div class="name">Casey Williams</div><div class="reason">Engagement score 48% — below 60% threshold · Engineering</div></div>
+            <div><div class="name">Casey Williams</div><div class="reason">Engagement 48% — below 60% threshold · Team: Engineering</div></div>
           </div>
           <a href="#" class="view-all">View All Risk Factor Alerts →</a>
         </div>
-
         <a href="#" class="cta" style="margin-top:16px">View All in Inbox →</a>
       </div>
 
-      <!-- 8. Comments — Negative Sentiment Flagged (Org-wide) -->
+      <!-- 8. Comments — Negative Sentiment (Org-wide) -->
       <div class="comment-card">
         <div class="card-head">
           <div class="card-icon" style="background:#fef3c7">💬</div>
@@ -973,14 +1101,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         </div>
         <div class="negative-count">
           <span class="neg-icon">🚩</span>
-          <span>3 comments flagged with negative sentiment across 3 teams</span>
+          <span>5 comments flagged with negative sentiment across 3 teams</span>
         </div>
-
         <div class="comment negative">
           <div class="sentiment-flag negative"></div>
           <div class="comment-header">
-            <span class="comment-anon">Anonymous · <span style="color:#6366f1;font-style:normal;font-weight:600">Product & Design</span></span>
-            <span class="sentiment-badge negative">🔴 Negative</span>
+            <span class="comment-anon">Anonymous · <span style="color:#6366f1;font-style:normal;font-weight:600">Product &amp; Design</span></span>
+            <span class="sentiment-badge negative">Negative</span>
           </div>
           <div class="comment-text">"The deadlines keep moving forward but the scope never shrinks. I'm burning out and it feels like nobody cares."</div>
           <div class="comment-meta">
@@ -988,25 +1115,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
             <span>Question: Work-life balance</span>
           </div>
         </div>
-
         <div class="comment negative">
           <div class="sentiment-flag negative"></div>
           <div class="comment-header">
             <span class="comment-anon">Anonymous · <span style="color:#6366f1;font-style:normal;font-weight:600">Engineering</span></span>
-            <span class="sentiment-badge negative">🔴 Negative</span>
+            <span class="sentiment-badge negative">Negative</span>
           </div>
-          <div class="comment-text">"Getting requirements from Sales feels like pulling teeth. We build what they ask for and then they change their minds. No one facilitates the handoff."</div>
+          <div class="comment-text">"Getting requirements from Sales feels like pulling teeth. We build what they ask for and then they change their minds."</div>
           <div class="comment-meta">
             <span class="comment-topic">Cross-team</span>
             <span>Question: Collaboration</span>
           </div>
         </div>
-
         <div class="comment negative">
           <div class="sentiment-flag negative"></div>
           <div class="comment-header">
             <span class="comment-anon">Anonymous · <span style="color:#6366f1;font-style:normal;font-weight:600">Sales</span></span>
-            <span class="sentiment-badge negative">🔴 Negative</span>
+            <span class="sentiment-badge negative">Negative</span>
           </div>
           <div class="comment-text">"We're selling features that don't exist yet. When clients find out, it makes us look bad and erodes trust."</div>
           <div class="comment-meta">
@@ -1014,7 +1139,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
             <span>Question: Company alignment</span>
           </div>
         </div>
-
         <a href="#" class="cta">View All Comments →</a>
         <a href="#" class="cta cta-ghost">Export Comments Report →</a>
       </div>
@@ -1026,7 +1150,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           <div class="card-title">Tickets Created</div>
         </div>
         <div style="font-size:13px;color:#64748b;margin-bottom:14px">7 new tickets created from this pulse across all teams:</div>
-
         <div class="ticket">
           <div class="ticket-icon pulse">📋</div>
           <div class="ticket-body">
@@ -1047,43 +1170,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           <div class="ticket-icon pulse">📋</div>
           <div class="ticket-body">
             <div class="ticket-id">EXP-142</div>
-            <div class="ticket-title">Team Experience Review — Product & Design</div>
+            <div class="ticket-title">Team Experience Review — Product &amp; Design</div>
             <div class="ticket-meta"><span>📁 pulse_generated</span><span>👤 Assigned: Sarah Mitchell</span></div>
           </div>
         </div>
-        <div class="ticket">
-          <div class="ticket-icon signal">⚠️</div>
-          <div class="ticket-body">
-            <div class="ticket-id">SIG-089</div>
-            <div class="ticket-title">Compliance Alert — Jordan Park</div>
-            <div class="ticket-meta"><span>📁 signal_automation</span><span>👤 Assigned: Sarah Mitchell</span></div>
-          </div>
-        </div>
-        <div class="ticket">
-          <div class="ticket-icon signal">⚠️</div>
-          <div class="ticket-body">
-            <div class="ticket-id">SIG-090</div>
-            <div class="ticket-title">Compliance Alert — Priya Sharma</div>
-            <div class="ticket-meta"><span>📁 signal_automation</span><span>👤 Assigned: David Nguyen</span></div>
-          </div>
-        </div>
-        <div class="ticket">
-          <div class="ticket-icon signal">⚡</div>
-          <div class="ticket-body">
-            <div class="ticket-id">SIG-091</div>
-            <div class="ticket-title">Risk Factor Alert — Sarah Chen</div>
-            <div class="ticket-meta"><span>📁 signal_automation</span><span>👤 Assigned: Sarah Mitchell</span></div>
-          </div>
-        </div>
-        <div class="ticket">
-          <div class="ticket-icon eli">🤖</div>
-          <div class="ticket-body">
-            <div class="ticket-id">ELI-045</div>
-            <div class="ticket-title">Cross-functional sync initiative — Eng × Sales</div>
-            <div class="ticket-meta"><span>📁 insights_automation</span><span>👤 Assigned: You</span></div>
-          </div>
-        </div>
-
+        <a href="#" class="view-all">View all 7 tickets in Inbox →</a>
+        <br>
         <a href="#" class="cta">Open Inbox →</a>
       </div>
     </div>
@@ -1092,31 +1184,38 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 
   <!-- Footer — Org-branded -->
   <div class="e-foot">
-    <p>This email was sent by <strong id="footOrg">AFS Solutions</strong> because a pulse closed for your team.<br><a href="#">Manage notification preferences</a> · <a href="#">Unsubscribe from digests</a></p>
+    <p id="footText">This email was sent by <strong>AFS Solutions</strong> because you completed a pulse survey.<br><a href="#">Manage notification preferences</a> · <a href="#">Unsubscribe from digests</a></p>
     <p style="margin-top:8px;font-size:11px;color:#c0c5ce">Powered by <a href="https://everperform.com" style="color:#c0c5ce">Everperform</a></p>
   </div>
 </div>
 
 <script>
 function sw(v){
-  document.getElementById('v-emp').classList.toggle('hidden',v!=='emp');
-  document.getElementById('v-mgr').classList.toggle('hidden',v!=='mgr');
-  document.getElementById('v-admin').classList.toggle('hidden',v!=='admin');
-  document.getElementById('tog-emp').classList.toggle('on',v==='emp');
-  document.getElementById('tog-mgr').classList.toggle('on',v==='mgr');
-  document.getElementById('tog-admin').classList.toggle('on',v==='admin');
+  ['emp','mgr','mm','admin'].forEach(function(k){
+    document.getElementById('v-'+k).classList.toggle('hidden',v!==k);
+    document.getElementById('tog-'+k).classList.toggle('on',v===k);
+  });
   var subjects={
     emp:"AFS Solutions — Pulse Digest: Engagement Monthly",
     mgr:"AFS Solutions — Pulse Digest: Engagement Monthly",
+    mm:"AFS Solutions — Pulse Digest: Engagement Monthly (Group Overview)",
     admin:"AFS Solutions — Pulse Digest: Engagement Monthly (Org Overview)"
   };
   document.getElementById('subj').textContent=subjects[v];
+  var subheads={
+    emp:"Pulse Digest: Engagement Monthly",
+    mgr:"Pulse Digest: Engagement Monthly",
+    mm:"Pulse Digest: Engagement Monthly — Group Overview",
+    admin:"Pulse Digest: Engagement Monthly — Org Overview"
+  };
+  document.getElementById('eSubhead').textContent=subheads[v];
   var footTexts={
     emp:"because you completed a pulse survey",
     mgr:"because a pulse closed for your team",
+    mm:"because a pulse closed for your teams",
     admin:"because a pulse closed for your organisation"
   };
-  document.getElementById('footOrg').parentElement.innerHTML='This email was sent by <strong>AFS Solutions</strong> '+footTexts[v]+'.<br><a href="#">Manage notification preferences</a> · <a href="#">Unsubscribe from digests</a>';
+  document.getElementById('footText').innerHTML='This email was sent by <strong>AFS Solutions</strong> '+footTexts[v]+'.<br><a href="#">Manage notification preferences</a> · <a href="#">Unsubscribe from digests</a>';
 }
 </script>
 </body>
