@@ -1,0 +1,1858 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Everperform · People Performance Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined">
+<style>
+:root{--brand:#3831FA;--brand-50:#eef0ff;--brand-700:#2721B2;--ink:#0f1222;--text:#2b2f44;--sub:#5b6075;--faint:#9aa0b4;--line:#e9ebf2;--line2:#f1f2f8;--bg:#f5f6fb;--panel:#fbfbf9;--ok:#10b981;--warn:#f59e0b;--bad:#e5484d;--eng:#7048e8}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Open Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:13.5px;-webkit-font-smoothing:antialiased}
+.app{display:flex;min-height:100vh}
+.side{width:208px;flex:0 0 208px;background:#fff;border-right:1px solid var(--line);padding:16px 12px;position:sticky;top:0;height:100vh}
+.brand{display:flex;align-items:center;gap:9px;font-weight:800;color:var(--ink);font-size:16px;padding:6px 8px 16px}
+.brand .lg{width:26px;height:26px;border-radius:7px;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:15px}
+.nav a{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:8px;color:var(--sub);text-decoration:none;font-weight:500;margin-bottom:2px;cursor:pointer}
+.nav a .material-symbols-outlined{font-size:20px}
+.nav a.on{background:var(--brand-50);color:var(--brand-700);font-weight:600}
+.nav a:hover:not(.on){background:var(--line2)}
+.who{position:absolute;bottom:14px;left:12px;right:12px;display:flex;gap:9px;align-items:center;font-size:12px;color:var(--sub)}
+.who .av{width:30px;height:30px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:700}
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.top{display:flex;align-items:center;gap:14px;padding:18px 26px 6px;flex-wrap:wrap}
+.top h1{font-size:20px;margin:0;color:var(--ink);font-weight:800;letter-spacing:-.2px}
+.top .sub{color:var(--faint);font-size:12.5px;margin-top:2px}
+.spacer{flex:1}
+.seg{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:9px;padding:3px}
+.seg button{border:0;background:none;font:inherit;font-weight:600;color:var(--sub);padding:6px 12px;border-radius:7px;cursor:pointer}
+.seg button.on{background:var(--brand);color:#fff}
+.selbox,.pill{background:#fff;border:1px solid var(--line);border-radius:9px;padding:7px 12px;font-weight:600;color:var(--text);font:inherit}
+.content{padding:14px 26px 130px}
+/* KPI cards row */
+.cards{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:20px}
+.kcard{background:#fff;border:1px solid var(--line);border-radius:14px;padding:15px 16px;cursor:pointer;transition:.15s;position:relative}
+.kcard:hover{border-color:#c9ccff}
+.kcard.on{border-color:var(--brand);box-shadow:0 0 0 1px var(--brand) inset,0 8px 20px rgba(56,49,250,.08)}
+.kcard .kl{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--faint);font-weight:700}
+.kcard .kd{font-size:11.5px;color:var(--faint);margin-top:1px}
+.kcard .kv{font-size:30px;font-weight:800;color:var(--ink);line-height:1.05;margin:10px 0 2px}
+.kcard .kv u{font-size:13px;color:var(--faint);text-decoration:none;font-weight:600;margin-left:3px}
+.kcard .kdelta{font-size:11.5px;font-weight:700}
+.kcard .up{color:var(--ok)}.kcard .down{color:var(--bad)}.kcard .flat{color:var(--faint)}
+.kspark{margin-top:8px;height:30px}
+/* section + panels */
+.secthead{display:flex;align-items:center;gap:10px;margin:4px 0 14px}
+.secthead .t{font-weight:800;font-size:16px;color:var(--ink)}
+.secthead .d{color:var(--faint);font-size:12.5px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr 1fr}.full{grid-column:1/-1}
+@media(max-width:1150px){.g2,.g3{grid-template-columns:1fr}.cards{grid-template-columns:repeat(2,1fr)}}
+.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.panel .ph{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px}
+.panel .pt{font-weight:700;color:var(--ink);font-size:14px}
+.panel .ps{font-size:12px;color:var(--faint)}
+.panel .pins{margin-top:12px;padding-top:11px;border-top:1px solid var(--line2);font-size:12.5px;color:var(--sub);line-height:1.5}
+.lgrow{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:10px}
+.lgi{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--sub);font-weight:600}.lgi i{width:11px;height:11px;border-radius:3px;display:inline-block}
+/* heatmap */
+.heat{display:grid;gap:3px;overflow-x:auto}
+.hmcell{border-radius:5px;font-size:10.5px;display:flex;align-items:center;justify-content:center;min-height:30px;padding:3px}
+.hmcorner{background:transparent}
+.hmcol{color:var(--sub);font-weight:600;font-size:9.5px;text-align:center;align-items:flex-end;line-height:1.1;min-height:46px;white-space:normal;overflow:hidden}
+.hmrow{justify-content:flex-start;font-weight:600;color:var(--ink);font-size:11.5px;background:var(--panel)}
+.hmval{font-weight:700;font-variant-numeric:tabular-nums}
+/* horizontal bars */
+.hbars{display:flex;flex-direction:column;gap:7px}
+.hbrow{display:flex;align-items:center;gap:9px}
+.hblab{flex:0 0 150px;font-size:12px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hbtrack{flex:1;height:11px;border-radius:6px;background:#eef0f4;overflow:hidden}.hbtrack i{display:block;height:100%;border-radius:6px}
+.hbval{flex:0 0 52px;text-align:right;font-weight:700;font-size:12px;font-variant-numeric:tabular-nums}
+/* funnel */
+.funnel{display:flex;flex-direction:column;gap:8px}
+.fnrow{display:flex;align-items:center;gap:10px}
+.fnlab{flex:0 0 130px;font-size:12px;color:var(--text)}
+.fntrack{flex:1;display:flex;justify-content:center}
+.fntrack i{display:block;height:26px;border-radius:6px;min-width:30px}
+.fnval{flex:0 0 40px;text-align:right;font-weight:700;font-size:12.5px}
+/* stacked */
+.stk{display:flex;flex-direction:column;gap:9px}
+.stkrow{display:flex;align-items:center;gap:9px}
+.stklab{flex:0 0 110px;font-size:12px;color:var(--text)}
+.stktrack{flex:1;display:flex;height:18px;border-radius:5px;overflow:hidden;background:#eef0f4}.stktrack i{height:100%}
+.stkval{flex:0 0 36px;text-align:right;font-weight:700;font-size:12px}
+/* risk matrix */
+.rmx{display:grid;grid-template-columns:88px repeat(5,1fr);gap:5px}
+.rmxc{border-radius:8px;min-height:46px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:16px}
+.rmxyl,.rmxxl{font-size:10px;color:var(--faint);display:flex;align-items:center;justify-content:center;text-align:center}
+.rmxyl{justify-content:flex-end;padding-right:6px}
+/* register list */
+.reglist{display:flex;flex-direction:column;gap:1px;max-height:300px;overflow-y:auto}
+.regrow{display:flex;align-items:center;justify-content:space-between;padding:8px 4px;border-bottom:1px solid var(--line2);font-size:12.5px}
+.tpill{padding:2px 8px;border-radius:7px;font-size:11px;font-weight:700}
+/* eli */
+.eli{position:fixed;left:208px;right:0;bottom:0;background:linear-gradient(180deg,rgba(245,246,251,0),var(--bg) 36%);padding:14px 26px 16px;z-index:20}
+.elibox{max-width:940px;margin:0 auto;display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:13px;padding:8px 8px 8px 14px;box-shadow:0 6px 22px rgba(16,18,40,.08)}
+.elibox .material-symbols-outlined{color:var(--brand)}
+.elibox input{flex:1;border:0;outline:0;font:inherit;font-size:13.5px;background:none;color:var(--text)}
+.elibox .go{width:34px;height:34px;border-radius:9px;background:var(--brand);color:#fff;border:0;display:grid;place-items:center;cursor:pointer}
+.chips{max-width:940px;margin:0 auto 9px;display:flex;gap:8px;flex-wrap:wrap}
+.chips button{border:1px solid var(--line);background:#fff;border-radius:20px;padding:6px 13px;font:inherit;font-size:12px;font-weight:600;color:var(--brand-700);cursor:pointer}
+
+/* people list + profile drawer */
+.plist{display:flex;flex-direction:column}
+.prow{display:flex;align-items:center;justify-content:space-between;padding:8px 6px;border-bottom:1px solid var(--line2);cursor:pointer;border-radius:7px}
+.prow:hover{background:#f7f8ff}
+.prow .t{font-weight:600;color:var(--ink);font-size:12.5px}
+.prow .s{font-size:11px;color:var(--faint)}
+.prow .pv{font-size:15px;font-weight:800;font-variant-numeric:tabular-nums}
+.pscrim{position:fixed;inset:0;background:rgba(15,18,34,.34);opacity:0;visibility:hidden;transition:.18s;z-index:50}
+.pscrim.on{opacity:1;visibility:visible}
+.pdrawer{position:fixed;top:0;right:0;width:420px;max-width:92vw;height:100vh;background:#fff;box-shadow:-12px 0 40px rgba(16,18,40,.18);transform:translateX(100%);transition:transform .22s ease;z-index:51;overflow-y:auto}
+.pdrawer.on{transform:none}
+.pdh{padding:20px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;gap:12px}
+.pdh .av{width:46px;height:46px;border-radius:50%;background:var(--brand-50);color:var(--brand-700);display:grid;place-items:center;font-weight:800;font-size:16px;flex:0 0 46px}
+.pdh .nm{font-weight:800;color:var(--ink);font-size:16px}
+.pdh .rl{color:var(--sub);font-size:12.5px}
+.pdh .x{margin-left:auto;cursor:pointer;color:var(--faint);border:1px solid var(--line);border-radius:8px;width:32px;height:32px;display:grid;place-items:center;font-size:14px}
+.pds{padding:15px 20px;border-bottom:1px solid var(--line2)}
+.pds h4{margin:0 0 10px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--faint)}
+.pdrow{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:13px;color:var(--sub)}
+.pdrow b{font-variant-numeric:tabular-nums}
+.pdli{font-size:12.5px;padding:6px 9px;border-radius:7px;margin-bottom:5px;background:var(--line2);color:var(--text)}
+.pdli.ok{background:#e7f8f1;color:#0a7a52}.pdli.bad{background:#fdeced;color:#b42318}
+.pdreco b{display:block;color:var(--ink);font-size:13px;margin-bottom:3px}
+.pdreco div{font-size:12.5px;color:var(--sub)}
+
+
+.piewrap{display:flex;align-items:center;gap:18px;flex-wrap:wrap}.pielgs{flex:1;min-width:170px}.pielg{display:flex;align-items:center;gap:9px;padding:5px 0;font-size:12.5px;border-bottom:1px solid var(--line2)}.pielg:last-child{border-bottom:0}.pielg .dot{width:11px;height:11px;border-radius:3px;flex:0 0 11px}.pielg .lab{flex:1;color:var(--text)}.pielg .cnt{font-weight:800;color:var(--ink)}.pielg .pct{width:40px;text-align:right;color:var(--faint);font-weight:600}
+
+/* full player profile (scoped to #pdrawer) */
+#pdrawer{width:500px;max-width:96vw;background:var(--bg)}
+#pdrawer .phero{background:linear-gradient(135deg,#3831FA,#6d28d9);color:#fff;padding:18px 20px 16px}
+#pdrawer .phtop{display:flex;align-items:center;gap:13px}
+#pdrawer .phav{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;flex:0 0 46px}
+#pdrawer .phav b{width:38px;height:38px;border-radius:50%;background:#fff;color:var(--brand-700);display:grid;place-items:center;font-weight:800;font-size:14px}
+#pdrawer .phid{flex:1;min-width:0}
+#pdrawer .phname{font-size:18px;font-weight:800;line-height:1.1}
+#pdrawer .phrole{font-size:12.5px;opacity:.85;margin-top:2px}
+#pdrawer .phidx{text-align:center;margin-right:6px}
+#pdrawer .phnum{font-size:26px;font-weight:800;line-height:1}
+#pdrawer .phlbl{font-size:10px;opacity:.8;text-transform:uppercase;letter-spacing:.05em}
+#pdrawer .phx{cursor:pointer;opacity:.85;font-size:15px;align-self:flex-start}
+#pdrawer .phform{display:flex;gap:6px;margin:12px 0 10px}
+#pdrawer .fdot{width:11px;height:11px;border-radius:50%}
+#pdrawer .phchips{display:flex;flex-wrap:wrap;gap:6px}
+#pdrawer .pchip{font-size:11px;font-weight:600;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:4px 10px;color:#fff}
+#pdrawer .pbody{padding:4px 20px 28px}
+#pdrawer .psec{padding:16px 0;border-bottom:1px solid var(--line)}
+#pdrawer .psec:last-child{border-bottom:0}
+#pdrawer .seclbl{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--faint);font-weight:800;margin-bottom:10px}
+#pdrawer .pquad{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+#pdrawer .ptile{border:1px solid var(--line);border-radius:10px;padding:9px 12px;background:#fff}
+#pdrawer .ptile .pl{font-size:10.5px;color:var(--sub);text-transform:uppercase;letter-spacing:.03em}
+#pdrawer .ptile .pv{font-size:20px;font-weight:800;color:var(--ink);letter-spacing:-.4px;margin-top:2px;line-height:1.1}
+#pdrawer .pmini{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--faint);font-weight:800;margin:13px 0 6px}
+#pdrawer .ptags{display:flex;flex-wrap:wrap;gap:6px}
+#pdrawer .ptag{font-size:11.5px;border:1px solid var(--line);border-radius:999px;padding:3px 10px;color:var(--text);background:#fff}
+#pdrawer .ptag.g{background:#e8f8f1;border-color:#bfe9d6;color:#0a7a52}
+#pdrawer .ptag.r{background:#fdecec;border-color:#f3c9c7;color:#b3322d}
+#pdrawer .pnone{font-size:12px;color:var(--faint)}
+#pdrawer .pcomment{border-left:3px solid var(--line);padding:6px 0 6px 11px;margin:7px 0;font-size:12.5px;line-height:1.5;color:var(--text)}
+#pdrawer .pcomment span{display:block;font-size:11px;color:var(--faint);margin-top:2px}
+#pdrawer .pcomment.pos{border-color:var(--ok)}#pdrawer .pcomment.neg{border-color:var(--bad)}#pdrawer .pcomment.neu{border-color:var(--warn)}
+#pdrawer .pcard,#pdrawer .pchart{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-top:10px}
+#pdrawer .sig{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:4px 10px;font-size:11.5px;font-weight:600;margin:0 6px 6px 0;background:#fde9ea;color:#b4282c;border:1px solid #f6d0d2}
+#pdrawer .sig.amber{background:#fdf3e3;color:#a45b06;border-color:#f3dcae}
+#pdrawer .pflags{display:flex;flex-wrap:wrap;gap:6px}
+#pdrawer .nextplay{display:flex;gap:11px;align-items:flex-start;background:linear-gradient(110deg,#ECF1FF,#FDF4FF);border:1px solid #e0e3ff;border-radius:12px;padding:13px;margin-top:12px}
+#pdrawer .nextplay .ic{width:34px;height:34px;border-radius:9px;background:#fff;border:1px solid #e0e3ff;display:flex;align-items:center;justify-content:center;color:var(--brand);flex:0 0 34px}
+#pdrawer .nextplay .t{font-weight:700;font-size:13px;color:var(--ink)}
+#pdrawer .nextplay .d{font-size:12px;color:var(--sub);margin-top:2px}
+#pdrawer .lgrow{margin-bottom:6px}
+
+
+.pmwrap{display:flex;flex-direction:column;gap:9px}.pmrow{display:flex;align-items:center;gap:10px}.pmn{flex:0 0 112px;font-size:12.5px;color:var(--text);font-weight:600}.pmbar{flex:1;height:10px;border-radius:6px;background:#eef0f4;overflow:hidden}.pmbar i{display:block;height:100%;border-radius:6px}.pmv{flex:0 0 32px;text-align:right;font-weight:800}.pmd{flex:0 0 58px;text-align:right;font-size:11.5px;font-weight:700}.pmd.up{color:var(--ok)}.pmd.down{color:var(--bad)}td.up{color:var(--ok)}td.down{color:var(--bad)}.ptbl{width:100%;border-collapse:collapse;font-size:12.5px}.ptbl th{text-align:right;font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint);font-weight:700;padding:6px 8px;border-bottom:1px solid var(--line)}.ptbl th:first-child{text-align:left}.ptbl td{text-align:right;padding:8px;border-bottom:1px solid var(--line2);font-variant-numeric:tabular-nums}.ptbl td:first-child{text-align:left;color:var(--text);font-weight:600}.ptbl tr:last-child td{border-bottom:0}.listat{display:flex;gap:14px}.ls{flex:1;border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--panel)}.lsl{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint);font-weight:700}.lsv{font-size:30px;font-weight:800;color:var(--ink);line-height:1.1;margin:6px 0 2px}.lsd{font-size:12px;font-weight:700}.lsd.up{color:var(--ok)}.lsd.down{color:var(--bad)}
+
+.bm{margin-top:11px}.bmcap{font-size:9px;letter-spacing:.04em;text-transform:uppercase;color:var(--faint);font-weight:700;margin-bottom:6px}.bmtrack{position:relative;height:6px;border-radius:4px;background:#eef0f4;overflow:visible}.bmtrack i{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:var(--brand);opacity:.26}.bmk{position:absolute;top:-3px;width:2px;height:12px;border-radius:1px;transform:translateX(-50%)}.bmk.ind{background:var(--faint)}.bmk.tq{background:var(--ok)}.bmyou{position:absolute;top:50%;width:11px;height:11px;border-radius:50%;background:var(--brand);border:2px solid #fff;box-shadow:0 0 0 1.5px var(--brand);transform:translate(-50%,-50%)}.bml{display:flex;justify-content:space-between;font-size:10px;color:var(--faint);margin-top:7px;font-weight:600}.bml .you{color:var(--brand);font-weight:800}.lenswrap{display:inline-flex;align-items:center;gap:8px}.lenslbl{font-size:11px;font-weight:700;color:var(--faint);text-transform:uppercase;letter-spacing:.03em}.lens{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:9px;padding:3px}.lens button{border:0;background:none;font:inherit;font-weight:600;color:var(--sub);padding:6px 12px;border-radius:7px;cursor:pointer;white-space:nowrap}.lens button.on{background:#1f2430;color:#fff}.top{flex-wrap:wrap;row-gap:12px}.elipanel{display:none;flex-direction:column;max-width:940px;margin:0 auto 10px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 44px rgba(16,18,40,.18);overflow:hidden;max-height:56vh}.elipanel.min{max-height:none}.elipanel.min .elimsgs{display:none}.elipanel.max{max-height:84vh}.elihead{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid var(--line);background:var(--panel)}.elittl{display:flex;align-items:center;gap:7px;font-weight:700;color:var(--ink);font-size:13px}.elittl .material-symbols-outlined{color:var(--brand)}.elibtns{display:flex;gap:8px}.elibtns .material-symbols-outlined{font-size:18px;color:var(--faint);cursor:pointer;border-radius:6px;padding:2px}.elibtns .material-symbols-outlined:hover{color:var(--ink);background:var(--line2)}.elimsgs{padding:14px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}.emsg{max-width:82%;padding:9px 13px;border-radius:13px;font-size:13px;line-height:1.5}.emsg.u{align-self:flex-end;background:var(--brand);color:#fff;border-bottom-right-radius:4px}.emsg.a{align-self:flex-start;background:var(--line2);color:var(--text);border-bottom-left-radius:4px}.emsg.a ul{margin:6px 0 0;padding-left:18px}.emsg.a li{margin:3px 0}
+</style></head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand"><span class="lg">e</span> Everperform</div>
+    <nav class="nav">
+      <a class="on"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
+      <a><span class="material-symbols-outlined">inbox</span> Inbox</a>
+      <a><span class="material-symbols-outlined">bar_chart</span> Reports</a>
+      <a><span class="material-symbols-outlined">shield</span> Register</a>
+      <a><span class="material-symbols-outlined">bolt</span> Automation</a>
+      <a><span class="material-symbols-outlined">settings</span> Settings</a>
+    </nav>
+    <div class="who"><span class="av">SK</span><div>Surendran Kandasamy<div style="color:var(--faint);font-size:11px">Senior PM</div></div></div>
+  </aside>
+  <div class="main">
+    <div class="top">
+      <div><h1>People Performance Dashboard</h1><div class="sub" id="scopeln">AFS & Associates · Org view · 131 people · May 2026</div></div>
+      <div class="spacer"></div>
+      <div class="lenswrap"><span class="lenslbl">Viewing as</span><div class="lens" id="lens"><button class="on" data-l="org">Org view</button><button data-l="mgr">Manager view</button><button data-l="multi">Multi-manager view</button></div></div>
+      <select class="selbox" id="lensSel" style="display:none"></select>
+      <div class="seg" id="alt"><button class="on" data-a="org">Organisation</button><button data-a="team">Teams</button><button data-a="person">People</button></div>
+      <select class="selbox" id="sel" style="display:none"></select>
+      <div class="pill"><span class="material-symbols-outlined" style="font-size:17px;vertical-align:-3px">calendar_month</span> Last 30 days</div>
+    </div>
+    <div class="content">
+      <div class="cards" id="cards"></div>
+      <div id="canvas"></div>
+    </div>
+  </div>
+</div>
+<div class="eli">
+  <div class="elipanel" id="elipanel"><div class="elihead"><span class="elittl"><span class="material-symbols-outlined" style="font-size:18px">auto_awesome</span> Ask Eli</span><div class="elibtns"><span class="material-symbols-outlined" onclick="eliMax()" title="Maximize">open_in_full</span><span class="material-symbols-outlined" onclick="eliMin()" title="Minimize">remove</span><span class="material-symbols-outlined" onclick="eliClose()" title="Close">close</span></div></div><div class="elimsgs" id="elimsgs"></div></div>
+  <div class="chips"><button onclick="ask(this)">Who needs attention most?</button><button onclick="ask(this)">Where is wellbeing declining?</button><button onclick="ask(this)">Productivity vs target by line</button></div>
+  <div class="elibox"><span class="material-symbols-outlined">auto_awesome</span><input id="eliin" placeholder="Ask Eli about this dashboard…" onkeydown="if(event.key==='Enter')ask()"><button class="go" onclick="ask()"><span class="material-symbols-outlined" style="font-size:20px">arrow_upward</span></button></div>
+</div>
+<script>const ROSTER=[{"id":"SZ","name":"Sage Zimmer","team":"Cameron Irwin Team","role":"Audit Partner","mgr":"Cameron Irwin","tenure":"7.5 yrs","safety":70,"eng":71,"util":75,"prod":77,"sigs":0,"tix":1,"idx":74,"status":"ok","sig":[["No active flags","amber"]],"radar":[77,72,77,72,74,61],"trend":[75,75,74,75,74,74],"reco":["Light check-in","Steady this cycle."],"escore":70,"expd":{"psych":70,"perf":77,"eng":71,"wb":70},"top":["Performance 77"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":1,"pending":1,"overdue":0,"closed":1,"missed":0},"closed":1,"serviceLine":"Audit & Assurance","rater":55,"pct":139},{"id":"JV","name":"Jules Vega","team":"Lennox Pace Team","role":"Audit Partner","mgr":"Lennox Pace","tenure":"8.7 yrs","safety":70,"eng":70,"util":70,"prod":70,"sigs":2,"tix":4,"idx":70,"status":"warn","sig":[["No active flags","amber"]],"radar":[77,76,65,61,66,65],"trend":[63,65,68,68,69,71],"reco":["Light check-in","Steady this cycle."],"escore":70,"expd":{"psych":70,"perf":70,"eng":70,"wb":70},"top":["Performance 70"],"low":[],"comments":[],"well":["Resilient under pressure"],"notwell":[],"inbox":{"open":4,"pending":4,"overdue":0,"closed":1,"missed":0},"closed":1,"serviceLine":"Audit & Assurance","rater":82,"pct":104},{"id":"HB","name":"Hollis Banks","team":"Harper Thorne Team","role":"Assistant Manager","mgr":"Harper Thorne","tenure":"2.8 yrs","safety":74,"eng":76,"util":70,"prod":75,"sigs":1,"tix":2,"idx":73,"status":"warn","sig":[["No active flags","amber"]],"radar":[77,80,72,65,72,84],"trend":[68,71,70,70,71,72],"reco":["Light check-in","Steady this cycle."],"escore":75,"expd":{"psych":74,"perf":75,"eng":76,"wb":74},"top":["Performance 75"],"low":[],"comments":[],"well":["Resilient under pressure"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":4,"missed":0},"closed":4,"serviceLine":"Audit & Assurance","rater":75,"pct":103},{"id":"NC","name":"Nico Chase","team":"Harper Thorne Team","role":"Audit Manager","mgr":"Harper Thorne","tenure":"8.8 yrs","safety":78,"eng":80,"util":75,"prod":73,"sigs":0,"tix":1,"idx":75,"status":"ok","sig":[["Score declining","amber"]],"radar":[74,81,80,71,83,79],"trend":[84,80,80,77,78,76],"reco":["Light check-in","Steady this cycle."],"escore":79,"expd":{"psych":78,"perf":73,"eng":80,"wb":78},"top":["Performance 73"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":1,"pending":1,"overdue":0,"closed":4,"missed":0},"closed":4,"serviceLine":"Audit & Assurance","rater":79,"pct":130},{"id":"RF","name":"Reese Frost","team":"Rowan Bennett Team","role":"Audit Associate","mgr":"Rowan Bennett","tenure":"3.9 yrs","safety":75,"eng":77,"util":70,"prod":75,"sigs":0,"tix":0,"idx":73,"status":"ok","sig":[["No active flags","amber"]],"radar":[69,76,80,69,71,85],"trend":[65,68,69,70,73,73],"reco":["Light check-in","Steady this cycle."],"escore":76,"expd":{"psych":75,"perf":75,"eng":77,"wb":75},"top":["Performance 75"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":0,"pending":0,"overdue":0,"closed":5,"missed":0},"closed":5,"serviceLine":"Audit & Assurance","rater":81,"pct":107},{"id":"AO","name":"Avery Osborne","team":"Rowan Bennett Team","role":"Audit Partner","mgr":"Rowan Bennett","tenure":"8.3 yrs","safety":61,"eng":56,"util":61,"prod":63,"sigs":5,"tix":8,"idx":62,"status":"bad","sig":[["5 risk factors","bad"]],"radar":[60,67,67,55,53,60],"trend":[61,63,61,61,63,62],"reco":["Workload + resourcing conversation","Multiple risk factors flagged; review workload and support."],"escore":58,"expd":{"psych":61,"perf":63,"eng":56,"wb":61},"top":["Performance 63"],"low":["Fatigue 49","Rater participation 49"],"comments":[["Workload","Workload peaks are not shared evenly.","neg"]],"well":["Resilient under pressure"],"notwell":["Watch wellbeing","Workload pressure"],"inbox":{"open":8,"pending":8,"overdue":1,"closed":3,"missed":1},"closed":3,"serviceLine":"Audit & Assurance","rater":71,"pct":122},{"id":"SI","name":"Sam Irwin","team":"Lennox Pace Team","role":"Audit Associate","mgr":"Lennox Pace","tenure":"2.5 yrs","safety":76,"eng":78,"util":75,"prod":73,"sigs":2,"tix":3,"idx":75,"status":"warn","sig":[["No active flags","amber"]],"radar":[77,66,68,81,71,74],"trend":[76,74,76,76,74,75],"reco":["Light check-in","Steady this cycle."],"escore":77,"expd":{"psych":76,"perf":73,"eng":78,"wb":76},"top":["Performance 73"],"low":[],"comments":[],"well":["Resilient under pressure"],"notwell":[],"inbox":{"open":3,"pending":3,"overdue":0,"closed":3,"missed":0},"closed":3,"serviceLine":"Audit & Assurance","rater":81,"pct":101},{"id":"ZJ","name":"Zara Jensen","team":"Cameron Irwin Team","role":"Audit Manager","mgr":"Cameron Irwin","tenure":"8.3 yrs","safety":70,"eng":68,"util":70,"prod":78,"sigs":2,"tix":4,"idx":73,"status":"warn","sig":[["Score declining","amber"]],"radar":[77,63,79,62,64,72],"trend":[81,79,78,75,75,73],"reco":["Light check-in","Steady this cycle."],"escore":69,"expd":{"psych":70,"perf":78,"eng":68,"wb":70},"top":["Performance 78"],"low":[],"comments":[],"well":["Resilient under pressure"],"notwell":[],"inbox":{"open":4,"pending":4,"overdue":0,"closed":5,"missed":0},"closed":5,"serviceLine":"Audit & Assurance","rater":80,"pct":117},{"id":"SQ","name":"Sutton Quill","team":"Cameron Irwin Team","role":"Audit Manager","mgr":"Cameron Irwin","tenure":"8.4 yrs","safety":79,"eng":72,"util":75,"prod":78,"sigs":0,"tix":1,"idx":77,"status":"ok","sig":[["Score declining","amber"]],"radar":[81,80,71,80,79,72],"trend":[79,80,79,80,79,76],"reco":["Light check-in","Steady this cycle."],"escore":76,"expd":{"psych":79,"perf":78,"eng":72,"wb":79},"top":["Performance 78"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":1,"pending":1,"overdue":0,"closed":2,"missed":0},"closed":2,"serviceLine":"Audit & Assurance","rater":52,"pct":126},{"id":"JS","name":"Jordan Sayer","team":"Cameron Irwin Team","role":"Assistant Manager","mgr":"Cameron Irwin","tenure":"1.4 yrs","safety":72,"eng":73,"util":69,"prod":77,"sigs":0,"tix":1,"idx":73,"status":"ok","sig":[["Score declining","amber"]],"radar":[76,66,75,67,72,80],"trend":[80,78,76,76,74,73],"reco":["Light check-in","Steady this cycle."],"escore":72,"expd":{"psych":72,"perf":77,"eng":73,"wb":72},"top":["Performance 77"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":1,"pending":1,"overdue":0,"closed":0,"missed":0},"closed":0,"serviceLine":"Audit & Assurance","rater":74,"pct":140},{"id":"NK","name":"Nat Knox","team":"Rowan Bennett Team","role":"Audit Partner","mgr":"Rowan Bennett","tenure":"2.8 yrs","safety":75,"eng":74,"util":71,"prod":79,"sigs":0,"tix":1,"idx":75,"status":"ok","sig":[["Score declining","amber"]],"radar":[66,72,84,84,66,72],"trend":[83,80,78,78,77,75],"reco":["Light check-in","Steady this cycle."],"escore":74,"expd":{"psych":75,"perf":79,"eng":74,"wb":75},"top":["Performance 79"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":1,"pending":1,"overdue":0,"closed":5,"missed":0},"closed":5,"serviceLine":"Audit & Assurance","rater":60,"pct":129},{"id":"PB","name":"Parker Boyd","team":"Lennox Pace Team","role":"Audit Partner","mgr":"Lennox Pace","tenure":"2.6 yrs","safety":81,"eng":82,"util":80,"prod":78,"sigs":0,"tix":2,"idx":80,"status":"ok","sig":[["No active flags","amber"]],"radar":[79,72,80,75,89,78],"trend":[80,81,81,79,79,81],"reco":["Light check-in","Steady this cycle."],"escore":82,"expd":{"psych":81,"perf":78,"eng":82,"wb":81},"top":["Performance 78","Compliance 80"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":1,"missed":0},"closed":1,"serviceLine":"Audit & Assurance","rater":55,"pct":138},{"id":"WB","name":"Wyatt Bennett","team":"Cameron Irwin Team","role":"Audit Partner","mgr":"Cameron Irwin","tenure":"8.8 yrs","safety":74,"eng":75,"util":71,"prod":72,"sigs":0,"tix":2,"idx":72,"status":"ok","sig":[["Score declining","amber"]],"radar":[84,66,82,68,65,73],"trend":[79,75,76,74,74,72],"reco":["Light check-in","Steady this cycle."],"escore":74,"expd":{"psych":74,"perf":72,"eng":75,"wb":74},"top":["Performance 72"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":4,"missed":0},"closed":4,"serviceLine":"Audit & Assurance","rater":63,"pct":119},{"id":"SS","name":"Sutton Sayer","team":"Cameron Irwin Team","role":"Audit Partner","mgr":"Cameron Irwin","tenure":"2.5 yrs","safety":77,"eng":75,"util":76,"prod":78,"sigs":0,"tix":0,"idx":77,"status":"ok","sig":[["No active flags","amber"]],"radar":[81,85,79,73,78,67],"trend":[73,74,74,74,76,78],"reco":["Light check-in","Steady this cycle."],"escore":76,"expd":{"psych":77,"perf":78,"eng":75,"wb":77},"top":["Performance 78"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":0,"pending":0,"overdue":0,"closed":2,"missed":0},"closed":2,"serviceLine":"Audit & Assurance","rater":52,"pct":126},{"id":"OS","name":"Oakley Sayer","team":"Cameron Irwin Team","role":"Audit Partner","mgr":"Cameron Irwin","tenure":"5.7 yrs","safety":74,"eng":74,"util":71,"prod":75,"sigs":0,"tix":2,"idx":73,"status":"ok","sig":[["No active flags","amber"]],"radar":[67,65,84,76,79,73],"trend":[67,67,71,70,71,74],"reco":["Light check-in","Steady this cycle."],"escore":74,"expd":{"psych":74,"perf":75,"eng":74,"wb":74},"top":["Performance 75"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":5,"missed":0},"closed":5,"serviceLine":"Audit & Assurance","rater":70,"pct":132},{"id":"NO","name":"Nat Osborne","team":"Harper Thorne Team","role":"Audit Manager","mgr":"Harper Thorne","tenure":"4.6 yrs","safety":73,"eng":74,"util":72,"prod":73,"sigs":0,"tix":2,"idx":73,"status":"ok","sig":[["Score declining","amber"]],"radar":[69,78,72,79,81,72],"trend":[80,76,75,75,74,73],"reco":["Light check-in","Steady this cycle."],"escore":74,"expd":{"psych":73,"perf":73,"eng":74,"wb":73},"top":["Performance 73"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":4,"missed":0},"closed":4,"serviceLine":"Audit & Assurance","rater":85,"pct":134},{"id":"ER","name":"Ellis Rhodes","team":"Rowan Bennett Team","role":"Audit Associate","mgr":"Rowan Bennett","tenure":"8.7 yrs","safety":81,"eng":82,"util":76,"prod":81,"sigs":0,"tix":1,"idx":79,"status":"ok","sig":[["No active flags","amber"]],"radar":[75,79,78,80,72,88],"trend":[79,80,78,78,79,78],"reco":["Light check-in","Steady this cycle."],"escore":82,"expd":{"psych":81,"perf":81,"eng":82,"wb":81},"top":["Performance 81"],"low":[],"comments":[["Performance","Strong delivery this cycle.","pos"]],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":1,"pending":1,"overdue":0,"closed":3,"missed":0},"closed":3,"serviceLine":"Audit & Assurance","rater":60,"pct":131},{"id":"MJ","name":"Mel Jarrett","team":"Lennox Pace Team","role":"Assistant Manager","mgr":"Lennox Pace","tenure":"1.3 yrs","safety":76,"eng":75,"util":76,"prod":78,"sigs":0,"tix":2,"idx":77,"status":"ok","sig":[["Low participation","bad"]],"radar":[75,69,78,67,74,77],"trend":[73,73,75,76,76,76],"reco":["Light check-in","Steady this cycle."],"escore":76,"expd":{"psych":76,"perf":78,"eng":75,"wb":76},"top":["Performance 78"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":0,"missed":0},"closed":0,"serviceLine":"Audit & Assurance","rater":49,"pct":112},{"id":"LC","name":"Lennox Cole","team":"Cameron Irwin Team","role":"Audit Associate","mgr":"Cameron Irwin","tenure":"6.6 yrs","safety":79,"eng":74,"util":72,"prod":75,"sigs":0,"tix":2,"idx":75,"status":"ok","sig":[["Score declining","amber"]],"radar":[70,70,74,86,81,74],"trend":[81,78,79,76,75,76],"reco":["Light check-in","Steady this cycle."],"escore":76,"expd":{"psych":79,"perf":75,"eng":74,"wb":79},"top":["Performance 75"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":3,"missed":0},"closed":3,"serviceLine":"Audit & Assurance","rater":67,"pct":111},{"id":"NT","name":"Noel Tate","team":"Rowan Bennett Team","role":"Audit Partner","mgr":"Rowan Bennett","tenure":"7.6 yrs","safety":74,"eng":71,"util":75,"prod":78,"sigs":0,"tix":0,"idx":76,"status":"ok","sig":[["No active flags","amber"]],"radar":[69,78,70,78,80,80],"trend":[77,76,77,75,76,77],"reco":["Light check-in","Steady this cycle."],"escore":72,"expd":{"psych":74,"perf":78,"eng":71,"wb":74},"top":["Performance 78"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":0,"pending":0,"overdue":0,"closed":4,"missed":0},"closed":4,"serviceLine":"Audit & Assurance","rater":73,"pct":130},{"id":"DP","name":"Dana Pratt","team":"Lennox Pace Team","role":"Audit Associate","mgr":"Lennox Pace","tenure":"2.8 yrs","safety":77,"eng":74,"util":74,"prod":78,"sigs":0,"tix":0,"idx":76,"status":"ok","sig":[["No active flags","amber"]],"radar":[84,79,73,72,86,73],"trend":[73,74,75,76,76,76],"reco":["Light check-in","Steady this cycle."],"escore":76,"expd":{"psych":77,"perf":78,"eng":74,"wb":77},"top":["Performance 78"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":0,"pending":0,"overdue":0,"closed":3,"missed":0},"closed":3,"serviceLine":"Audit & Assurance","rater":83,"pct":133},{"id":"ZR","name":"Zion Rhodes","team":"Cameron Irwin Team","role":"Assistant Manager","mgr":"Cameron Irwin","tenure":"6.5 yrs","safety":77,"eng":79,"util":73,"prod":73,"sigs":0,"tix":2,"idx":74,"status":"ok","sig":[["No active flags","amber"]],"radar":[80,77,83,69,71,81],"trend":[73,71,73,73,74,75],"reco":["Light check-in","Steady this cycle."],"escore":78,"expd":{"psych":77,"perf":73,"eng":79,"wb":77},"top":["Performance 73"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":2,"missed":0},"closed":2,"serviceLine":"Audit & Assurance","rater":56,"pct":106},{"id":"DH","name":"Dakota Hale","team":"Cameron Irwin Team","role":"Audit Manager","mgr":"Cameron Irwin","tenure":"0.7 yrs","safety":77,"eng":76,"util":74,"prod":81,"sigs":0,"tix":0,"idx":77,"status":"ok","sig":[["Score declining","amber"]],"radar":[82,79,87,84,73,74],"trend":[85,83,80,80,78,77],"reco":["Light check-in","Steady this cycle."],"escore":76,"expd":{"psych":77,"perf":81,"eng":76,"wb":77},"top":["Performance 81"],"low":[],"comments":[["Performance","Strong delivery this cycle.","pos"]],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":0,"pending":0,"overdue":0,"closed":2,"missed":0},"closed":2,"serviceLine":"Audit & Assurance","rater":63,"pct":117},{"id":"JL","name":"Jordan Locke","team":"Harper Thorne Team","role":"Audit Senior","mgr":"Harper Thorne","tenure":"1.7 yrs","safety":74,"eng":78,"util":78,"prod":77,"sigs":0,"tix":1,"idx":76,"status":"ok","sig":[["No active flags","amber"]],"radar":[65,77,65,67,75,70],"trend":[70,71,75,74,76,76],"reco":["Light check-in","Steady this cycle."],"escore":76,"expd":{"psych":74,"perf":77,"eng":78,"wb":74},"top":["Performance 77"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":1,"pending":1,"overdue":0,"closed":1,"missed":0},"closed":1,"serviceLine":"Audit & Assurance","rater":54,"pct":135},{"id":"NT","name":"Nat Tate","team":"Rowan Bennett Team","role":"Assistant Manager","mgr":"Rowan Bennett","tenure":"6.9 yrs","safety":74,"eng":75,"util":75,"prod":73,"sigs":0,"tix":2,"idx":74,"status":"ok","sig":[["No active flags","amber"]],"radar":[75,67,72,78,73,65],"trend":[65,69,70,70,71,73],"reco":["Light check-in","Steady this cycle."],"escore":74,"expd":{"psych":74,"perf":73,"eng":75,"wb":74},"top":["Performance 73"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":2,"missed":0},"closed":2,"serviceLine":"Audit & Assurance","rater":67,"pct":116},{"id":"NH","name":"Nat Hale","team":"Lennox Pace Team","role":"Assistant Manager","mgr":"Lennox Pace","tenure":"4.5 yrs","safety":74,"eng":77,"util":74,"prod":79,"sigs":0,"tix":2,"idx":76,"status":"ok","sig":[["Score declining","amber"]],"radar":[70,66,78,78,83,74],"trend":[84,81,79,78,78,76],"reco":["Light check-in","Steady this cycle."],"escore":76,"expd":{"psych":74,"perf":79,"eng":77,"wb":74},"top":["Performance 79"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":3,"missed":0},"closed":3,"serviceLine":"Audit & Assurance","rater":74,"pct":126},{"id":"TC","name":"Taylor Cole","team":"Rowan Bennett Team","role":"Audit Senior","mgr":"Rowan Bennett","tenure":"5.0 yrs","safety":77,"eng":71,"util":75,"prod":77,"sigs":0,"tix":2,"idx":76,"status":"ok","sig":[["Score declining","amber"]],"radar":[69,74,74,80,84,74],"trend":[81,81,78,78,77,76],"reco":["Light check-in","Steady this cycle."],"escore":74,"expd":{"psych":77,"perf":77,"eng":71,"wb":77},"top":["Performance 77"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":5,"missed":0},"closed":5,"serviceLine":"Audit & Assurance","rater":58,"pct":126},{"id":"OA","name":"Ola Archer","team":"Harper Thorne Team","role":"Assistant Manager","mgr":"Harper Thorne","tenure":"6.9 yrs","safety":72,"eng":68,"util":73,"prod":71,"sigs":1,"tix":3,"idx":72,"status":"warn","sig":[["No active flags","amber"]],"radar":[65,68,80,72,63,75],"trend":[70,71,71,71,70,71],"reco":["Light check-in","Steady this cycle."],"escore":70,"expd":{"psych":72,"perf":71,"eng":68,"wb":72},"top":["Performance 71"],"low":[],"comments":[],"well":["Resilient under pressure"],"notwell":[],"inbox":{"open":3,"pending":3,"overdue":0,"closed":1,"missed":0},"closed":1,"serviceLine":"Audit & Assurance","rater":59,"pct":102},{"id":"MG","name":"Marley Gibbs","team":"Cameron Irwin Team","role":"Audit Senior","mgr":"Cameron Irwin","tenure":"3.0 yrs","safety":74,"eng":78,"util":75,"prod":76,"sigs":0,"tix":1,"idx":75,"status":"ok","sig":[["No active flags","amber"]],"radar":[82,81,70,80,72,83],"trend":[69,69,71,72,75,75],"reco":["Light check-in","Steady this cycle."],"escore":76,"expd":{"psych":74,"perf":76,"eng":78,"wb":74},"top":["Performance 76"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":1,"pending":1,"overdue":0,"closed":4,"missed":0},"closed":4,"serviceLine":"Audit & Assurance","rater":54,"pct":138},{"id":"WK","name":"Wyatt Knox","team":"Harper Thorne Team","role":"Assistant Manager","mgr":"Harper Thorne","tenure":"9.3 yrs","safety":81,"eng":82,"util":80,"prod":80,"sigs":0,"tix":1,"idx":80,"status":"ok","sig":[["No active flags","amber"]],"radar":[77,80,89,79,91,87],"trend":[74,75,75,77,80,80],"reco":["Light check-in","Steady this cycle."],"escore":82,"expd":{"psych":81,"perf":80,"eng":82,"wb":81},"top":["Performance 80","Compliance 80"],"low":[],"comments":[["Performance","Strong delivery this cycle.","pos"]],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":1,"pending":1,"overdue":0,"closed":5,"missed":0},"closed":5,"serviceLine":"Audit & Assurance","rater":84,"pct":116},{"id":"TA","name":"Tory Archer","team":"Harper Thorne Team","role":"Audit Manager","mgr":"Harper Thorne","tenure":"0.9 yrs","safety":73,"eng":77,"util":74,"prod":77,"sigs":0,"tix":1,"idx":75,"status":"ok","sig":[["Score declining","amber"]],"radar":[76,74,82,76,81,73],"trend":[78,76,77,76,74,74],"reco":["Light check-in","Steady this cycle."],"escore":75,"expd":{"psych":73,"perf":77,"eng":77,"wb":73},"top":["Performance 77"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":1,"pending":1,"overdue":0,"closed":4,"missed":0},"closed":4,"serviceLine":"Audit & Assurance","rater":84,"pct":116},{"id":"DD","name":"Devon Doyle","team":"Cameron Irwin Team","role":"Audit Manager","mgr":"Cameron Irwin","tenure":"1.9 yrs","safety":80,"eng":82,"util":80,"prod":83,"sigs":0,"tix":1,"idx":81,"status":"ok","sig":[["Score declining","amber"]],"radar":[86,73,72,87,82,75],"trend":[84,82,82,81,82,81],"reco":["Light check-in","Steady this cycle."],"escore":81,"expd":{"psych":80,"perf":83,"eng":82,"wb":80},"top":["Performance 83","Compliance 80"],"low":[],"comments":[["Performance","Strong delivery this cycle.","pos"]],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":1,"pending":1,"overdue":0,"closed":4,"missed":0},"closed":4,"serviceLine":"Audit & Assurance","rater":66,"pct":101},{"id":"RW","name":"Robin Whitlock","team":"Cameron Irwin Team","role":"Assistant Manager","mgr":"Cameron Irwin","tenure":"5.6 yrs","safety":72,"eng":75,"util":71,"prod":71,"sigs":1,"tix":2,"idx":71,"status":"warn","sig":[["No active flags","amber"]],"radar":[69,68,76,62,79,70],"trend":[65,65,69,70,69,71],"reco":["Light check-in","Steady this cycle."],"escore":74,"expd":{"psych":72,"perf":71,"eng":75,"wb":72},"top":["Performance 71"],"low":[],"comments":[],"well":["Resilient under pressure"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":0,"missed":0},"closed":0,"serviceLine":"Audit & Assurance","rater":85,"pct":126},{"id":"CO","name":"Cory Osborne","team":"Cameron Irwin Team","role":"Audit Manager","mgr":"Cameron Irwin","tenure":"5.3 yrs","safety":76,"eng":72,"util":69,"prod":77,"sigs":0,"tix":2,"idx":74,"status":"ok","sig":[["Score declining","amber"]],"radar":[68,72,81,70,69,77],"trend":[81,79,77,76,75,75],"reco":["Light check-in","Steady this cycle."],"escore":74,"expd":{"psych":76,"perf":77,"eng":72,"wb":76},"top":["Performance 77"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":2,"missed":0},"closed":2,"serviceLine":"Audit & Assurance","rater":85,"pct":109},{"id":"RE","name":"Rowan Evers","team":"Lennox Pace Team","role":"Audit Partner","mgr":"Lennox Pace","tenure":"2.7 yrs","safety":63,"eng":62,"util":61,"prod":69,"sigs":5,"tix":9,"idx":64,"status":"bad","sig":[["5 risk factors","bad"],["Score declining","amber"]],"radar":[53,64,62,66,66,65],"trend":[72,71,70,68,65,65],"reco":["Workload + resourcing conversation","Multiple risk factors flagged; review workload and support."],"escore":62,"expd":{"psych":63,"perf":69,"eng":62,"wb":63},"top":["Performance 69"],"low":["Work-life balance 51","Goal clarity 49"],"comments":[["Workload","Workload peaks are not shared evenly.","neg"]],"well":["Resilient under pressure"],"notwell":["Watch wellbeing","Workload pressure"],"inbox":{"open":9,"pending":9,"overdue":1,"closed":5,"missed":1},"closed":5,"serviceLine":"Audit & Assurance","rater":81,"pct":129},{"id":"PR","name":"Phoenix Reed","team":"Rowan Bennett Team","role":"Audit Associate","mgr":"Rowan Bennett","tenure":"6.4 yrs","safety":82,"eng":77,"util":78,"prod":83,"sigs":0,"tix":2,"idx":81,"status":"ok","sig":[["No active flags","amber"]],"radar":[79,91,86,83,84,87],"trend":[82,84,81,81,82,81],"reco":["Light check-in","Steady this cycle."],"escore":80,"expd":{"psych":82,"perf":83,"eng":77,"wb":82},"top":["Performance 83"],"low":[],"comments":[["Performance","Strong delivery this cycle.","pos"]],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":3,"missed":0},"closed":3,"serviceLine":"Audit & Assurance","rater":52,"pct":133},{"id":"FJ","name":"Finley Jarrett","team":"Kris Rhodes Team","role":"Senior Advisor","mgr":"Kris Rhodes","tenure":"5.9 yrs","safety":75,"eng":75,"util":70,"prod":76,"sigs":0,"tix":2,"idx":74,"status":"ok","sig":[["Score declining","amber"]],"radar":[66,80,76,80,75,81],"trend":[79,77,78,76,75,73],"reco":["Light check-in","Steady this cycle."],"escore":75,"expd":{"psych":75,"perf":76,"eng":75,"wb":75},"top":["Performance 76"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":4,"missed":0},"closed":4,"serviceLine":"Business Advisory","rater":82,"pct":86},{"id":"MD","name":"Morgan Dalton","team":"Eden Nash Team","role":"Associate Advisor","mgr":"Eden Nash","tenure":"5.1 yrs","safety":73,"eng":78,"util":74,"prod":77,"sigs":0,"tix":1,"idx":75,"status":"ok","sig":[["No active flags","amber"]],"radar":[69,76,74,70,83,74],"trend":[69,71,70,71,74,74],"reco":["Light check-in","Steady this cycle."],"escore":76,"expd":{"psych":73,"perf":77,"eng":78,"wb":73},"top":["Performance 77"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":1,"pending":1,"overdue":0,"closed":3,"missed":0},"closed":3,"serviceLine":"Business Advisory","rater":84,"pct":87},{"id":"DB","name":"Dakota Boyd","team":"Eden Nash Team","role":"Senior Advisor","mgr":"Eden Nash","tenure":"1.1 yrs","safety":76,"eng":77,"util":70,"prod":76,"sigs":0,"tix":1,"idx":74,"status":"ok","sig":[["No active flags","amber"]],"radar":[67,83,68,68,81,82],"trend":[68,70,72,72,72,75],"reco":["Light check-in","Steady this cycle."],"escore":76,"expd":{"psych":76,"perf":76,"eng":77,"wb":76},"top":["Performance 76"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":1,"pending":1,"overdue":0,"closed":4,"missed":0},"closed":4,"serviceLine":"Business Advisory","rater":80,"pct":112},{"id":"JS","name":"Jamie Sloan","team":"Casey Vega Team","role":"Client Manager","mgr":"Casey Vega","tenure":"8.0 yrs","safety":66,"eng":70,"util":67,"prod":68,"sigs":2,"tix":5,"idx":67,"status":"warn","sig":[["No active flags","amber"]],"radar":[58,62,61,65,67,71],"trend":[67,66,67,68,67,67],"reco":["Light check-in","Steady this cycle."],"escore":68,"expd":{"psych":66,"perf":68,"eng":70,"wb":66},"top":["Performance 68"],"low":["Workload satisfaction 54","Compliance training 55"],"comments":[],"well":["Resilient under pressure"],"notwell":["Watch wellbeing"],"inbox":{"open":5,"pending":5,"overdue":0,"closed":5,"missed":0},"closed":5,"serviceLine":"Business Advisory","rater":95,"pct":93},{"id":"JE","name":"Jess Ellison","team":"Ellis Yates Team","role":"Business Advisor","mgr":"Ellis Yates","tenure":"3.0 yrs","safety":74,"eng":73,"util":76,"prod":74,"sigs":0,"tix":1,"idx":75,"status":"ok","sig":[["Score declining","amber"]],"radar":[83,76,82,67,79,65],"trend":[78,77,76,75,75,74],"reco":["Light check-in","Steady this cycle."],"escore":74,"expd":{"psych":74,"perf":74,"eng":73,"wb":74},"top":["Performance 74"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":1,"pending":1,"overdue":0,"closed":0,"missed":0},"closed":0,"serviceLine":"Business Advisory","rater":58,"pct":112},{"id":"ZI","name":"Zara Ingram","team":"Zara Ortiz Team","role":"Senior Advisor","mgr":"Zara Ortiz","tenure":"5.6 yrs","safety":73,"eng":75,"util":71,"prod":72,"sigs":0,"tix":0,"idx":72,"status":"ok","sig":[["Score declining","amber"]],"radar":[70,63,78,67,71,77],"trend":[77,74,74,73,72,71],"reco":["Light check-in","Steady this cycle."],"escore":74,"expd":{"psych":73,"perf":72,"eng":75,"wb":73},"top":["Performance 72"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":0,"pending":0,"overdue":0,"closed":4,"missed":0},"closed":4,"serviceLine":"Business Advisory","rater":62,"pct":93},{"id":"NL","name":"Nat Locke","team":"Ellis Yates Team","role":"Associate Advisor","mgr":"Ellis Yates","tenure":"2.6 yrs","safety":61,"eng":61,"util":62,"prod":68,"sigs":5,"tix":8,"idx":64,"status":"bad","sig":[["5 risk factors","bad"]],"radar":[58,60,53,60,59,53],"trend":[60,62,61,64,63,65],"reco":["Workload + resourcing conversation","Multiple risk factors flagged; review workload and support."],"escore":61,"expd":{"psych":61,"perf":68,"eng":61,"wb":61},"top":["Performance 68"],"low":["Work-life balance 49","Compliance training 50"],"comments":[["Workload","Workload peaks are not shared evenly.","neg"]],"well":["Resilient under pressure"],"notwell":["Watch wellbeing","Workload pressure"],"inbox":{"open":8,"pending":8,"overdue":1,"closed":2,"missed":1},"closed":2,"serviceLine":"Business Advisory","rater":76,"pct":77},{"id":"LP","name":"Lane Pace","team":"Kris Rhodes Team","role":"Advisory Partner","mgr":"Kris Rhodes","tenure":"3.4 yrs","safety":67,"eng":65,"util":70,"prod":72,"sigs":1,"tix":4,"idx":70,"status":"warn","sig":[["No active flags","amber"]],"radar":[72,72,66,75,68,70],"trend":[70,71,70,69,71,70],"reco":["Light check-in","Steady this cycle."],"escore":66,"expd":{"psych":67,"perf":72,"eng":65,"wb":67},"top":["Performance 72"],"low":["Work-life balance 55"],"comments":[],"well":["Resilient under pressure"],"notwell":["Watch wellbeing"],"inbox":{"open":4,"pending":4,"overdue":0,"closed":5,"missed":0},"closed":5,"serviceLine":"Business Advisory","rater":89,"pct":89},{"id":"CD","name":"Casey Dalton","team":"Casey Vega Team","role":"Senior Advisor","mgr":"Casey Vega","tenure":"1.9 yrs","safety":74,"eng":75,"util":74,"prod":77,"sigs":0,"tix":1,"idx":75,"status":"ok","sig":[["Score declining","amber"]],"radar":[79,65,82,75,68,76],"trend":[82,78,79,77,76,76],"reco":["Light check-in","Steady this cycle."],"escore":74,"expd":{"psych":74,"perf":77,"eng":75,"wb":74},"top":["Performance 77"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":1,"pending":1,"overdue":0,"closed":4,"missed":0},"closed":4,"serviceLine":"Business Advisory","rater":72,"pct":77},{"id":"NY","name":"Noel Yates","team":"Casey Vega Team","role":"Senior Advisor","mgr":"Casey Vega","tenure":"1.3 yrs","safety":75,"eng":79,"util":78,"prod":76,"sigs":0,"tix":0,"idx":76,"status":"ok","sig":[["No active flags","amber"]],"radar":[79,71,79,78,83,82],"trend":[71,73,74,75,74,75],"reco":["Light check-in","Steady this cycle."],"escore":77,"expd":{"psych":75,"perf":76,"eng":79,"wb":75},"top":["Performance 76"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":0,"pending":0,"overdue":0,"closed":2,"missed":0},"closed":2,"serviceLine":"Business Advisory","rater":78,"pct":81},{"id":"FR","name":"Flynn Reed","team":"Kris Rhodes Team","role":"Senior Advisor","mgr":"Kris Rhodes","tenure":"7.5 yrs","safety":75,"eng":74,"util":70,"prod":75,"sigs":0,"tix":0,"idx":73,"status":"ok","sig":[["No active flags","amber"]],"radar":[80,69,85,68,71,81],"trend":[71,71,70,71,74,73],"reco":["Light check-in","Steady this cycle."],"escore":74,"expd":{"psych":75,"perf":75,"eng":74,"wb":75},"top":["Performance 75"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":0,"pending":0,"overdue":0,"closed":4,"missed":0},"closed":4,"serviceLine":"Business Advisory","rater":63,"pct":105},{"id":"OY","name":"Oakley York","team":"Zara Ortiz Team","role":"Associate Advisor","mgr":"Zara Ortiz","tenure":"4.7 yrs","safety":74,"eng":73,"util":67,"prod":71,"sigs":0,"tix":0,"idx":71,"status":"ok","sig":[["No active flags","amber"]],"radar":[69,83,80,82,68,78],"trend":[67,69,69,70,71,70],"reco":["Light check-in","Steady this cycle."],"escore":74,"expd":{"psych":74,"perf":71,"eng":73,"wb":74},"top":["Performance 71"],"low":["Compliance training 55"],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":0,"pending":0,"overdue":0,"closed":3,"missed":0},"closed":3,"serviceLine":"Business Advisory","rater":63,"pct":90},{"id":"WY","name":"Will Yates","team":"Zara Ortiz Team","role":"Client Manager","mgr":"Zara Ortiz","tenure":"3.9 yrs","safety":73,"eng":76,"util":72,"prod":78,"sigs":1,"tix":2,"idx":74,"status":"warn","sig":[["No active flags","amber"]],"radar":[82,67,72,70,64,64],"trend":[66,69,69,72,72,74],"reco":["Light check-in","Steady this cycle."],"escore":74,"expd":{"psych":73,"perf":78,"eng":76,"wb":73},"top":["Performance 78"],"low":[],"comments":[],"well":["Resilient under pressure"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":4,"missed":0},"closed":4,"serviceLine":"Business Advisory","rater":90,"pct":80},{"id":"CS","name":"Casey Sloan","team":"Ellis Yates Team","role":"Associate Advisor","mgr":"Ellis Yates","tenure":"4.3 yrs","safety":72,"eng":67,"util":71,"prod":74,"sigs":0,"tix":0,"idx":72,"status":"ok","sig":[["Score declining","amber"]],"radar":[81,74,70,78,67,64],"trend":[78,78,77,73,72,71],"reco":["Light check-in","Steady this cycle."],"escore":70,"expd":{"psych":72,"perf":74,"eng":67,"wb":72},"top":["Performance 74"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":0,"pending":0,"overdue":0,"closed":1,"missed":0},"closed":1,"serviceLine":"Business Advisory","rater":86,"pct":89},{"id":"LS","name":"Lane Sloan","team":"Zara Ortiz Team","role":"Associate Advisor","mgr":"Zara Ortiz","tenure":"2.9 yrs","safety":71,"eng":70,"util":67,"prod":76,"sigs":0,"tix":0,"idx":71,"status":"ok","sig":[["No active flags","amber"]],"radar":[72,77,71,61,78,62],"trend":[67,67,69,69,70,72],"reco":["Light check-in","Steady this cycle."],"escore":70,"expd":{"psych":71,"perf":76,"eng":70,"wb":71},"top":["Performance 76"],"low":["Rater participation 55"],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":0,"pending":0,"overdue":0,"closed":2,"missed":0},"closed":2,"serviceLine":"Business Advisory","rater":58,"pct":97},{"id":"RW","name":"Riley Whitlock","team":"Casey Vega Team","role":"Client Manager","mgr":"Casey Vega","tenure":"5.2 yrs","safety":80,"eng":78,"util":74,"prod":79,"sigs":0,"tix":0,"idx":78,"status":"ok","sig":[["Score declining","amber"]],"radar":[89,71,74,86,88,76],"trend":[86,85,82,80,78,79],"reco":["Light check-in","Steady this cycle."],"escore":79,"expd":{"psych":80,"perf":79,"eng":78,"wb":80},"top":["Performance 79"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":0,"pending":0,"overdue":0,"closed":2,"missed":0},"closed":2,"serviceLine":"Business Advisory","rater":89,"pct":106},{"id":"WR","name":"Wyatt Rhodes","team":"Casey Vega Team","role":"Advisory Partner","mgr":"Casey Vega","tenure":"3.2 yrs","safety":70,"eng":65,"util":67,"prod":74,"sigs":0,"tix":2,"idx":70,"status":"ok","sig":[["No active flags","amber"]],"radar":[78,70,76,75,62,72],"trend":[63,65,65,68,69,70],"reco":["Light check-in","Steady this cycle."],"escore":68,"expd":{"psych":70,"perf":74,"eng":65,"wb":70},"top":["Performance 74"],"low":["Goal clarity 55"],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":4,"missed":0},"closed":4,"serviceLine":"Business Advisory","rater":72,"pct":108},{"id":"CO","name":"Cory Ortiz","team":"Casey Vega Team","role":"Associate Advisor","mgr":"Casey Vega","tenure":"9.1 yrs","safety":74,"eng":75,"util":72,"prod":75,"sigs":1,"tix":2,"idx":74,"status":"warn","sig":[["Score declining","amber"]],"radar":[76,80,65,65,80,71],"trend":[77,76,76,76,76,73],"reco":["Light check-in","Steady this cycle."],"escore":74,"expd":{"psych":74,"perf":75,"eng":75,"wb":74},"top":["Performance 75"],"low":[],"comments":[],"well":["Resilient under pressure"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":3,"missed":0},"closed":3,"serviceLine":"Business Advisory","rater":64,"pct":93},{"id":"SR","name":"Sutton Reed","team":"Kris Rhodes Team","role":"Senior Advisor","mgr":"Kris Rhodes","tenure":"4.6 yrs","safety":76,"eng":75,"util":75,"prod":76,"sigs":0,"tix":1,"idx":76,"status":"ok","sig":[["No active flags","amber"]],"radar":[70,78,80,86,70,69],"trend":[77,78,79,76,77,77],"reco":["Light check-in","Steady this cycle."],"escore":76,"expd":{"psych":76,"perf":76,"eng":75,"wb":76},"top":["Performance 76"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":1,"pending":1,"overdue":0,"closed":0,"missed":0},"closed":0,"serviceLine":"Business Advisory","rater":61,"pct":80},{"id":"NT","name":"Nico Tate","team":"Ellis Yates Team","role":"Business Advisor","mgr":"Ellis Yates","tenure":"9.5 yrs","safety":70,"eng":72,"util":67,"prod":74,"sigs":0,"tix":0,"idx":70,"status":"ok","sig":[["Score declining","amber"]],"radar":[71,67,76,71,72,62],"trend":[77,74,73,72,72,69],"reco":["Light check-in","Steady this cycle."],"escore":71,"expd":{"psych":70,"perf":74,"eng":72,"wb":70},"top":["Performance 74"],"low":["Rater participation 55"],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":0,"pending":0,"overdue":0,"closed":3,"missed":0},"closed":3,"serviceLine":"Business Advisory","rater":71,"pct":89},{"id":"AI","name":"Adrian Irwin","team":"Ellis Yates Team","role":"Client Manager","mgr":"Ellis Yates","tenure":"2.8 yrs","safety":72,"eng":68,"util":73,"prod":76,"sigs":0,"tix":1,"idx":74,"status":"ok","sig":[["No active flags","amber"]],"radar":[65,68,76,69,81,80],"trend":[72,71,73,71,72,73],"reco":["Light check-in","Steady this cycle."],"escore":70,"expd":{"psych":72,"perf":76,"eng":68,"wb":72},"top":["Performance 76"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":1,"pending":1,"overdue":0,"closed":0,"missed":0},"closed":0,"serviceLine":"Business Advisory","rater":97,"pct":102},{"id":"MK","name":"Marley Keller","team":"Ellis Yates Team","role":"Client Manager","mgr":"Ellis Yates","tenure":"3.2 yrs","safety":73,"eng":71,"util":69,"prod":72,"sigs":0,"tix":2,"idx":71,"status":"ok","sig":[["No active flags","amber"]],"radar":[68,67,74,75,64,81],"trend":[68,66,70,68,72,72],"reco":["Light check-in","Steady this cycle."],"escore":72,"expd":{"psych":73,"perf":72,"eng":71,"wb":73},"top":["Performance 72"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":4,"missed":0},"closed":4,"serviceLine":"Business Advisory","rater":78,"pct":81},{"id":"WE","name":"Will Evers","team":"Casey Vega Team","role":"Business Advisor","mgr":"Casey Vega","tenure":"8.3 yrs","safety":64,"eng":63,"util":67,"prod":69,"sigs":3,"tix":6,"idx":67,"status":"bad","sig":[["3 risk factors","bad"]],"radar":[64,56,59,56,63,57],"trend":[65,64,67,65,66,68],"reco":["Workload + resourcing conversation","Multiple risk factors flagged; review workload and support."],"escore":64,"expd":{"psych":64,"perf":69,"eng":63,"wb":64},"top":["Performance 69"],"low":["Workload satisfaction 52","Rater participation 55"],"comments":[["Workload","Workload peaks are not shared evenly.","neg"]],"well":["Resilient under pressure"],"notwell":["Watch wellbeing","Workload pressure"],"inbox":{"open":6,"pending":6,"overdue":0,"closed":3,"missed":0},"closed":3,"serviceLine":"Business Advisory","rater":61,"pct":77},{"id":"OE","name":"Ola Evers","team":"Casey Vega Team","role":"Associate Advisor","mgr":"Casey Vega","tenure":"1.8 yrs","safety":73,"eng":77,"util":73,"prod":74,"sigs":2,"tix":3,"idx":73,"status":"warn","sig":[["No active flags","amber"]],"radar":[73,81,76,72,74,80],"trend":[72,71,73,71,72,72],"reco":["Light check-in","Steady this cycle."],"escore":75,"expd":{"psych":73,"perf":74,"eng":77,"wb":73},"top":["Performance 74"],"low":[],"comments":[],"well":["Resilient under pressure"],"notwell":[],"inbox":{"open":3,"pending":3,"overdue":0,"closed":3,"missed":0},"closed":3,"serviceLine":"Business Advisory","rater":87,"pct":82},{"id":"GH","name":"Gray Holt","team":"Robin Doyle Team","role":"Associate Advisor","mgr":"Robin Doyle","tenure":"1.8 yrs","safety":75,"eng":70,"util":73,"prod":72,"sigs":0,"tix":0,"idx":73,"status":"ok","sig":[["No active flags","amber"]],"radar":[76,72,68,77,73,66],"trend":[73,73,72,72,73,74],"reco":["Light check-in","Steady this cycle."],"escore":72,"expd":{"psych":75,"perf":72,"eng":70,"wb":75},"top":["Performance 72"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":0,"pending":0,"overdue":0,"closed":0,"missed":0},"closed":0,"serviceLine":"Business Advisory","rater":80,"pct":90},{"id":"PM","name":"Phoenix Mayer","team":"Robin Doyle Team","role":"Senior Advisor","mgr":"Robin Doyle","tenure":"7.6 yrs","safety":71,"eng":71,"util":70,"prod":73,"sigs":2,"tix":3,"idx":71,"status":"warn","sig":[["No active flags","amber"]],"radar":[73,77,76,75,62,70],"trend":[66,66,69,69,70,72],"reco":["Light check-in","Steady this cycle."],"escore":71,"expd":{"psych":71,"perf":73,"eng":71,"wb":71},"top":["Performance 73"],"low":[],"comments":[],"well":["Resilient under pressure"],"notwell":[],"inbox":{"open":3,"pending":3,"overdue":0,"closed":5,"missed":0},"closed":5,"serviceLine":"Business Advisory","rater":71,"pct":101},{"id":"LT","name":"Lane Thorne","team":"Zara Ortiz Team","role":"Business Advisor","mgr":"Zara Ortiz","tenure":"5.6 yrs","safety":72,"eng":69,"util":72,"prod":74,"sigs":0,"tix":2,"idx":73,"status":"ok","sig":[["No active flags","amber"]],"radar":[77,80,79,77,63,65],"trend":[64,65,68,69,72,73],"reco":["Light check-in","Steady this cycle."],"escore":70,"expd":{"psych":72,"perf":74,"eng":69,"wb":72},"top":["Performance 74"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":1,"missed":0},"closed":1,"serviceLine":"Business Advisory","rater":83,"pct":101},{"id":"HO","name":"Hollis Ortiz","team":"Kris Rhodes Team","role":"Associate Advisor","mgr":"Kris Rhodes","tenure":"6.6 yrs","safety":70,"eng":69,"util":68,"prod":75,"sigs":0,"tix":2,"idx":71,"status":"ok","sig":[["Score declining","amber"]],"radar":[70,70,71,79,74,66],"trend":[74,75,75,73,72,72],"reco":["Light check-in","Steady this cycle."],"escore":70,"expd":{"psych":70,"perf":75,"eng":69,"wb":70},"top":["Performance 75"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":4,"missed":0},"closed":4,"serviceLine":"Business Advisory","rater":79,"pct":98},{"id":"AD","name":"Adrian Doyle","team":"Ellis Yates Team","role":"Senior Advisor","mgr":"Ellis Yates","tenure":"7.0 yrs","safety":78,"eng":80,"util":76,"prod":79,"sigs":0,"tix":2,"idx":78,"status":"ok","sig":[["No active flags","amber"]],"radar":[73,69,86,73,73,70],"trend":[76,75,76,76,76,79],"reco":["Light check-in","Steady this cycle."],"escore":79,"expd":{"psych":78,"perf":79,"eng":80,"wb":78},"top":["Performance 79"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":2,"missed":0},"closed":2,"serviceLine":"Business Advisory","rater":69,"pct":87},{"id":"WR","name":"Will Reed","team":"Casey Vega Team","role":"Business Advisor","mgr":"Casey Vega","tenure":"7.6 yrs","safety":79,"eng":79,"util":71,"prod":77,"sigs":0,"tix":2,"idx":76,"status":"ok","sig":[["No active flags","amber"]],"radar":[70,87,77,86,88,70],"trend":[75,77,76,75,77,77],"reco":["Light check-in","Steady this cycle."],"escore":79,"expd":{"psych":79,"perf":77,"eng":79,"wb":79},"top":["Performance 77"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":3,"missed":0},"closed":3,"serviceLine":"Business Advisory","rater":74,"pct":115},{"id":"WS","name":"Wyatt Sloan","team":"Ellis Yates Team","role":"Associate Advisor","mgr":"Ellis Yates","tenure":"7.3 yrs","safety":78,"eng":73,"util":77,"prod":75,"sigs":0,"tix":2,"idx":77,"status":"ok","sig":[["No active flags","amber"]],"radar":[83,81,82,68,75,74],"trend":[73,72,74,74,77,76],"reco":["Light check-in","Steady this cycle."],"escore":76,"expd":{"psych":78,"perf":75,"eng":73,"wb":78},"top":["Performance 75"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":5,"missed":0},"closed":5,"serviceLine":"Business Advisory","rater":70,"pct":100},{"id":"KF","name":"Kai Flagg","team":"Kris Rhodes Team","role":"Senior Advisor","mgr":"Kris Rhodes","tenure":"8.8 yrs","safety":79,"eng":79,"util":78,"prod":79,"sigs":0,"tix":0,"idx":79,"status":"ok","sig":[["Score declining","amber"]],"radar":[82,83,70,71,75,77],"trend":[82,83,83,80,80,78],"reco":["Light check-in","Steady this cycle."],"escore":79,"expd":{"psych":79,"perf":79,"eng":79,"wb":79},"top":["Performance 79"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":0,"pending":0,"overdue":0,"closed":4,"missed":0},"closed":4,"serviceLine":"Business Advisory","rater":61,"pct":103},{"id":"WJ","name":"Will Jensen","team":"Ellis Yates Team","role":"Associate Advisor","mgr":"Ellis Yates","tenure":"1.6 yrs","safety":72,"eng":76,"util":71,"prod":74,"sigs":0,"tix":2,"idx":72,"status":"ok","sig":[["No active flags","amber"]],"radar":[76,74,78,73,73,69],"trend":[68,70,70,71,72,73],"reco":["Light check-in","Steady this cycle."],"escore":74,"expd":{"psych":72,"perf":74,"eng":76,"wb":72},"top":["Performance 74"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":4,"missed":0},"closed":4,"serviceLine":"Business Advisory","rater":73,"pct":84},{"id":"ZF","name":"Zara Frost","team":"Eden Nash Team","role":"Client Manager","mgr":"Eden Nash","tenure":"5.4 yrs","safety":74,"eng":68,"util":68,"prod":73,"sigs":0,"tix":2,"idx":72,"status":"ok","sig":[["Score declining","amber"]],"radar":[72,80,79,76,65,71],"trend":[77,76,74,74,74,73],"reco":["Light check-in","Steady this cycle."],"escore":71,"expd":{"psych":74,"perf":73,"eng":68,"wb":74},"top":["Performance 73"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":0,"missed":0},"closed":0,"serviceLine":"Business Advisory","rater":92,"pct":93},{"id":"MY","name":"Mel Yates","team":"Eden Nash Team","role":"Associate Advisor","mgr":"Eden Nash","tenure":"4.7 yrs","safety":75,"eng":73,"util":76,"prod":74,"sigs":2,"tix":5,"idx":75,"status":"warn","sig":[["No active flags","amber"]],"radar":[76,76,80,69,65,65],"trend":[71,72,73,74,74,74],"reco":["Light check-in","Steady this cycle."],"escore":74,"expd":{"psych":75,"perf":74,"eng":73,"wb":75},"top":["Performance 74"],"low":[],"comments":[],"well":["Resilient under pressure"],"notwell":[],"inbox":{"open":5,"pending":5,"overdue":0,"closed":2,"missed":0},"closed":2,"serviceLine":"Business Advisory","rater":65,"pct":80},{"id":"RC","name":"Rowan Carver","team":"Robin Doyle Team","role":"Associate Advisor","mgr":"Robin Doyle","tenure":"2.7 yrs","safety":72,"eng":71,"util":70,"prod":71,"sigs":0,"tix":2,"idx":71,"status":"ok","sig":[["Score declining","amber"]],"radar":[63,71,73,77,78,65],"trend":[73,74,73,73,73,70],"reco":["Light check-in","Steady this cycle."],"escore":72,"expd":{"psych":72,"perf":71,"eng":71,"wb":72},"top":["Performance 71"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":2,"missed":0},"closed":2,"serviceLine":"Business Advisory","rater":64,"pct":82},{"id":"CB","name":"Cameron Boyd","team":"Casey Vega Team","role":"Senior Advisor","mgr":"Casey Vega","tenure":"4.0 yrs","safety":71,"eng":74,"util":70,"prod":74,"sigs":0,"tix":2,"idx":72,"status":"ok","sig":[["Score declining","amber"]],"radar":[68,74,69,71,75,69],"trend":[78,77,74,75,73,71],"reco":["Light check-in","Steady this cycle."],"escore":72,"expd":{"psych":71,"perf":74,"eng":74,"wb":71},"top":["Performance 74"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":2,"missed":0},"closed":2,"serviceLine":"Business Advisory","rater":67,"pct":112},{"id":"MK","name":"Mel Knox","team":"Kris Rhodes Team","role":"Client Manager","mgr":"Kris Rhodes","tenure":"7.0 yrs","safety":72,"eng":75,"util":74,"prod":72,"sigs":0,"tix":1,"idx":73,"status":"ok","sig":[["No active flags","amber"]],"radar":[66,67,75,74,79,66],"trend":[69,71,72,73,71,74],"reco":["Light check-in","Steady this cycle."],"escore":74,"expd":{"psych":72,"perf":72,"eng":75,"wb":72},"top":["Performance 72"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":1,"pending":1,"overdue":0,"closed":4,"missed":0},"closed":4,"serviceLine":"Business Advisory","rater":90,"pct":114},{"id":"EB","name":"Emery Banks","team":"Kris Rhodes Team","role":"Associate Advisor","mgr":"Kris Rhodes","tenure":"8.7 yrs","safety":73,"eng":79,"util":75,"prod":73,"sigs":0,"tix":2,"idx":74,"status":"ok","sig":[["No active flags","amber"]],"radar":[69,70,81,72,79,77],"trend":[67,68,70,71,73,74],"reco":["Light check-in","Steady this cycle."],"escore":76,"expd":{"psych":73,"perf":73,"eng":79,"wb":73},"top":["Performance 73"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":2,"missed":0},"closed":2,"serviceLine":"Business Advisory","rater":58,"pct":115},{"id":"MS","name":"Mel Sloan","team":"Kris Rhodes Team","role":"Business Advisor","mgr":"Kris Rhodes","tenure":"7.0 yrs","safety":74,"eng":70,"util":74,"prod":73,"sigs":0,"tix":1,"idx":74,"status":"ok","sig":[["No active flags","amber"]],"radar":[74,78,79,73,79,71],"trend":[74,73,74,75,74,75],"reco":["Light check-in","Steady this cycle."],"escore":72,"expd":{"psych":74,"perf":73,"eng":70,"wb":74},"top":["Performance 73"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":1,"pending":1,"overdue":0,"closed":1,"missed":0},"closed":1,"serviceLine":"Business Advisory","rater":68,"pct":115},{"id":"JC","name":"Jamie Cole","team":"Eden Nash Team","role":"Advisory Partner","mgr":"Eden Nash","tenure":"0.7 yrs","safety":76,"eng":70,"util":73,"prod":76,"sigs":0,"tix":2,"idx":75,"status":"ok","sig":[["Score declining","amber"]],"radar":[79,78,76,76,66,77],"trend":[81,81,78,78,76,75],"reco":["Light check-in","Steady this cycle."],"escore":73,"expd":{"psych":76,"perf":76,"eng":70,"wb":76},"top":["Performance 76"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":0,"missed":0},"closed":0,"serviceLine":"Business Advisory","rater":59,"pct":111},{"id":"DI","name":"Devon Ingram","team":"Kris Rhodes Team","role":"Business Advisor","mgr":"Kris Rhodes","tenure":"1.4 yrs","safety":68,"eng":69,"util":66,"prod":70,"sigs":2,"tix":3,"idx":68,"status":"warn","sig":[["Score declining","amber"]],"radar":[63,72,64,75,60,78],"trend":[73,72,72,69,71,68],"reco":["Light check-in","Steady this cycle."],"escore":68,"expd":{"psych":68,"perf":70,"eng":69,"wb":68},"top":["Performance 70"],"low":["Compliance training 54"],"comments":[],"well":["Resilient under pressure"],"notwell":[],"inbox":{"open":3,"pending":3,"overdue":0,"closed":0,"missed":0},"closed":0,"serviceLine":"Business Advisory","rater":75,"pct":115},{"id":"RO","name":"Riley Osborne","team":"Ellis Yates Team","role":"Business Advisor","mgr":"Ellis Yates","tenure":"8.9 yrs","safety":75,"eng":69,"util":70,"prod":71,"sigs":0,"tix":2,"idx":72,"status":"ok","sig":[["No active flags","amber"]],"radar":[84,71,84,77,80,79],"trend":[66,67,70,71,71,71],"reco":["Light check-in","Steady this cycle."],"escore":72,"expd":{"psych":75,"perf":71,"eng":69,"wb":75},"top":["Performance 71"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":3,"missed":0},"closed":3,"serviceLine":"Business Advisory","rater":78,"pct":93},{"id":"RH","name":"Reese Holt","team":"Zara Ortiz Team","role":"Senior Advisor","mgr":"Zara Ortiz","tenure":"5.8 yrs","safety":67,"eng":69,"util":67,"prod":72,"sigs":4,"tix":8,"idx":69,"status":"bad","sig":[["4 risk factors","bad"],["Score declining","amber"]],"radar":[58,62,77,67,64,76],"trend":[75,72,73,72,70,70],"reco":["Workload + resourcing conversation","Multiple risk factors flagged; review workload and support."],"escore":68,"expd":{"psych":67,"perf":72,"eng":69,"wb":67},"top":["Performance 72"],"low":["Fatigue 55","Goal clarity 55"],"comments":[],"well":["Resilient under pressure"],"notwell":["Watch wellbeing","Workload pressure"],"inbox":{"open":8,"pending":8,"overdue":1,"closed":5,"missed":1},"closed":5,"serviceLine":"Business Advisory","rater":79,"pct":91},{"id":"MB","name":"Marley Banks","team":"Casey Vega Team","role":"Associate Advisor","mgr":"Casey Vega","tenure":"7.6 yrs","safety":76,"eng":70,"util":72,"prod":73,"sigs":0,"tix":2,"idx":74,"status":"ok","sig":[["No active flags","amber"]],"radar":[75,77,74,67,73,68],"trend":[73,73,74,73,73,73],"reco":["Light check-in","Steady this cycle."],"escore":73,"expd":{"psych":76,"perf":73,"eng":70,"wb":76},"top":["Performance 73"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":4,"missed":0},"closed":4,"serviceLine":"Business Advisory","rater":69,"pct":91},{"id":"OT","name":"Oakley Thorne","team":"Kris Rhodes Team","role":"Associate Advisor","mgr":"Kris Rhodes","tenure":"3.3 yrs","safety":68,"eng":71,"util":69,"prod":75,"sigs":0,"tix":0,"idx":71,"status":"ok","sig":[["Score declining","amber"]],"radar":[65,77,72,68,70,67],"trend":[74,73,72,72,71,72],"reco":["Light check-in","Steady this cycle."],"escore":70,"expd":{"psych":68,"perf":75,"eng":71,"wb":68},"top":["Performance 75"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":0,"pending":0,"overdue":0,"closed":1,"missed":0},"closed":1,"serviceLine":"Business Advisory","rater":80,"pct":118},{"id":"KT","name":"Kai Tate","team":"Robin Doyle Team","role":"Senior Advisor","mgr":"Robin Doyle","tenure":"5.9 yrs","safety":69,"eng":68,"util":70,"prod":75,"sigs":0,"tix":2,"idx":71,"status":"ok","sig":[["Score declining","amber"]],"radar":[75,66,65,75,66,78],"trend":[75,75,73,74,72,72],"reco":["Light check-in","Steady this cycle."],"escore":68,"expd":{"psych":69,"perf":75,"eng":68,"wb":69},"top":["Performance 75"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":1,"missed":0},"closed":1,"serviceLine":"Business Advisory","rater":71,"pct":110},{"id":"QF","name":"Quinn Frey","team":"Ellis Yates Team","role":"Associate Advisor","mgr":"Ellis Yates","tenure":"7.6 yrs","safety":75,"eng":74,"util":73,"prod":78,"sigs":0,"tix":0,"idx":75,"status":"ok","sig":[["No active flags","amber"]],"radar":[77,77,76,83,82,73],"trend":[72,72,72,74,74,75],"reco":["Light check-in","Steady this cycle."],"escore":74,"expd":{"psych":75,"perf":78,"eng":74,"wb":75},"top":["Performance 78"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":0,"pending":0,"overdue":0,"closed":0,"missed":0},"closed":0,"serviceLine":"Business Advisory","rater":86,"pct":93},{"id":"LJ","name":"Lou Jensen","team":"Dana Vega Team","role":"Analyst","mgr":"Dana Vega","tenure":"1.2 yrs","safety":75,"eng":76,"util":76,"prod":74,"sigs":0,"tix":1,"idx":75,"status":"ok","sig":[["No active flags","amber"]],"radar":[74,69,75,75,74,79],"trend":[72,74,72,75,73,74],"reco":["Light check-in","Steady this cycle."],"escore":76,"expd":{"psych":75,"perf":74,"eng":76,"wb":75},"top":["Performance 74"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":1,"pending":1,"overdue":0,"closed":2,"missed":0},"closed":2,"serviceLine":"Corporate Advisory","rater":74,"pct":88},{"id":"PK","name":"Parker Knox","team":"Reese Granger Team","role":"Corporate Advisor","mgr":"Reese Granger","tenure":"7.3 yrs","safety":78,"eng":71,"util":72,"prod":73,"sigs":0,"tix":2,"idx":74,"status":"ok","sig":[["No active flags","amber"]],"radar":[83,86,77,77,68,72],"trend":[69,71,72,71,74,74],"reco":["Light check-in","Steady this cycle."],"escore":74,"expd":{"psych":78,"perf":73,"eng":71,"wb":78},"top":["Performance 73"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":2,"missed":0},"closed":2,"serviceLine":"Corporate Advisory","rater":83,"pct":109},{"id":"SN","name":"Sutton Noble","team":"Reese Granger Team","role":"Associate Director","mgr":"Reese Granger","tenure":"4.3 yrs","safety":66,"eng":63,"util":66,"prod":71,"sigs":1,"tix":2,"idx":68,"status":"warn","sig":[["No active flags","amber"]],"radar":[68,69,62,61,58,63],"trend":[65,66,65,67,68,69],"reco":["Light check-in","Steady this cycle."],"escore":64,"expd":{"psych":66,"perf":71,"eng":63,"wb":66},"top":["Performance 71"],"low":["Feeling energised 54","Compliance training 54"],"comments":[],"well":["Resilient under pressure"],"notwell":["Watch wellbeing"],"inbox":{"open":2,"pending":2,"overdue":0,"closed":3,"missed":0},"closed":3,"serviceLine":"Corporate Advisory","rater":64,"pct":88},{"id":"ZS","name":"Zara Sloan","team":"Dana Vega Team","role":"Corporate Advisor","mgr":"Dana Vega","tenure":"1.3 yrs","safety":71,"eng":72,"util":69,"prod":72,"sigs":2,"tix":4,"idx":71,"status":"warn","sig":[["No active flags","amber"]],"radar":[72,74,69,71,75,70],"trend":[71,72,72,71,70,71],"reco":["Light check-in","Steady this cycle."],"escore":72,"expd":{"psych":71,"perf":72,"eng":72,"wb":71},"top":["Performance 72"],"low":[],"comments":[],"well":["Resilient under pressure"],"notwell":[],"inbox":{"open":4,"pending":4,"overdue":0,"closed":1,"missed":0},"closed":1,"serviceLine":"Corporate Advisory","rater":77,"pct":112},{"id":"BK","name":"Bex Knox","team":"Dana Vega Team","role":"Corporate Partner","mgr":"Dana Vega","tenure":"2.9 yrs","safety":78,"eng":76,"util":74,"prod":72,"sigs":0,"tix":2,"idx":75,"status":"ok","sig":[["No active flags","amber"]],"radar":[88,70,85,83,74,88],"trend":[76,75,76,74,76,75],"reco":["Light check-in","Steady this cycle."],"escore":77,"expd":{"psych":78,"perf":72,"eng":76,"wb":78},"top":["Performance 72"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":3,"missed":0},"closed":3,"serviceLine":"Corporate Advisory","rater":58,"pct":88},{"id":"NK","name":"Nat Keller","team":"Dana Vega Team","role":"Corporate Advisor","mgr":"Dana Vega","tenure":"9.4 yrs","safety":63,"eng":70,"util":70,"prod":63,"sigs":2,"tix":5,"idx":65,"status":"warn","sig":[["Score declining","amber"]],"radar":[64,72,63,71,69,56],"trend":[72,71,69,67,68,64],"reco":["Wellbeing check-in","Energy and balance trending down."],"escore":66,"expd":{"psych":63,"perf":63,"eng":70,"wb":63},"top":["Performance 63"],"low":["Fatigue 51"],"comments":[["Workload","Workload peaks are not shared evenly.","neg"]],"well":["Resilient under pressure"],"notwell":["Watch wellbeing"],"inbox":{"open":5,"pending":5,"overdue":0,"closed":0,"missed":0},"closed":0,"serviceLine":"Corporate Advisory","rater":60,"pct":100},{"id":"JP","name":"Jules Pratt","team":"Reese Granger Team","role":"Associate Director","mgr":"Reese Granger","tenure":"6.3 yrs","safety":68,"eng":73,"util":73,"prod":68,"sigs":0,"tix":2,"idx":70,"status":"ok","sig":[["No active flags","amber"]],"radar":[67,68,70,75,75,60],"trend":[68,69,68,70,70,71],"reco":["Light check-in","Steady this cycle."],"escore":70,"expd":{"psych":68,"perf":68,"eng":73,"wb":68},"top":["Performance 68"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":3,"missed":0},"closed":3,"serviceLine":"Corporate Advisory","rater":84,"pct":101},{"id":"MV","name":"Micah Vance","team":"Reese Granger Team","role":"Corporate Advisor","mgr":"Reese Granger","tenure":"3.3 yrs","safety":74,"eng":79,"util":74,"prod":70,"sigs":0,"tix":0,"idx":73,"status":"ok","sig":[["No active flags","amber"]],"radar":[67,73,84,73,84,82],"trend":[74,72,73,74,72,74],"reco":["Light check-in","Steady this cycle."],"escore":76,"expd":{"psych":74,"perf":70,"eng":79,"wb":74},"top":["Performance 70"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":0,"pending":0,"overdue":0,"closed":5,"missed":0},"closed":5,"serviceLine":"Corporate Advisory","rater":84,"pct":90},{"id":"RY","name":"Reagan York","team":"Reese Granger Team","role":"Corporate Advisor","mgr":"Reese Granger","tenure":"7.1 yrs","safety":72,"eng":65,"util":67,"prod":68,"sigs":0,"tix":0,"idx":69,"status":"ok","sig":[["Score declining","amber"]],"radar":[76,78,82,70,65,63],"trend":[74,74,72,71,71,68],"reco":["Light check-in","Steady this cycle."],"escore":68,"expd":{"psych":72,"perf":68,"eng":65,"wb":72},"top":["Performance 68"],"low":["Rater participation 55"],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":0,"pending":0,"overdue":0,"closed":0,"missed":0},"closed":0,"serviceLine":"Corporate Advisory","rater":78,"pct":96},{"id":"LE","name":"Lane Ellison","team":"Dana Vega Team","role":"Corporate Partner","mgr":"Dana Vega","tenure":"2.8 yrs","safety":75,"eng":79,"util":78,"prod":71,"sigs":0,"tix":2,"idx":75,"status":"ok","sig":[["No active flags","amber"]],"radar":[83,68,67,80,72,74],"trend":[70,72,74,74,74,74],"reco":["Light check-in","Steady this cycle."],"escore":77,"expd":{"psych":75,"perf":71,"eng":79,"wb":75},"top":["Performance 71"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":1,"missed":0},"closed":1,"serviceLine":"Corporate Advisory","rater":81,"pct":74},{"id":"PN","name":"Phoenix Nash","team":"Reese Granger Team","role":"Corporate Advisor","mgr":"Reese Granger","tenure":"6.7 yrs","safety":64,"eng":63,"util":67,"prod":68,"sigs":3,"tix":7,"idx":66,"status":"bad","sig":[["3 risk factors","bad"]],"radar":[55,72,54,61,60,62],"trend":[67,67,65,66,65,66],"reco":["Workload + resourcing conversation","Multiple risk factors flagged; review workload and support."],"escore":64,"expd":{"psych":64,"perf":68,"eng":63,"wb":64},"top":["Performance 68"],"low":["Fatigue 52","Rater participation 55"],"comments":[["Workload","Workload peaks are not shared evenly.","neg"]],"well":["Resilient under pressure"],"notwell":["Watch wellbeing","Workload pressure"],"inbox":{"open":7,"pending":7,"overdue":0,"closed":4,"missed":0},"closed":4,"serviceLine":"Corporate Advisory","rater":89,"pct":69},{"id":"IH","name":"Isa Holt","team":"Reese Granger Team","role":"Analyst","mgr":"Reese Granger","tenure":"6.3 yrs","safety":74,"eng":69,"util":73,"prod":66,"sigs":0,"tix":0,"idx":71,"status":"ok","sig":[["No active flags","amber"]],"radar":[68,80,75,72,77,81],"trend":[64,66,68,68,69,71],"reco":["Light check-in","Steady this cycle."],"escore":72,"expd":{"psych":74,"perf":66,"eng":69,"wb":74},"top":["Performance 66"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":0,"pending":0,"overdue":0,"closed":5,"missed":0},"closed":5,"serviceLine":"Corporate Advisory","rater":62,"pct":70},{"id":"AT","name":"Avery Tate","team":"Dana Vega Team","role":"Corporate Advisor","mgr":"Dana Vega","tenure":"3.0 yrs","safety":61,"eng":61,"util":67,"prod":61,"sigs":6,"tix":11,"idx":63,"status":"bad","sig":[["6 risk factors","bad"],["Score declining","amber"]],"radar":[54,54,67,56,69,66],"trend":[70,67,68,66,65,64],"reco":["Workload + resourcing conversation","Multiple risk factors flagged; review workload and support."],"escore":61,"expd":{"psych":61,"perf":61,"eng":61,"wb":61},"top":["Performance 61"],"low":["Workload satisfaction 49","Rater participation 55"],"comments":[["Workload","Workload peaks are not shared evenly.","neg"]],"well":["Resilient under pressure"],"notwell":["Watch wellbeing","Workload pressure"],"inbox":{"open":11,"pending":11,"overdue":1,"closed":3,"missed":1},"closed":3,"serviceLine":"Corporate Advisory","rater":88,"pct":73},{"id":"EK","name":"Eden Keller","team":"Dana Vega Team","role":"Analyst","mgr":"Dana Vega","tenure":"7.2 yrs","safety":78,"eng":77,"util":76,"prod":71,"sigs":0,"tix":1,"idx":75,"status":"ok","sig":[["No active flags","amber"]],"radar":[75,86,72,87,69,84],"trend":[68,71,70,74,72,74],"reco":["Light check-in","Steady this cycle."],"escore":78,"expd":{"psych":78,"perf":71,"eng":77,"wb":78},"top":["Performance 71"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":1,"pending":1,"overdue":0,"closed":5,"missed":0},"closed":5,"serviceLine":"Corporate Advisory","rater":66,"pct":90},{"id":"JL","name":"Jamie Lowry","team":"Dana Vega Team","role":"Corporate Advisor","mgr":"Dana Vega","tenure":"8.6 yrs","safety":66,"eng":64,"util":67,"prod":69,"sigs":3,"tix":6,"idx":67,"status":"bad","sig":[["3 risk factors","bad"]],"radar":[60,67,62,68,65,68],"trend":[64,64,67,66,67,66],"reco":["Workload + resourcing conversation","Multiple risk factors flagged; review workload and support."],"escore":65,"expd":{"psych":66,"perf":69,"eng":64,"wb":66},"top":["Performance 69"],"low":["Fatigue 54","Goal clarity 55"],"comments":[],"well":["Resilient under pressure"],"notwell":["Watch wellbeing","Workload pressure"],"inbox":{"open":6,"pending":6,"overdue":0,"closed":5,"missed":0},"closed":5,"serviceLine":"Corporate Advisory","rater":54,"pct":84},{"id":"LW","name":"Lane Ward","team":"Frankie Jensen Team","role":"Operations Lead","mgr":"Frankie Jensen","tenure":"2.9 yrs","safety":54,"eng":52,"util":56,"prod":61,"sigs":6,"tix":12,"idx":57,"status":"bad","sig":[["6 risk factors","bad"],["Score declining","amber"]],"radar":[46,47,60,45,55,53],"trend":[66,63,62,60,60,56],"reco":["Workload + resourcing conversation","Multiple risk factors flagged; review workload and support."],"escore":53,"expd":{"psych":54,"perf":61,"eng":52,"wb":54},"top":["Performance 61"],"low":["Feeling energised 42","Goal clarity 44"],"comments":[["Workload","Workload peaks are not shared evenly.","neg"]],"well":["Resilient under pressure"],"notwell":["Watch wellbeing","Workload pressure"],"inbox":{"open":12,"pending":12,"overdue":1,"closed":2,"missed":1},"closed":2,"serviceLine":"Management Services","rater":90,"pct":84},{"id":"HJ","name":"Harper Jensen","team":"Frankie Jensen Team","role":"Practice Manager","mgr":"Frankie Jensen","tenure":"1.9 yrs","safety":73,"eng":69,"util":69,"prod":76,"sigs":0,"tix":0,"idx":73,"status":"ok","sig":[["No active flags","amber"]],"radar":[65,66,77,80,77,64],"trend":[68,69,72,70,71,72],"reco":["Light check-in","Steady this cycle."],"escore":71,"expd":{"psych":73,"perf":76,"eng":69,"wb":73},"top":["Performance 76"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":0,"pending":0,"overdue":0,"closed":2,"missed":0},"closed":2,"serviceLine":"Management Services","rater":62,"pct":68},{"id":"SK","name":"Sam Knox","team":"Frankie Jensen Team","role":"PA","mgr":"Frankie Jensen","tenure":"9.5 yrs","safety":71,"eng":65,"util":64,"prod":68,"sigs":0,"tix":2,"idx":68,"status":"ok","sig":[["Score declining","amber"]],"radar":[77,68,74,74,73,66],"trend":[74,71,69,71,70,67],"reco":["Light check-in","Steady this cycle."],"escore":68,"expd":{"psych":71,"perf":68,"eng":65,"wb":71},"top":["Performance 68"],"low":["Goal clarity 52"],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":0,"missed":0},"closed":0,"serviceLine":"Management Services","rater":84,"pct":73},{"id":"JK","name":"Jamie Keller","team":"Alex Boyd Team","role":"PA","mgr":"Alex Boyd","tenure":"1.4 yrs","safety":69,"eng":71,"util":67,"prod":68,"sigs":2,"tix":6,"idx":68,"status":"warn","sig":[["No active flags","amber"]],"radar":[62,71,71,72,69,77],"trend":[63,64,65,67,66,68],"reco":["Light check-in","Steady this cycle."],"escore":70,"expd":{"psych":69,"perf":68,"eng":71,"wb":69},"top":["Performance 68"],"low":["Rater participation 55"],"comments":[],"well":["Resilient under pressure"],"notwell":[],"inbox":{"open":6,"pending":6,"overdue":0,"closed":0,"missed":0},"closed":0,"serviceLine":"Management Services","rater":83,"pct":70},{"id":"FF","name":"Flynn Frey","team":"Alex Boyd Team","role":"Operations Lead","mgr":"Alex Boyd","tenure":"9.5 yrs","safety":71,"eng":67,"util":68,"prod":76,"sigs":0,"tix":0,"idx":72,"status":"ok","sig":[["No active flags","amber"]],"radar":[62,77,67,77,70,68],"trend":[65,67,67,69,69,72],"reco":["Light check-in","Steady this cycle."],"escore":69,"expd":{"psych":71,"perf":76,"eng":67,"wb":71},"top":["Performance 76"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":0,"pending":0,"overdue":0,"closed":4,"missed":0},"closed":4,"serviceLine":"Management Services","rater":90,"pct":89},{"id":"CL","name":"Cameron Locke","team":"Alex Boyd Team","role":"Companies Officer","mgr":"Alex Boyd","tenure":"2.2 yrs","safety":62,"eng":66,"util":63,"prod":67,"sigs":1,"tix":4,"idx":64,"status":"warn","sig":[["Score declining","amber"]],"radar":[71,63,63,56,72,70],"trend":[67,67,66,66,63,65],"reco":["Wellbeing check-in","Energy and balance trending down."],"escore":64,"expd":{"psych":62,"perf":67,"eng":66,"wb":62},"top":["Performance 67"],"low":["Fatigue 50","Compliance training 51"],"comments":[["Workload","Workload peaks are not shared evenly.","neg"]],"well":["Resilient under pressure"],"notwell":["Watch wellbeing"],"inbox":{"open":4,"pending":4,"overdue":0,"closed":2,"missed":0},"closed":2,"serviceLine":"Management Services","rater":87,"pct":68},{"id":"ZW","name":"Zion Ward","team":"Alex Boyd Team","role":"HR Consultant","mgr":"Alex Boyd","tenure":"7.1 yrs","safety":71,"eng":70,"util":70,"prod":72,"sigs":0,"tix":2,"idx":71,"status":"ok","sig":[["No active flags","amber"]],"radar":[68,80,69,63,67,64],"trend":[73,74,73,73,73,72],"reco":["Light check-in","Steady this cycle."],"escore":70,"expd":{"psych":71,"perf":72,"eng":70,"wb":71},"top":["Performance 72"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":1,"missed":0},"closed":1,"serviceLine":"Management Services","rater":64,"pct":92},{"id":"PZ","name":"Parker Zimmer","team":"Alex Boyd Team","role":"Operations Lead","mgr":"Alex Boyd","tenure":"3.5 yrs","safety":71,"eng":71,"util":67,"prod":72,"sigs":0,"tix":1,"idx":70,"status":"ok","sig":[["Score declining","amber"]],"radar":[65,67,77,73,74,63],"trend":[72,73,72,72,71,70],"reco":["Light check-in","Steady this cycle."],"escore":71,"expd":{"psych":71,"perf":72,"eng":71,"wb":71},"top":["Performance 72"],"low":["Rater participation 55"],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":1,"pending":1,"overdue":0,"closed":1,"missed":0},"closed":1,"serviceLine":"Management Services","rater":73,"pct":104},{"id":"WD","name":"Wyatt Doyle","team":"Alex Boyd Team","role":"Practice Manager","mgr":"Alex Boyd","tenure":"7.3 yrs","safety":66,"eng":69,"util":62,"prod":72,"sigs":3,"tix":6,"idx":67,"status":"bad","sig":[["3 risk factors","bad"]],"radar":[75,74,66,64,67,58],"trend":[69,69,68,67,67,68],"reco":["Workload + resourcing conversation","Multiple risk factors flagged; review workload and support."],"escore":68,"expd":{"psych":66,"perf":72,"eng":69,"wb":66},"top":["Performance 72"],"low":["Fatigue 54","Compliance training 50"],"comments":[],"well":["Resilient under pressure"],"notwell":["Watch wellbeing","Workload pressure"],"inbox":{"open":6,"pending":6,"overdue":0,"closed":5,"missed":0},"closed":5,"serviceLine":"Management Services","rater":84,"pct":95},{"id":"FK","name":"Flynn Keller","team":"Frankie Jensen Team","role":"Practice Manager","mgr":"Frankie Jensen","tenure":"5.4 yrs","safety":72,"eng":66,"util":70,"prod":71,"sigs":0,"tix":1,"idx":71,"status":"ok","sig":[["No active flags","amber"]],"radar":[65,64,66,66,76,76],"trend":[71,71,70,72,70,72],"reco":["Light check-in","Steady this cycle."],"escore":69,"expd":{"psych":72,"perf":71,"eng":66,"wb":72},"top":["Performance 71"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":1,"pending":1,"overdue":0,"closed":5,"missed":0},"closed":5,"serviceLine":"Management Services","rater":61,"pct":70},{"id":"SS","name":"Sage Sloan","team":"Alex Boyd Team","role":"PA","mgr":"Alex Boyd","tenure":"2.3 yrs","safety":68,"eng":65,"util":62,"prod":71,"sigs":0,"tix":0,"idx":67,"status":"ok","sig":[["No active flags","amber"]],"radar":[67,76,63,71,66,65],"trend":[69,69,70,68,66,68],"reco":["Light check-in","Steady this cycle."],"escore":66,"expd":{"psych":68,"perf":71,"eng":65,"wb":68},"top":["Performance 71"],"low":["Rater participation 50"],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":0,"pending":0,"overdue":0,"closed":2,"missed":0},"closed":2,"serviceLine":"Management Services","rater":70,"pct":67},{"id":"AJ","name":"Adrian Jarrett","team":"Frankie Jensen Team","role":"Companies Officer","mgr":"Frankie Jensen","tenure":"6.6 yrs","safety":73,"eng":71,"util":67,"prod":78,"sigs":0,"tix":0,"idx":73,"status":"ok","sig":[["No active flags","amber"]],"radar":[68,69,71,80,64,74],"trend":[70,71,73,73,74,73],"reco":["Light check-in","Steady this cycle."],"escore":72,"expd":{"psych":73,"perf":78,"eng":71,"wb":73},"top":["Performance 78"],"low":["Compliance training 55"],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":0,"pending":0,"overdue":0,"closed":4,"missed":0},"closed":4,"serviceLine":"Management Services","rater":57,"pct":96},{"id":"NF","name":"Nat Frost","team":"Frankie Jensen Team","role":"Companies Officer","mgr":"Frankie Jensen","tenure":"1.9 yrs","safety":67,"eng":72,"util":67,"prod":70,"sigs":0,"tix":0,"idx":68,"status":"ok","sig":[["Score declining","amber"]],"radar":[64,63,66,74,73,69],"trend":[74,75,73,70,69,68],"reco":["Light check-in","Steady this cycle."],"escore":70,"expd":{"psych":67,"perf":70,"eng":72,"wb":67},"top":["Performance 70"],"low":["Fatigue 55","Goal clarity 55"],"comments":[],"well":["Consistent contributor"],"notwell":["Watch wellbeing"],"inbox":{"open":0,"pending":0,"overdue":0,"closed":3,"missed":0},"closed":3,"serviceLine":"Management Services","rater":90,"pct":101},{"id":"VR","name":"Vic Rhodes","team":"Devon Granger Team","role":"Tax Senior","mgr":"Devon Granger","tenure":"1.4 yrs","safety":72,"eng":69,"util":75,"prod":76,"sigs":0,"tix":0,"idx":74,"status":"ok","sig":[["No active flags","amber"]],"radar":[65,81,71,79,67,70],"trend":[73,73,74,75,73,75],"reco":["Light check-in","Steady this cycle."],"escore":70,"expd":{"psych":72,"perf":76,"eng":69,"wb":72},"top":["Performance 76"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":0,"pending":0,"overdue":0,"closed":5,"missed":0},"closed":5,"serviceLine":"Taxation","rater":76,"pct":82},{"id":"QT","name":"Quinn Tate","team":"Devon Granger Team","role":"Tax Associate","mgr":"Devon Granger","tenure":"6.7 yrs","safety":76,"eng":74,"util":72,"prod":73,"sigs":0,"tix":2,"idx":74,"status":"ok","sig":[["No active flags","amber"]],"radar":[84,80,71,82,76,79],"trend":[65,67,71,72,72,74],"reco":["Light check-in","Steady this cycle."],"escore":75,"expd":{"psych":76,"perf":73,"eng":74,"wb":76},"top":["Performance 73"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":0,"missed":0},"closed":0,"serviceLine":"Taxation","rater":56,"pct":70},{"id":"MZ","name":"Morgan Zimmer","team":"Devon Granger Team","role":"Tax Partner","mgr":"Devon Granger","tenure":"2.6 yrs","safety":75,"eng":74,"util":74,"prod":78,"sigs":0,"tix":2,"idx":76,"status":"ok","sig":[["No active flags","amber"]],"radar":[82,84,79,74,68,68],"trend":[68,70,71,72,75,76],"reco":["Light check-in","Steady this cycle."],"escore":74,"expd":{"psych":75,"perf":78,"eng":74,"wb":75},"top":["Performance 78"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":0,"missed":0},"closed":0,"serviceLine":"Taxation","rater":63,"pct":83},{"id":"BE","name":"Blair Evers","team":"Devon Frey Team","role":"Tax Senior","mgr":"Devon Frey","tenure":"6.4 yrs","safety":74,"eng":72,"util":74,"prod":74,"sigs":0,"tix":1,"idx":74,"status":"ok","sig":[["No active flags","amber"]],"radar":[70,66,65,84,77,81],"trend":[71,72,73,73,74,74],"reco":["Light check-in","Steady this cycle."],"escore":73,"expd":{"psych":74,"perf":74,"eng":72,"wb":74},"top":["Performance 74"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":1,"pending":1,"overdue":0,"closed":2,"missed":0},"closed":2,"serviceLine":"Taxation","rater":76,"pct":105},{"id":"JS","name":"Jess Sayer","team":"Devon Granger Team","role":"Tax Senior","mgr":"Devon Granger","tenure":"8.1 yrs","safety":65,"eng":62,"util":64,"prod":68,"sigs":2,"tix":5,"idx":66,"status":"warn","sig":[["Low participation","bad"],["Score declining","amber"]],"radar":[66,59,70,59,66,71],"trend":[73,70,69,68,66,67],"reco":["Wellbeing check-in","Energy and balance trending down."],"escore":64,"expd":{"psych":65,"perf":68,"eng":62,"wb":65},"top":["Performance 68"],"low":["Work-life balance 53","Compliance training 52"],"comments":[],"well":["Resilient under pressure"],"notwell":["Watch wellbeing"],"inbox":{"open":5,"pending":5,"overdue":0,"closed":2,"missed":0},"closed":2,"serviceLine":"Taxation","rater":43,"pct":105},{"id":"RT","name":"Remy Thorne","team":"Devon Granger Team","role":"Tax Senior","mgr":"Devon Granger","tenure":"5.1 yrs","safety":72,"eng":66,"util":68,"prod":68,"sigs":0,"tix":2,"idx":69,"status":"ok","sig":[["Score declining","amber"]],"radar":[79,71,79,74,81,63],"trend":[74,72,72,70,69,68],"reco":["Light check-in","Steady this cycle."],"escore":69,"expd":{"psych":72,"perf":68,"eng":66,"wb":72},"top":["Performance 68"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":1,"missed":0},"closed":1,"serviceLine":"Taxation","rater":51,"pct":103},{"id":"TJ","name":"Tory Jensen","team":"Devon Granger Team","role":"Tax Senior","mgr":"Devon Granger","tenure":"4.4 yrs","safety":69,"eng":73,"util":69,"prod":67,"sigs":0,"tix":1,"idx":68,"status":"ok","sig":[["Low participation","bad"],["Score declining","amber"]],"radar":[62,74,69,74,61,71],"trend":[73,71,71,68,68,69],"reco":["Light check-in","Steady this cycle."],"escore":71,"expd":{"psych":69,"perf":67,"eng":73,"wb":69},"top":["Performance 67"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":1,"pending":1,"overdue":0,"closed":5,"missed":0},"closed":5,"serviceLine":"Taxation","rater":46,"pct":76},{"id":"SB","name":"Shay Bennett","team":"Devon Granger Team","role":"Tax Partner","mgr":"Devon Granger","tenure":"3.7 yrs","safety":73,"eng":73,"util":69,"prod":74,"sigs":0,"tix":2,"idx":72,"status":"ok","sig":[["Score declining","amber"]],"radar":[69,69,78,75,70,81],"trend":[78,76,75,75,72,73],"reco":["Light check-in","Steady this cycle."],"escore":73,"expd":{"psych":73,"perf":74,"eng":73,"wb":73},"top":["Performance 74"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":1,"missed":0},"closed":1,"serviceLine":"Taxation","rater":79,"pct":107},{"id":"FN","name":"Finley Nash","team":"Devon Granger Team","role":"Tax Partner","mgr":"Devon Granger","tenure":"1.7 yrs","safety":69,"eng":73,"util":68,"prod":74,"sigs":0,"tix":2,"idx":70,"status":"ok","sig":[["Score declining","amber"]],"radar":[79,72,72,59,73,67],"trend":[75,72,74,71,71,69],"reco":["Light check-in","Steady this cycle."],"escore":71,"expd":{"psych":69,"perf":74,"eng":73,"wb":69},"top":["Performance 74"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":3,"missed":0},"closed":3,"serviceLine":"Taxation","rater":57,"pct":78},{"id":"KB","name":"Kai Boyd","team":"Devon Granger Team","role":"Tax Partner","mgr":"Devon Granger","tenure":"0.7 yrs","safety":63,"eng":57,"util":61,"prod":67,"sigs":6,"tix":11,"idx":64,"status":"bad","sig":[["6 risk factors","bad"]],"radar":[67,59,54,63,57,72],"trend":[63,63,63,63,64,63],"reco":["Workload + resourcing conversation","Multiple risk factors flagged; review workload and support."],"escore":60,"expd":{"psych":63,"perf":67,"eng":57,"wb":63},"top":["Performance 67"],"low":["Work-life balance 51","Goal clarity 49"],"comments":[["Workload","Workload peaks are not shared evenly.","neg"]],"well":["Resilient under pressure"],"notwell":["Watch wellbeing","Workload pressure"],"inbox":{"open":11,"pending":11,"overdue":1,"closed":0,"missed":1},"closed":0,"serviceLine":"Taxation","rater":57,"pct":72},{"id":"GR","name":"Greer Reed","team":"Devon Frey Team","role":"Tax Manager","mgr":"Devon Frey","tenure":"2.1 yrs","safety":74,"eng":79,"util":76,"prod":75,"sigs":0,"tix":2,"idx":75,"status":"ok","sig":[["No active flags","amber"]],"radar":[73,66,81,82,64,67],"trend":[74,76,76,76,75,76],"reco":["Light check-in","Steady this cycle."],"escore":76,"expd":{"psych":74,"perf":75,"eng":79,"wb":74},"top":["Performance 75"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":5,"missed":0},"closed":5,"serviceLine":"Taxation","rater":72,"pct":71},{"id":"TR","name":"Tory Rhodes","team":"Devon Frey Team","role":"Tax Associate","mgr":"Devon Frey","tenure":"0.9 yrs","safety":67,"eng":64,"util":69,"prod":72,"sigs":3,"tix":6,"idx":69,"status":"bad","sig":[["3 risk factors","bad"]],"radar":[65,69,73,71,61,65],"trend":[64,63,66,65,69,68],"reco":["Workload + resourcing conversation","Multiple risk factors flagged; review workload and support."],"escore":66,"expd":{"psych":67,"perf":72,"eng":64,"wb":67},"top":["Performance 72"],"low":["Work-life balance 55"],"comments":[],"well":["Resilient under pressure"],"notwell":["Watch wellbeing","Workload pressure"],"inbox":{"open":6,"pending":6,"overdue":0,"closed":4,"missed":0},"closed":4,"serviceLine":"Taxation","rater":73,"pct":76},{"id":"HR","name":"Hollis Reed","team":"Devon Granger Team","role":"Tax Senior","mgr":"Devon Granger","tenure":"1.9 yrs","safety":73,"eng":78,"util":75,"prod":69,"sigs":0,"tix":0,"idx":72,"status":"ok","sig":[["Low participation","bad"]],"radar":[77,65,76,68,70,77],"trend":[66,67,69,70,70,72],"reco":["Light check-in","Steady this cycle."],"escore":76,"expd":{"psych":73,"perf":69,"eng":78,"wb":73},"top":["Performance 69"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":0,"pending":0,"overdue":0,"closed":3,"missed":0},"closed":3,"serviceLine":"Taxation","rater":45,"pct":86},{"id":"OE","name":"Oakley Ellison","team":"Devon Frey Team","role":"Tax Associate","mgr":"Devon Frey","tenure":"6.4 yrs","safety":68,"eng":72,"util":68,"prod":64,"sigs":2,"tix":4,"idx":67,"status":"warn","sig":[["Score declining","amber"]],"radar":[67,69,60,68,64,78],"trend":[70,70,70,68,69,66],"reco":["Light check-in","Steady this cycle."],"escore":70,"expd":{"psych":68,"perf":64,"eng":72,"wb":68},"top":["Performance 64"],"low":[],"comments":[],"well":["Resilient under pressure"],"notwell":[],"inbox":{"open":4,"pending":4,"overdue":0,"closed":5,"missed":0},"closed":5,"serviceLine":"Taxation","rater":61,"pct":88},{"id":"OK","name":"Ola Knox","team":"Devon Frey Team","role":"Tax Manager","mgr":"Devon Frey","tenure":"9.2 yrs","safety":75,"eng":71,"util":76,"prod":71,"sigs":0,"tix":0,"idx":74,"status":"ok","sig":[["No active flags","amber"]],"radar":[78,79,67,80,69,72],"trend":[73,73,74,74,74,74],"reco":["Light check-in","Steady this cycle."],"escore":73,"expd":{"psych":75,"perf":71,"eng":71,"wb":75},"top":["Performance 71"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":0,"pending":0,"overdue":0,"closed":5,"missed":0},"closed":5,"serviceLine":"Taxation","rater":65,"pct":95},{"id":"HQ","name":"Harper Quill","team":"Devon Granger Team","role":"Tax Manager","mgr":"Devon Granger","tenure":"1.8 yrs","safety":74,"eng":72,"util":76,"prod":71,"sigs":0,"tix":2,"idx":74,"status":"ok","sig":[["Low participation","bad"],["Score declining","amber"]],"radar":[83,81,76,79,73,77],"trend":[81,80,79,78,74,74],"reco":["Light check-in","Steady this cycle."],"escore":73,"expd":{"psych":74,"perf":71,"eng":72,"wb":74},"top":["Performance 71"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":4,"missed":0},"closed":4,"serviceLine":"Taxation","rater":46,"pct":99},{"id":"PV","name":"Parker Vega","team":"Devon Granger Team","role":"Tax Manager","mgr":"Devon Granger","tenure":"6.0 yrs","safety":73,"eng":74,"util":69,"prod":76,"sigs":0,"tix":2,"idx":73,"status":"ok","sig":[["Score declining","amber"]],"radar":[78,68,82,82,72,66],"trend":[78,78,76,74,75,74],"reco":["Light check-in","Steady this cycle."],"escore":74,"expd":{"psych":73,"perf":76,"eng":74,"wb":73},"top":["Performance 76"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":2,"pending":2,"overdue":0,"closed":3,"missed":0},"closed":3,"serviceLine":"Taxation","rater":60,"pct":90},{"id":"WO","name":"Wren Ortiz","team":"Devon Frey Team","role":"Tax Senior","mgr":"Devon Frey","tenure":"7.8 yrs","safety":63,"eng":64,"util":68,"prod":67,"sigs":3,"tix":5,"idx":66,"status":"bad","sig":[["3 risk factors","bad"],["Score declining","amber"]],"radar":[60,63,64,66,61,68],"trend":[74,74,71,70,67,65],"reco":["Workload + resourcing conversation","Multiple risk factors flagged; review workload and support."],"escore":64,"expd":{"psych":63,"perf":67,"eng":64,"wb":63},"top":["Performance 67"],"low":["Work-life balance 51"],"comments":[["Workload","Workload peaks are not shared evenly.","neg"]],"well":["Resilient under pressure"],"notwell":["Watch wellbeing","Workload pressure"],"inbox":{"open":5,"pending":5,"overdue":0,"closed":3,"missed":0},"closed":3,"serviceLine":"Taxation","rater":70,"pct":92},{"id":"GJ","name":"Greer Jensen","team":"Devon Frey Team","role":"Tax Partner","mgr":"Devon Frey","tenure":"1.0 yrs","safety":70,"eng":67,"util":70,"prod":74,"sigs":0,"tix":0,"idx":71,"status":"ok","sig":[["Score declining","amber"]],"radar":[75,71,65,76,76,66],"trend":[76,77,74,75,73,72],"reco":["Light check-in","Steady this cycle."],"escore":68,"expd":{"psych":70,"perf":74,"eng":67,"wb":70},"top":["Performance 74"],"low":[],"comments":[],"well":["Consistent contributor"],"notwell":[],"inbox":{"open":0,"pending":0,"overdue":0,"closed":5,"missed":0},"closed":5,"serviceLine":"Taxation","rater":71,"pct":75}];
+const EP = {
+  org: {
+    name: "AFS & Associates",
+    headcount: 131,
+    scored: 129,
+    wellbeing: 73.7,
+    compliance: 72.3,
+    performance: 74.5,
+    rater: 73.5,
+    prodHrsProgress: 101.6,
+    atRisk: 34,
+    totalFlags: 89,
+    pulseAvg: 73.7
+  },
+  factors: [
+    {
+      name: "Colleague relationships",
+      pillar: "Engagement",
+      score: 78.3
+    },
+    {
+      name: "Collaboration & Teamwork",
+      pillar: "Engagement",
+      score: 78.2
+    },
+    {
+      name: "Job expectations clarity",
+      pillar: "Performance",
+      score: 78.1
+    },
+    {
+      name: "Performance Accountability",
+      pillar: "Performance",
+      score: 77.7
+    },
+    {
+      name: "Learning opportunities",
+      pillar: "Performance",
+      score: 77.4
+    },
+    {
+      name: "Relationships with colleagues",
+      pillar: "Engagement",
+      score: 77
+    },
+    {
+      name: "Goal Clarity & Alignment",
+      pillar: "Performance",
+      score: 76.1
+    },
+    {
+      name: "Psychological safety",
+      pillar: "Engagement",
+      score: 75.5
+    },
+    {
+      name: "Ability to do meaningful work",
+      pillar: "Engagement",
+      score: 75.3
+    },
+    {
+      name: "Poor change management",
+      pillar: "Compliance",
+      score: 74.7
+    },
+    {
+      name: "Resource Availability",
+      pillar: "Wellbeing",
+      score: 74.3
+    },
+    {
+      name: "Workload Management",
+      pillar: "Wellbeing",
+      score: 73.9
+    },
+    {
+      name: "Work-life balance",
+      pillar: "Wellbeing",
+      score: 73.9
+    },
+    {
+      name: "Manager support",
+      pillar: "Engagement",
+      score: 73.7
+    },
+    {
+      name: "Feedback & Recognition",
+      pillar: "Performance",
+      score: 72.9
+    },
+    {
+      name: "Fatigue",
+      pillar: "Wellbeing",
+      score: 72.1
+    },
+    {
+      name: "Workload satisfaction",
+      pillar: "Wellbeing",
+      score: 69.9
+    },
+    {
+      name: "Training and development",
+      pillar: "Performance",
+      score: 65.5
+    }
+  ],
+  pulseWaves: [
+    {
+      label: "Wave 1",
+      date: "02-May-26",
+      overall: 76.5,
+      respondents: 90,
+      factors: [
+        {
+          name: "Ability to do meaningful work",
+          score: 79.1,
+          responses: 85
+        },
+        {
+          name: "Performance Accountability",
+          score: 78.8,
+          responses: 86
+        },
+        {
+          name: "Learning opportunities",
+          score: 77.8,
+          responses: 89
+        },
+        {
+          name: "Goal Clarity & Alignment",
+          score: 77.2,
+          responses: 90
+        },
+        {
+          name: "Feedback & Recognition",
+          score: 76.7,
+          responses: 87
+        },
+        {
+          name: "Resource Availability",
+          score: 76.4,
+          responses: 90
+        },
+        {
+          name: "Fatigue",
+          score: 76.1,
+          responses: 90
+        },
+        {
+          name: "Workload Management",
+          score: 76.1,
+          responses: 90
+        },
+        {
+          name: "Manager support",
+          score: 73.8,
+          responses: 85
+        },
+        {
+          name: "Workload satisfaction",
+          score: 73.1,
+          responses: 90
+        }
+      ],
+      weakest: "Workload satisfaction"
+    },
+    {
+      label: "Wave 2",
+      date: "09-May-26",
+      overall: 71.3,
+      respondents: 101,
+      factors: [
+        {
+          name: "Collaboration & Teamwork",
+          score: 78.2,
+          responses: 101
+        },
+        {
+          name: "Goal Clarity & Alignment",
+          score: 76.7,
+          responses: 101
+        },
+        {
+          name: "Psychological safety",
+          score: 75.5,
+          responses: 101
+        },
+        {
+          name: "Workload Management",
+          score: 71.5,
+          responses: 101
+        },
+        {
+          name: "Workload satisfaction",
+          score: 69.6,
+          responses: 101
+        },
+        {
+          name: "Ability to do meaningful work",
+          score: 69.1,
+          responses: 101
+        },
+        {
+          name: "Fatigue",
+          score: 68.7,
+          responses: 101
+        },
+        {
+          name: "Training and development",
+          score: 65.5,
+          responses: 97
+        }
+      ],
+      weakest: "Training and development"
+    },
+    {
+      label: "Wave 3",
+      date: "16-May-26",
+      overall: 75.3,
+      respondents: 99,
+      factors: [
+        {
+          name: "Goal Clarity & Alignment",
+          score: 79.1,
+          responses: 99
+        },
+        {
+          name: "Colleague relationships",
+          score: 78.3,
+          responses: 99
+        },
+        {
+          name: "Learning opportunities",
+          score: 77.9,
+          responses: 96
+        },
+        {
+          name: "Poor change management",
+          score: 74.7,
+          responses: 99
+        },
+        {
+          name: "Manager support",
+          score: 74.5,
+          responses: 92
+        },
+        {
+          name: "Work-life balance",
+          score: 73.9,
+          responses: 94
+        },
+        {
+          name: "Feedback & Recognition",
+          score: 71.1,
+          responses: 97
+        },
+        {
+          name: "Workload satisfaction",
+          score: 69.2,
+          responses: 99
+        }
+      ],
+      weakest: "Workload satisfaction"
+    },
+    {
+      label: "Wave 4",
+      date: "23-May-26",
+      overall: 73.8,
+      respondents: 96,
+      factors: [
+        {
+          name: "Job expectations clarity",
+          score: 78.1,
+          responses: 96
+        },
+        {
+          name: "Relationships with colleagues",
+          score: 77,
+          responses: 87
+        },
+        {
+          name: "Performance Accountability",
+          score: 76.3,
+          responses: 96
+        },
+        {
+          name: "Goal Clarity & Alignment",
+          score: 72.9,
+          responses: 96
+        },
+        {
+          name: "Fatigue",
+          score: 72.4,
+          responses: 96
+        },
+        {
+          name: "Workload satisfaction",
+          score: 72,
+          responses: 96
+        },
+        {
+          name: "Feedback & Recognition",
+          score: 71.7,
+          responses: 91
+        }
+      ],
+      weakest: "Feedback & Recognition"
+    },
+    {
+      label: "Wave 5",
+      date: "30-May-26",
+      overall: 73.5,
+      respondents: 64,
+      factors: [
+        {
+          name: "Performance Accountability",
+          score: 77.9,
+          responses: 61
+        },
+        {
+          name: "Ability to do meaningful work",
+          score: 77.8,
+          responses: 62
+        },
+        {
+          name: "Learning opportunities",
+          score: 76.6,
+          responses: 63
+        },
+        {
+          name: "Goal Clarity & Alignment",
+          score: 74.6,
+          responses: 64
+        },
+        {
+          name: "Workload Management",
+          score: 74.2,
+          responses: 64
+        },
+        {
+          name: "Manager support",
+          score: 72.8,
+          responses: 58
+        },
+        {
+          name: "Resource Availability",
+          score: 72.3,
+          responses: 64
+        },
+        {
+          name: "Feedback & Recognition",
+          score: 72.2,
+          responses: 63
+        },
+        {
+          name: "Fatigue",
+          score: 71.1,
+          responses: 64
+        },
+        {
+          name: "Workload satisfaction",
+          score: 65.6,
+          responses: 64
+        }
+      ],
+      weakest: "Workload satisfaction"
+    }
+  ],
+  trend: {
+    labels: ["Mar", "Apr", "May"],
+    wb: [75.2, 74.9, 73.7],
+    comp: [73.1, 73.3, 72.3],
+    perf: [74.9, 74.9, 74.5],
+    rater: [72.6, 70.8, 73.5],
+    atRisk: [22, 17, 34],
+    flags: [62, 52, 89],
+    prodHrsProgress: [99, 92.7, 101.6]
+  },
+  cohort: {
+    wb: {
+      avg: 73.7,
+      min: 39,
+      max: 100,
+      range: 61,
+      lt65: 24,
+      ge80: 28
+    },
+    comp: {
+      avg: 72.3,
+      min: 38,
+      max: 100,
+      range: 62,
+      lt65: 30,
+      ge80: 20
+    },
+    perf: {
+      avg: 74.5,
+      min: 24,
+      max: 100,
+      range: 76,
+      lt65: 20,
+      ge80: 33
+    },
+    rater: {
+      avg: 73.5,
+      min: 0,
+      max: 100,
+      silentRaters: 8
+    },
+    leadIndicator: {
+      avg: 73.8,
+      min: 36.1,
+      max: 100
+    },
+    util: {
+      totalProdHrs: 11395.1,
+      peopleWithHours: 120,
+      peopleNoHours: 11
+    },
+    headcount: 131,
+    scored: 129,
+    atRisk: 34,
+    totalFlags: 89,
+    multiFlag3plus: 13,
+    balanced: 16
+  },
+  wbHist: [
+    {
+      band: "<50",
+      count: 1
+    },
+    {
+      band: "50-54",
+      count: 4
+    },
+    {
+      band: "55-59",
+      count: 5
+    },
+    {
+      band: "60-64",
+      count: 14
+    },
+    {
+      band: "65-69",
+      count: 19
+    },
+    {
+      band: "70-74",
+      count: 21
+    },
+    {
+      band: "75-79",
+      count: 37
+    },
+    {
+      band: "80-84",
+      count: 8
+    },
+    {
+      band: "85+",
+      count: 20
+    }
+  ],
+  perfHist: [
+    {
+      band: "<50",
+      count: 3
+    },
+    {
+      band: "50-54",
+      count: 5
+    },
+    {
+      band: "55-59",
+      count: 4
+    },
+    {
+      band: "60-64",
+      count: 8
+    },
+    {
+      band: "65-69",
+      count: 11
+    },
+    {
+      band: "70-74",
+      count: 24
+    },
+    {
+      band: "75-79",
+      count: 41
+    },
+    {
+      band: "80-84",
+      count: 11
+    },
+    {
+      band: "85+",
+      count: 22
+    }
+  ],
+  pctBands: [
+    {
+      band: "140%+",
+      count: 3
+    },
+    {
+      band: "100-139%",
+      count: 60
+    },
+    {
+      band: "85-99%",
+      count: 26
+    },
+    {
+      band: "<85%",
+      count: 27
+    }
+  ],
+  targetHoursBands: {
+    Taxation: [1450, 1550],
+    "Audit & Assurance": [1400, 1500],
+    "Business Advisory": [1250, 1400],
+    "Corporate Advisory": [1100, 1300]
+  },
+  serviceLines: [
+    {
+      name: "Audit & Assurance Services",
+      ppl: 36,
+      scored: 35,
+      wb: 75.8,
+      comp: 74.1,
+      perf: 76.7,
+      rater: 71.1,
+      pct: 118.6,
+      flags: 19,
+      atRisk: 8,
+      prodHrs: 4458.8,
+      prodTarget: 3759.7,
+      pulseAvg: 74.9
+    },
+    {
+      name: "Business Advisory Services",
+      ppl: 48,
+      scored: 48,
+      wb: 73.9,
+      comp: 72.4,
+      perf: 74.6,
+      rater: 79.8,
+      pct: 95.9,
+      flags: 25,
+      atRisk: 11,
+      prodHrs: 3872.6,
+      prodTarget: 4037.4,
+      pulseAvg: 74.4
+    },
+    {
+      name: "Corporate Advisory Services",
+      ppl: 15,
+      scored: 14,
+      wb: 73,
+      comp: 72.8,
+      perf: 71.6,
+      rater: 73.2,
+      pct: 89.9,
+      flags: 17,
+      atRisk: 6,
+      prodHrs: 1248.3,
+      prodTarget: 1389.3,
+      pulseAvg: 73.6
+    },
+    {
+      name: "Management Services",
+      ppl: 13,
+      scored: 13,
+      wb: 70.1,
+      comp: 66.2,
+      perf: 73,
+      rater: 72.7,
+      pct: 87.1,
+      flags: 12,
+      atRisk: 4,
+      prodHrs: 91.7,
+      prodTarget: 105.3,
+      pulseAvg: 71.2
+    },
+    {
+      name: "Taxation Services",
+      ppl: 19,
+      scored: 19,
+      wb: 72.6,
+      comp: 72.7,
+      perf: 73,
+      rater: 62.6,
+      pct: 89.6,
+      flags: 16,
+      atRisk: 5,
+      prodHrs: 1723.7,
+      prodTarget: 1924.6,
+      pulseAvg: 71.9
+    }
+  ],
+  managerGroups: [
+    {
+      label: "Manager A",
+      ppl: 31,
+      scored: 30,
+      wb: 75,
+      perf: 75.6,
+      comp: 72.5,
+      rater: 73.2,
+      pct: 120.1,
+      flags: 16,
+      atRisk: 6
+    },
+    {
+      label: "Manager B",
+      ppl: 22,
+      scored: 22,
+      wb: 77,
+      perf: 77.5,
+      comp: 74.3,
+      rater: 75.5,
+      pct: 96.6,
+      flags: 14,
+      atRisk: 3
+    },
+    {
+      label: "Manager C",
+      ppl: 21,
+      scored: 20,
+      wb: 76.8,
+      perf: 75.9,
+      comp: 72.6,
+      rater: 66,
+      pct: 128.5,
+      flags: 13,
+      atRisk: 5
+    },
+    {
+      label: "Manager D",
+      ppl: 21,
+      scored: 21,
+      wb: 70.6,
+      perf: 70.7,
+      comp: 74.5,
+      rater: 60.5,
+      pct: 91.1,
+      flags: 28,
+      atRisk: 11
+    },
+    {
+      label: "Manager E",
+      ppl: 13,
+      scored: 12,
+      wb: 74.8,
+      perf: 73.8,
+      comp: 74,
+      rater: 70.8,
+      pct: 90.2,
+      flags: 13,
+      atRisk: 5
+    },
+    {
+      label: "Manager F",
+      ppl: 11,
+      scored: 11,
+      wb: 81.3,
+      perf: 82,
+      comp: 77.1,
+      rater: 87.3,
+      pct: 108.4,
+      flags: 7,
+      atRisk: 2
+    },
+    {
+      label: "Manager G",
+      ppl: 11,
+      scored: 11,
+      wb: 72.6,
+      perf: 73.7,
+      comp: 69.2,
+      rater: 79.5,
+      pct: 106.4,
+      flags: 7,
+      atRisk: 4
+    },
+    {
+      label: "Manager H",
+      ppl: 11,
+      scored: 11,
+      wb: 68.9,
+      perf: 69,
+      comp: 68.2,
+      rater: 60.5,
+      pct: 93.1,
+      flags: 16,
+      atRisk: 5
+    },
+    {
+      label: "Manager I",
+      ppl: 10,
+      scored: 10,
+      wb: 71.3,
+      perf: 75.1,
+      comp: 72.4,
+      rater: 87.5,
+      pct: 103.6,
+      flags: 3,
+      atRisk: 1
+    },
+    {
+      label: "Manager J",
+      ppl: 9,
+      scored: 9,
+      wb: 68.2,
+      perf: 70,
+      comp: 63.3,
+      rater: 79.4,
+      pct: 100.9,
+      flags: 6,
+      atRisk: 3
+    },
+    {
+      label: "Manager K",
+      ppl: 9,
+      scored: 9,
+      wb: 77.7,
+      perf: 78.2,
+      comp: 74.4,
+      rater: 78.9,
+      pct: 76.7,
+      flags: 2,
+      atRisk: 1
+    },
+    {
+      label: "Manager L",
+      ppl: 7,
+      scored: 7,
+      wb: 69.3,
+      perf: 71.1,
+      comp: 69.3,
+      rater: 82.9,
+      pct: 103.4,
+      flags: 4,
+      atRisk: 1
+    },
+    {
+      label: "Manager M",
+      ppl: 6,
+      scored: 6,
+      wb: 74,
+      perf: 75.5,
+      comp: 74.5,
+      rater: 96.7,
+      pct: 73.8,
+      flags: 0,
+      atRisk: 0
+    },
+    {
+      label: "Manager N",
+      ppl: 5,
+      scored: 5,
+      wb: 73.8,
+      perf: 75.6,
+      comp: 74.4,
+      rater: 96,
+      pct: 73.8,
+      flags: 0,
+      atRisk: 0
+    },
+    {
+      label: "Manager O",
+      ppl: 4,
+      scored: 4,
+      wb: 71.3,
+      perf: 71.5,
+      comp: 71,
+      rater: 80,
+      pct: 112.1,
+      flags: 4,
+      atRisk: 1
+    },
+    {
+      label: "Manager P",
+      ppl: 4,
+      scored: 4,
+      wb: 70.3,
+      perf: 72,
+      comp: 58.8,
+      rater: 100,
+      pct: 174.1,
+      flags: 4,
+      atRisk: 2
+    },
+    {
+      label: "Manager Q",
+      ppl: 3,
+      scored: 3,
+      wb: 83.7,
+      perf: 83,
+      comp: 80.3,
+      rater: 53.3,
+      pct: 128.2,
+      flags: 1,
+      atRisk: 1
+    },
+    {
+      label: "Manager R",
+      ppl: 3,
+      scored: 3,
+      wb: 86.3,
+      perf: 85.7,
+      comp: 81.3,
+      rater: 91.7,
+      pct: 89.8,
+      flags: 1,
+      atRisk: 1
+    },
+    {
+      label: "Manager S",
+      ppl: 3,
+      scored: 3,
+      wb: 72,
+      perf: 74.7,
+      comp: 66.7,
+      rater: 60,
+      pct: 67.6,
+      flags: 2,
+      atRisk: 1
+    },
+    {
+      label: "Manager T",
+      ppl: 3,
+      scored: 3,
+      wb: 67.3,
+      perf: 68.7,
+      comp: 70,
+      rater: 61.7,
+      pct: 104.7,
+      flags: 1,
+      atRisk: 1
+    },
+    {
+      label: "Manager U",
+      ppl: 3,
+      scored: 3,
+      wb: 75,
+      perf: 76.7,
+      comp: 75,
+      rater: 66.7,
+      pct: 80.9,
+      flags: 0,
+      atRisk: 0
+    },
+    {
+      label: "Manager V",
+      ppl: 2,
+      scored: 2,
+      wb: 76,
+      perf: 77,
+      comp: 75,
+      rater: 80,
+      pct: 77.9,
+      flags: 0,
+      atRisk: 0
+    },
+    {
+      label: "Manager W",
+      ppl: 2,
+      scored: 2,
+      wb: 70.5,
+      perf: 74.5,
+      comp: 64,
+      rater: 40,
+      pct: 0,
+      flags: 2,
+      atRisk: 1
+    },
+    {
+      label: "Manager X",
+      ppl: 2,
+      scored: 2,
+      wb: 67,
+      perf: 65.5,
+      comp: 64,
+      rater: 60,
+      pct: 101.9,
+      flags: 0,
+      atRisk: 0
+    },
+    {
+      label: "Manager Y",
+      ppl: 2,
+      scored: 2,
+      wb: 69,
+      perf: 80.5,
+      comp: 81.5,
+      rater: 100,
+      pct: 8.5,
+      flags: 0,
+      atRisk: 0
+    },
+    {
+      label: "Manager Z",
+      ppl: 2,
+      scored: 1,
+      wb: 50,
+      perf: 42,
+      comp: 53,
+      rater: 100,
+      pct: 95.6,
+      flags: 4,
+      atRisk: 1
+    },
+    {
+      label: "Manager AA",
+      ppl: 2,
+      scored: 2,
+      wb: 79.5,
+      perf: 79.5,
+      comp: 84.5,
+      rater: 67.5,
+      pct: 101.1,
+      flags: 2,
+      atRisk: 1
+    },
+    {
+      label: "Manager AB",
+      ppl: 2,
+      scored: 2,
+      wb: 79,
+      perf: 77,
+      comp: 69,
+      rater: 100,
+      pct: 61,
+      flags: 0,
+      atRisk: 0
+    },
+    {
+      label: "Manager AC",
+      ppl: 1,
+      scored: 1,
+      wb: 86,
+      perf: 93,
+      comp: 94,
+      rater: 80,
+      pct: 81.3,
+      flags: 0,
+      atRisk: 0
+    },
+    {
+      label: "Manager AD",
+      ppl: 1,
+      scored: 1,
+      wb: 100,
+      perf: 96,
+      comp: 100,
+      rater: 40,
+      pct: 58.2,
+      flags: 0,
+      atRisk: 0
+    },
+    {
+      label: "Manager AE",
+      ppl: 1,
+      scored: 1,
+      wb: 71,
+      perf: 67,
+      comp: 75,
+      rater: 25,
+      pct: 104.8,
+      flags: 1,
+      atRisk: 1
+    },
+    {
+      label: "Manager AF",
+      ppl: 1,
+      scored: 1,
+      wb: 71,
+      perf: 72,
+      comp: 78,
+      rater: 60,
+      pct: 90.8,
+      flags: 0,
+      atRisk: 0
+    },
+    {
+      label: "Manager AG",
+      ppl: 1,
+      scored: 1,
+      wb: 50,
+      perf: 42,
+      comp: 53,
+      rater: 100,
+      pct: 95.6,
+      flags: 4,
+      atRisk: 1
+    },
+    {
+      label: "Manager AH",
+      ppl: 1,
+      scored: 1,
+      wb: 73,
+      perf: 75,
+      comp: 56,
+      rater: 50,
+      pct: 88.6,
+      flags: 0,
+      atRisk: 0
+    }
+  ],
+  movers: {
+    wellbeing: {
+      positive: 52,
+      negative: 59,
+      atRisk: 48
+    },
+    compliance: {
+      positive: 21,
+      negative: 11,
+      atRisk: 57
+    },
+    performance: {
+      positive: 34,
+      negative: 37,
+      atRisk: 29
+    }
+  },
+  riskFactorDist: [
+    {
+      flags: "0",
+      people: 96
+    },
+    {
+      flags: "1",
+      people: 14
+    },
+    {
+      flags: "2",
+      people: 7
+    },
+    {
+      flags: "3",
+      people: 4
+    },
+    {
+      flags: "4",
+      people: 4
+    },
+    {
+      flags: "5",
+      people: 1
+    },
+    {
+      flags: "6",
+      people: 1
+    },
+    {
+      flags: "7+",
+      people: 3
+    }
+  ],
+  voice: {
+    strain: [],
+    support: [],
+    wins: []
+  },
+  inbox: {
+    total: 122,
+    byPriority: [
+      {
+        name: "Unspecified",
+        count: 119
+      },
+      {
+        name: "High",
+        count: 3
+      }
+    ],
+    byStage: [
+      {
+        name: "Raised",
+        count: 122
+      }
+    ],
+    byStatus: [
+      {
+        name: "To Do",
+        count: 122
+      }
+    ],
+    byCategory: [
+      {
+        name: "Experience",
+        count: 69
+      },
+      {
+        name: "Signal",
+        count: 26
+      },
+      {
+        name: "Review",
+        count: 12
+      },
+      {
+        name: "Development",
+        count: 11
+      },
+      {
+        name: "Action",
+        count: 4
+      }
+    ],
+    bySubcategory: [
+      {
+        name: "Pulse Automation",
+        count: 69
+      },
+      {
+        name: "Signal Automation",
+        count: 26
+      },
+      {
+        name: "Review Automation",
+        count: 12
+      },
+      {
+        name: "Development Automation",
+        count: 11
+      },
+      {
+        name: "Manual",
+        count: 4
+      }
+    ]
+  },
+  registers: [
+    {
+      hazard: "Violence is not tolerated in this workplace",
+      rating: "Medium",
+      priority: "Medium",
+      status: "Not Started",
+      impact: "Moderate",
+      likelihood: "Possible"
+    },
+    {
+      hazard: "Care for Isolated employees is important in this workplace",
+      rating: null,
+      priority: "Medium",
+      status: "To Do",
+      impact: "Moderate",
+      likelihood: "Possible"
+    },
+    {
+      hazard: "Respecting emplotee privacy is important in this workplace",
+      rating: null,
+      priority: "Medium",
+      status: "To Do",
+      impact: "Moderate",
+      likelihood: "Possible"
+    },
+    {
+      hazard: "Support is important is this workplace",
+      rating: null,
+      priority: "Medium",
+      status: "To Do",
+      impact: "Moderate",
+      likelihood: "Possible"
+    },
+    {
+      hazard: "A healthy workplace is important",
+      rating: null,
+      priority: "Medium",
+      status: "To Do",
+      impact: "Moderate",
+      likelihood: "Possible"
+    },
+    {
+      hazard: "Organisational Justice is important in this workplace",
+      rating: null,
+      priority: "Medium",
+      status: "To Do",
+      impact: "Moderate",
+      likelihood: "Possible"
+    },
+    {
+      hazard: "Traumatic events need to be treated with care in this workplace",
+      rating: null,
+      priority: "Medium",
+      status: "To Do",
+      impact: "Moderate",
+      likelihood: "Possible"
+    },
+    {
+      hazard: "Job Control is important in this workplace",
+      rating: null,
+      priority: "Medium",
+      status: "To Do",
+      impact: "Moderate",
+      likelihood: "Possible"
+    },
+    {
+      hazard: "Workplace relationships are important",
+      rating: null,
+      priority: "Medium",
+      status: "To Do",
+      impact: "Moderate",
+      likelihood: "Possible"
+    },
+    {
+      hazard: "Job Demands needs balance in this workplace",
+      rating: null,
+      priority: "Medium",
+      status: "To Do",
+      impact: "Moderate",
+      likelihood: "Possible"
+    },
+    {
+      hazard: "Job stability and security are important in this workplace",
+      rating: null,
+      priority: "Medium",
+      status: "To Do",
+      impact: "Moderate",
+      likelihood: "Possible"
+    },
+    {
+      hazard: "Managing employee fatigue is important in this workplace",
+      rating: null,
+      priority: "Medium",
+      status: "To Do",
+      impact: "Moderate",
+      likelihood: "Possible"
+    },
+    {
+      hazard: "Harmful Behaviour is not tolerated in this workplace",
+      rating: null,
+      priority: "Medium",
+      status: "To Do",
+      impact: "Moderate",
+      likelihood: "Possible"
+    },
+    {
+      hazard: "Getting recognised for work is important",
+      rating: null,
+      priority: "Medium",
+      status: "To Do",
+      impact: "Moderate",
+      likelihood: "Possible"
+    },
+    {
+      hazard: "Managing low job demands is important for workplace wellbeing",
+      rating: null,
+      priority: "Medium",
+      status: "To Do",
+      impact: "Moderate",
+      likelihood: "Possible"
+    },
+    {
+      hazard: "Change mangagement communication and planning",
+      rating: null,
+      priority: "Medium",
+      status: "To Do",
+      impact: "Moderate",
+      likelihood: "Possible"
+    },
+    {
+      hazard: "Role Clarity is important in this workplace",
+      rating: null,
+      priority: "Medium",
+      status: "To Do",
+      impact: "Moderate",
+      likelihood: "Possible"
+    }
+  ]
+};
+const REG=[{"h": "Workplace Violence Or Aggression", "domain": "Harmful behaviours", "summary": "Violence is not tolerated in this workplace", "desc": "Abuse, threats or assaults from coworkers, clients or public causing physical or psychological harm.", "ctrl": "Zero-tolerance policy; secure workplace (CCTV, alarms, controlled access); adequate staffing; de‑escalation training; buddy/duress systems.", "reco": "Conduct regular risk assessments; encourage incident reporting; foster a respectful culture; provide post‑incident support and investigations.", "impact": "Moderate", "likelihood": "Possible", "impN": 3, "likN": 3, "rating": "Medium", "priority": "Medium", "stage": "Raised", "status": "Not Started", "esc": false}, {"h": "Remote Or Isolated Work", "domain": "Environment & exposure", "summary": "Care for Isolated employees is important in this workplace", "desc": "Working alone or in remote locations with limited access to assistance and higher response times.", "ctrl": "Reliable communications and check‑ins; GPS/trackers; emergency plans; first‑aid and remote‑work training; avoid solo high‑risk tasks.", "reco": "Maintain regular contact; monitor wellbeing; consult isolated workers; use safety apps and location‑aware tech.", "impact": "Moderate", "likelihood": "Possible", "impN": 3, "likN": 3, "rating": "Medium", "priority": "Medium", "stage": "Raised", "status": "To Do", "esc": false}, {"h": "Intrusive Surveillance", "domain": "Environment & exposure", "summary": "Respecting emplotee privacy is important in this workplace", "desc": "Excessive or unjustified monitoring that erodes privacy, trust and autonomy.", "ctrl": "Transparent monitoring policy; use least‑intrusive tools; consult workers; protect and limit access to collected data.", "reco": "Regularly justify monitoring level; watch for stress impacts; review against privacy laws; train managers on respectful use.", "impact": "Moderate", "likelihood": "Possible", "impN": 3, "likN": 3, "rating": "Medium", "priority": "Medium", "stage": "Raised", "status": "To Do", "esc": false}, {"h": "Poor Support", "domain": "Support & recognition", "summary": "Support is important is this workplace", "desc": "Inadequate practical or emotional support, resources, information or training to do the job safely and effectively.", "ctrl": "Provide tools/resources/training; manager open‑door and regular check‑ins; buddy/mentoring; balance workloads.", "reco": "Hold routine one‑on‑ones to surface needs; continual upskilling; simple escalation paths; recognise supportive behaviours.", "impact": "Moderate", "likelihood": "Possible", "impN": 3, "likN": 3, "rating": "Medium", "priority": "Medium", "stage": "Raised", "status": "To Do", "esc": false}, {"h": "Poor Working Environments", "domain": "Environment & exposure", "summary": "A healthy workplace is important", "desc": "Poor physical conditions (temperature, lighting, ventilation, noise, hygiene) affecting health, comfort and performance.", "ctrl": "Control hazards (HVAC, lighting, noise, ergonomics, cleaning); provide rest areas; reasonable accommodations; preventative maintenance.", "reco": "Perform regular inspections with HSRs; encourage reporting; ensure compliance with standards; include environment in wellbeing plans.", "impact": "Moderate", "likelihood": "Possible", "impN": 3, "likN": 3, "rating": "Medium", "priority": "Medium", "stage": "Raised", "status": "To Do", "esc": false}, {"h": "Poor Organisational Justice", "domain": "Organisational", "summary": "Organisational Justice is important in this workplace", "desc": "Perceived unfair or non‑transparent processes, decisions or interactions (e.g. favoritism, inconsistent rules).", "ctrl": "Clear, consistently applied procedures; transparent rationales; consult workers; trusted grievance process with no retaliation.", "reco": "Train leaders in fairness; monitor perceptions via surveys; audit HR decisions for bias; promote respectful treatment.", "impact": "Moderate", "likelihood": "Possible", "impN": 3, "likN": 3, "rating": "Medium", "priority": "Medium", "stage": "Raised", "status": "To Do", "esc": false}, {"h": "Exposure To Traumatic Events Or Material", "domain": "Environment & exposure", "summary": "Traumatic events need to be treated with care in this workplace", "desc": "Exposure to traumatic incidents or graphic material leading to acute stress or longer‑term psychological harm.", "ctrl": "Clear incident procedures; specialised training; rotate or limit exposure; provide counselling and structured debriefs.", "reco": "Monitor high‑risk roles; implement critical‑incident debriefs; consult workers; remove stigma around seeking help.", "impact": "Moderate", "likelihood": "Possible", "impN": 3, "likN": 3, "rating": "Medium", "priority": "Medium", "stage": "Raised", "status": "To Do", "esc": false}, {"h": "Low Job Control", "domain": "Job design", "summary": "Job Control is important in this workplace", "desc": "Little say over how or when work is done, including rigid processes and micromanagement.", "ctrl": "Increase autonomy where safe; delegate routine decisions; consult on changes; provide flexible work arrangements and breaks.", "reco": "Review job design for unnecessary restrictions; match autonomy to skill; monitor stress; encourage improvement suggestions.", "impact": "Moderate", "likelihood": "Possible", "impN": 3, "likN": 3, "rating": "Medium", "priority": "Medium", "stage": "Raised", "status": "To Do", "esc": false}, {"h": "Poor Workplace Relationships", "domain": "Harmful behaviours", "summary": "Workplace relationships are important", "desc": "Conflict, incivility or breakdown in trust among colleagues creating a hostile or distracting atmosphere.", "ctrl": "Code of conduct; early conflict resolution/mediation; team‑building; leaders model respectful behaviour.", "reco": "Monitor climate via surveys; promote open communication; provide anti‑bullying and inclusion refreshers; supervisor check‑ins.", "impact": "Moderate", "likelihood": "Possible", "impN": 3, "likN": 3, "rating": "Medium", "priority": "Medium", "stage": "Raised", "status": "To Do", "esc": false}, {"h": "High Job Demands", "domain": "Job design", "summary": "Job Demands needs balance in this workplace", "desc": "Sustained high physical, mental or emotional effort exceeding reasonable capacity.", "ctrl": "Manage workload and staffing; prioritise realistically; control overtime; provide resources, training and debriefs for emotional labour.", "reco": "Review demands via tracking/surveys; seek worker input; offer stress/time‑management programs; discourage overwork culture.", "impact": "Moderate", "likelihood": "Possible", "impN": 3, "likN": 3, "rating": "Medium", "priority": "Medium", "stage": "Raised", "status": "To Do", "esc": false}, {"h": "Job Insecurity", "domain": "Organisational", "summary": "Job stability and security are important in this workplace", "desc": "Uncertainty about continuity of employment causing stress, distraction and disengagement.", "ctrl": "Transparent business updates; offer more secure arrangements where possible; fair scheduling/notice for casuals; invest in development.", "reco": "Plan and communicate changes early; consult on changes; provide EAP/outplacement when needed; run retention initiatives for key talent.", "impact": "Moderate", "likelihood": "Possible", "impN": 3, "likN": 3, "rating": "Medium", "priority": "Medium", "stage": "Raised", "status": "To Do", "esc": false}, {"h": "Fatigue", "domain": "Job design", "summary": "Managing employee fatigue is important in this workplace", "desc": "Extreme tiredness reducing ability to work safely due to long hours, shift patterns or workload.", "ctrl": "Work‑hour limits; fatigue‑aware rosters; regular breaks and rest areas; align workloads to human limits; control environmental contributors.", "reco": "Have a fatigue management plan; train to recognise/report fatigue; provide wellness/sleep guidance; monitor incidents; consult on rosters.", "impact": "Moderate", "likelihood": "Possible", "impN": 3, "likN": 3, "rating": "Medium", "priority": "Medium", "stage": "Raised", "status": "To Do", "esc": false}, {"h": "Sexual Or Gender Based Harassment", "domain": "Harmful behaviours", "summary": "Harmful Behaviour is not tolerated in this workplace", "desc": "Unwelcome conduct of a sexual nature or based on sex/gender creating a hostile work environment.", "ctrl": "Zero‑tolerance policy; regular training incl. bystander skills; confidential reporting channels; remove hostile environment factors.", "reco": "Support victims (EAP/legal); conduct culture checks; leaders model respect; keep policies aligned with law and best practice.", "impact": "Moderate", "likelihood": "Possible", "impN": 3, "likN": 3, "rating": "Medium", "priority": "Medium", "stage": "Raised", "status": "To Do", "esc": false}, {"h": "Low Recognition And Reward", "domain": "Support & recognition", "summary": "Getting recognised for work is important", "desc": "Imbalance between effort and acknowledgement/reward leading to demotivation and disengagement.", "ctrl": "Regular sincere recognition; fair and transparent rewards; non‑monetary growth opportunities; periodic pay/benefit reviews.", "reco": "Build a feedback culture; ask preferences for recognition; align rewards with extra effort; use team‑based recognition where apt; avoid favoritism.", "impact": "Moderate", "likelihood": "Possible", "impN": 3, "likN": 3, "rating": "Medium", "priority": "Medium", "stage": "Raised", "status": "To Do", "esc": false}, {"h": "Low Job Demands", "domain": "Job design", "summary": "Managing low job demands is important for workplace wellbeing", "desc": "Insufficiently challenging or monotonous work causing boredom, reduced alertness and disengagement.", "ctrl": "Job enrichment and rotation; set meaningful goals; provide productive options during idle periods; add responsibilities cautiously.", "reco": "Monitor engagement; allow short breaks/task switches; raise awareness of complacency risk; solicit ideas to improve task variety.", "impact": "Moderate", "likelihood": "Possible", "impN": 3, "likN": 3, "rating": "Medium", "priority": "Medium", "stage": "Raised", "status": "To Do", "esc": false}, {"h": "Poor Organisational Change Management", "domain": "Organisational", "summary": "Change mangagement communication and planning", "desc": "Workplace changes handled without proper planning, communication or support, creating confusion and stress.", "ctrl": "Structured change process; early consultation; clear multi‑channel communications; training/resources; added support during transition.", "reco": "Involve workers via change committees; monitor impact post‑go‑live; avoid unnecessary surprises; manage change fatigue and consolidate when needed.", "impact": "Moderate", "likelihood": "Possible", "impN": 3, "likN": 3, "rating": "Medium", "priority": "Medium", "stage": "Raised", "status": "To Do", "esc": false}, {"h": "Lack Of Role Clarity", "domain": "Job design", "summary": "Role Clarity is important in this workplace", "desc": "Unclear responsibilities, goals or expectations causing confusion, errors and friction.", "ctrl": "Maintain job descriptions/org charts; set clear objectives and KPIs; avoid overlapping duties; manage changes with training and updates.", "reco": "Hold regular check‑ins on clarity; maintain SOPs/wiki; coordinate between managers; use reviews to clarify roles and priorities.", "impact": "Moderate", "likelihood": "Possible", "impN": 3, "likN": 3, "rating": "Medium", "priority": "Medium", "stage": "Raised", "status": "To Do", "esc": false}];
+
+var AFS={"org": {"name": "AFS & Associates", "ppl": 131, "productive": 11395.1, "productiveTarget": 11216.3, "available": 19912.0, "leave": 1113.5, "nonbillable": 7403.4, "nbCats": {"Admin/Support": 2221.0, "Client": 1332.7, "Firm": 1184.6, "Operational": 1036.5, "Personal": 888.4, "Team": 740.3}, "timesheet": 18798.5, "std": 18798.5, "prodMtd": 11224.9, "mtdTarget": 11216.3, "mtdProgress": 100, "prodYtd": 11455.0, "ytdTarget": 11216.3, "ytdProgress": 102, "varMth": {"actual": 8.6, "target": 0, "progress": 100}, "varYtd": {"actual": 238.7, "target": 0, "progress": 102}, "productivityActual": 60.6, "productivityTarget": 80, "avgRate": 320, "pillars": {"Wellbeing": {"score": 73.7, "var": -1.5, "pos": 52, "neg": 59, "atrisk": 48}, "Compliance": {"score": 72.3, "var": -1.0, "pos": 21, "neg": 11, "atrisk": 57}, "Performance": {"score": 74.5, "var": -0.4, "pos": 34, "neg": 37, "atrisk": 29}}, "li": {"curr": 73.8, "prev": 72.0, "var": 1.8, "rfCurr": 14, "rfPrev": 18}}, "lines": [{"name": "Audit & Assurance", "ppl": 36, "productive": 4458.8, "productiveTarget": 3759.7, "available": 5472.0, "leave": 306.0, "nonbillable": 707.2, "nbCats": {"Admin/Support": 212.2, "Client": 127.3, "Firm": 113.2, "Operational": 99.0, "Personal": 84.9, "Team": 70.7}, "timesheet": 5166.0, "std": 5166.0, "rate": 295, "prodMtd": 4377.1, "mtdTarget": 3759.7, "mtdProgress": 116, "prodYtd": 4451.5, "ytdTarget": 3759.7, "ytdProgress": 118, "varMth": {"actual": 617.4, "target": 0, "progress": 116}, "varYtd": {"actual": 691.8, "target": 0, "progress": 118}, "productivityActual": 86.3, "productivityTarget": 80, "pillars": {"Wellbeing": {"score": 75.8, "var": -1.5, "pos": 14, "neg": 16, "atrisk": 13}, "Compliance": {"score": 74.1, "var": -0.9, "pos": 6, "neg": 3, "atrisk": 16}, "Performance": {"score": 76.7, "var": -0.7, "pos": 9, "neg": 10, "atrisk": 8}}, "li": {"curr": 78.0, "prev": 77.7, "var": 0.3, "rfCurr": 5, "rfPrev": 4}}, {"name": "Business Advisory", "ppl": 48, "productive": 3872.6, "productiveTarget": 4037.4, "available": 7296.0, "leave": 408.0, "nonbillable": 3015.4, "nbCats": {"Admin/Support": 904.6, "Client": 542.8, "Firm": 482.5, "Operational": 422.2, "Personal": 361.8, "Team": 301.5}, "timesheet": 6888.0, "std": 6888.0, "rate": 340, "prodMtd": 3849.7, "mtdTarget": 4037.4, "mtdProgress": 95, "prodYtd": 3992.7, "ytdTarget": 4037.4, "ytdProgress": 99, "varMth": {"actual": -187.7, "target": 0, "progress": 95}, "varYtd": {"actual": -44.7, "target": 0, "progress": 99}, "productivityActual": 56.2, "productivityTarget": 80, "pillars": {"Wellbeing": {"score": 73.9, "var": -1.8, "pos": 19, "neg": 22, "atrisk": 18}, "Compliance": {"score": 72.4, "var": -0.8, "pos": 8, "neg": 4, "atrisk": 21}, "Performance": {"score": 74.6, "var": -0.2, "pos": 12, "neg": 14, "atrisk": 11}}, "li": {"curr": 72.7, "prev": 73.6, "var": -0.9, "rfCurr": 1, "rfPrev": 5}}, {"name": "Corporate Advisory", "ppl": 15, "productive": 1248.3, "productiveTarget": 1389.3, "available": 2280.0, "leave": 127.5, "nonbillable": 904.2, "nbCats": {"Admin/Support": 271.3, "Client": 162.8, "Firm": 144.7, "Operational": 126.6, "Personal": 108.5, "Team": 90.4}, "timesheet": 2152.5, "std": 2152.5, "rate": 420, "prodMtd": 1271.7, "mtdTarget": 1389.3, "mtdProgress": 92, "prodYtd": 1317.0, "ytdTarget": 1389.3, "ytdProgress": 95, "varMth": {"actual": -117.6, "target": 0, "progress": 92}, "varYtd": {"actual": -72.3, "target": 0, "progress": 95}, "productivityActual": 58.0, "productivityTarget": 80, "pillars": {"Wellbeing": {"score": 73.0, "var": -1.8, "pos": 6, "neg": 7, "atrisk": 5}, "Compliance": {"score": 72.8, "var": -1.4, "pos": 2, "neg": 1, "atrisk": 7}, "Performance": {"score": 71.6, "var": -0.4, "pos": 4, "neg": 4, "atrisk": 3}}, "li": {"curr": 72.8, "prev": 71.5, "var": 1.3, "rfCurr": 1, "rfPrev": 1}}, {"name": "Management Services", "ppl": 13, "productive": 91.7, "productiveTarget": 105.3, "available": 1976.0, "leave": 110.5, "nonbillable": 1773.8, "nbCats": {"Admin/Support": 532.1, "Client": 319.3, "Firm": 283.8, "Operational": 248.3, "Personal": 212.9, "Team": 177.4}, "timesheet": 1865.5, "std": 1865.5, "rate": 210, "prodMtd": 88.3, "mtdTarget": 105.3, "mtdProgress": 84, "prodYtd": 87.5, "ytdTarget": 105.3, "ytdProgress": 83, "varMth": {"actual": -17.0, "target": 0, "progress": 84}, "varYtd": {"actual": -17.8, "target": 0, "progress": 83}, "productivityActual": 4.9, "productivityTarget": 80, "pillars": {"Wellbeing": {"score": 70.1, "var": -1.5, "pos": 5, "neg": 6, "atrisk": 5}, "Compliance": {"score": 66.2, "var": -0.7, "pos": 2, "neg": 1, "atrisk": 6}, "Performance": {"score": 73.0, "var": -0.4, "pos": 3, "neg": 4, "atrisk": 3}}, "li": {"curr": 70.0, "prev": 69.8, "var": 0.2, "rfCurr": 3, "rfPrev": 4}}, {"name": "Taxation", "ppl": 19, "productive": 1723.7, "productiveTarget": 1924.6, "available": 2888.0, "leave": 161.5, "nonbillable": 1002.8, "nbCats": {"Admin/Support": 300.8, "Client": 180.5, "Firm": 160.4, "Operational": 140.4, "Personal": 120.3, "Team": 100.3}, "timesheet": 2726.5, "std": 2726.5, "rate": 310, "prodMtd": 1638.1, "mtdTarget": 1924.6, "mtdProgress": 85, "prodYtd": 1606.3, "ytdTarget": 1924.6, "ytdProgress": 83, "varMth": {"actual": -286.5, "target": 0, "progress": 85}, "varYtd": {"actual": -318.3, "target": 0, "progress": 83}, "productivityActual": 63.2, "productivityTarget": 80, "pillars": {"Wellbeing": {"score": 72.6, "var": -1.5, "pos": 8, "neg": 9, "atrisk": 7}, "Compliance": {"score": 72.7, "var": -0.7, "pos": 3, "neg": 2, "atrisk": 8}, "Performance": {"score": 73.0, "var": -0.7, "pos": 5, "neg": 5, "atrisk": 4}}, "li": {"curr": 73.5, "prev": 73.7, "var": -0.2, "rfCurr": 3, "rfPrev": 3}}]};
+</script>
+<script>
+(function(){var oe={'Lane Ward':78,'Avery Tate':79,'Kai Boyd':77,'Avery Osborne':77,'Nat Locke':76,'Wren Ortiz':76,'Phoenix Nash':77,'Rowan Evers':76};ROSTER.forEach(function(p){if(oe[p.name]!=null)p.util=oe[p.name];});})();
+var C={brand:'#3831FA',ink:'#0f1222',sub:'#5b6075',faint:'#9aa0b4',ok:'#10b981',warn:'#f59e0b',bad:'#e5484d',eng:'#7048e8',blue:'#3b82f6',violet:'#8b5cf6',teal:'#14b8a6',sky:'#0ea5e9'};
+var PILL={Wellbeing:C.ok,Performance:C.brand,Engagement:C.eng,Compliance:C.warn};
+function hsh(s){var h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return Math.abs(h);}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function ragScore(v){return v>=75?C.ok:(v>=65?C.warn:C.bad);}
+function ragProg(v){return v>=100?C.ok:(v>=80?C.warn:C.bad);}
+function heatColor(v){if(v==null)return '#eef0f4';if(v>=88)return '#0b8457';if(v>=80)return '#10b981';if(v>=74)return '#56d3a0';if(v>=68)return '#9be7c4';if(v>=62)return '#cdeede';if(v>=56)return '#fde2c4';if(v>=50)return '#fbcf9a';if(v>=44)return '#f6a96b';return '#e5484d';}
+function fmt(n){return Math.round(n).toLocaleString();}
+
+/* ---------- chart helpers ---------- */
+function chHeat(rows,cols,mat){
+  var head='<div class="hmcell hmcorner"></div>'+cols.map(function(c){return '<div class="hmcell hmcol" title="'+c+'">'+c+'</div>';}).join('');
+  var body=rows.map(function(r,ri){return '<div class="hmcell hmrow" title="'+r+'">'+r+'</div>'+cols.map(function(c,ci){var v=mat[ri][ci];return '<div class="hmcell hmval" title="'+r+' · '+c+': '+v+'" style="background:'+heatColor(v)+';color:'+(v>=62?'#0a3a26':'#5e1414')+'">'+v+'</div>';}).join('');}).join('');
+  return '<div class="heat" style="grid-template-columns:120px repeat('+cols.length+',minmax(34px,1fr))">'+head+body+'</div>';
+}
+function chLine(series,xl,o){o=o||{};var W=o.w||640,H=o.h||220,pl=40,pr=14,pt=14,pb=32;var all=[];series.forEach(function(s){all=all.concat(s.data);});var mn=o.min!=null?o.min:Math.min.apply(null,all),mx=o.max!=null?o.max:Math.max.apply(null,all);var rng=(mx-mn)||1;function X(i){return pl+i/(xl.length-1)*(W-pl-pr);}function Y(v){return H-pb-(v-mn)/rng*(H-pt-pb);}
+  var grid='';for(var g=0;g<=4;g++){var gy=pt+g/4*(H-pt-pb);grid+='<line x1="'+pl+'" y1="'+gy.toFixed(1)+'" x2="'+(W-pr)+'" y2="'+gy.toFixed(1)+'" stroke="#eef0f4"/><text x="'+(pl-7)+'" y="'+(gy+3).toFixed(1)+'" text-anchor="end" font-size="9.5" fill="#9aa0b4">'+Math.round(mx-g/4*rng)+'</text>';}
+  var xlab=xl.map(function(l,i){return '<text x="'+X(i).toFixed(1)+'" y="'+(H-11)+'" text-anchor="middle" font-size="10" fill="#5b6075">'+l+'</text>';}).join('');
+  var ln=series.map(function(s){var p=s.data.map(function(v,i){return X(i).toFixed(1)+','+Y(v).toFixed(1);}).join(' ');var d=s.data.map(function(v,i){return '<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(v).toFixed(1)+'" r="3.4" fill="'+s.color+'"/><text x="'+X(i).toFixed(1)+'" y="'+(Y(v)-8).toFixed(1)+'" text-anchor="middle" font-size="9.5" font-weight="700" fill="'+s.color+'">'+v+'</text>';}).join('');return '<polyline points="'+p+'" fill="none" stroke="'+s.color+'" stroke-width="2.6" stroke-linejoin="round"/>'+d;}).join('');
+  var leg=series.length>1?'<div class="lgrow">'+series.map(function(s){return '<span class="lgi"><i style="background:'+s.color+'"></i>'+s.name+'</span>';}).join('')+'</div>':'';
+  return leg+'<svg viewBox="0 0 '+W+' '+H+'" width="100%">'+grid+xlab+ln+'</svg>';
+}
+function chHBar(rows,o){o=o||{};var mx=o.max||Math.max.apply(null,rows.map(function(r){return r[1];}))||1;return '<div class="hbars">'+rows.map(function(r){return '<div class="hbrow"><span class="hblab" title="'+r[0]+'">'+r[0]+'</span><span class="hbtrack"><i style="width:'+Math.max(2,r[1]/mx*100)+'%;background:'+(r[2]||C.brand)+'"></i></span><b class="hbval">'+r[1]+(o.unit||'')+'</b></div>';}).join('')+'</div>';}
+function chCols(items,o){o=o||{};var W=o.w||640,H=o.h||240,pl=30,pr=14,pt=22,pb=42;var mx=Math.max.apply(null,items.map(function(it){return Math.max(it[1],it[2]);}))*1.12||1;var n=items.length,bw=(W-pl-pr)/n;function Y(v){return H-pb-v/mx*(H-pt-pb);}
+  var bars=items.map(function(it,i){var x=pl+i*bw+bw*0.22,w=bw*0.56,prog=it[2]?Math.round(it[1]/it[2]*100):0,col=ragProg(prog);return '<rect x="'+x.toFixed(1)+'" y="'+Y(it[1]).toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+(H-pb-Y(it[1])).toFixed(1)+'" rx="4" fill="'+col+'"/><line x1="'+(x-3).toFixed(1)+'" y1="'+Y(it[2]).toFixed(1)+'" x2="'+(x+w+3).toFixed(1)+'" y2="'+Y(it[2]).toFixed(1)+'" stroke="#0f1222" stroke-width="2.2"/><text x="'+(x+w/2).toFixed(1)+'" y="'+(Y(it[1])-6).toFixed(1)+'" text-anchor="middle" font-size="10.5" font-weight="800" fill="'+col+'">'+prog+'%</text><text x="'+(x+w/2).toFixed(1)+'" y="'+(H-24)+'" text-anchor="middle" font-size="10" fill="#5b6075">'+it[0]+'</text><text x="'+(x+w/2).toFixed(1)+'" y="'+(H-11)+'" text-anchor="middle" font-size="9.5" fill="#9aa0b4">'+fmt(it[1])+'/'+fmt(it[2])+'h</text>';}).join('');
+  return '<div class="lgrow"><span class="lgi"><i style="background:'+C.ok+'"></i>≥100%</span><span class="lgi"><i style="background:'+C.warn+'"></i>80–99%</span><span class="lgi"><i style="background:'+C.bad+'"></i>&lt;80%</span><span class="lgi"><i style="background:#0f1222;width:13px;height:3px"></i>target</span></div><svg viewBox="0 0 '+W+' '+H+'" width="100%">'+bars+'</svg>';
+}
+function chScatter(pts,o){o=o||{};var W=720,H=420,pl=48,pr=22,pt=22,pb=48;var xd0=o.xDiv||75,yd0=o.yDiv||65;
+  var xs=pts.map(function(p){return p.x;}).concat(xd0),ys=pts.map(function(p){return p.y;}).concat(yd0);
+  var xmin=Math.min.apply(null,xs),xmax=Math.max.apply(null,xs),ymin=Math.min.apply(null,ys),ymax=Math.max.apply(null,ys);
+  var xp=Math.max(3,(xmax-xmin)*0.1),yp=Math.max(3,(ymax-ymin)*0.1);xmin-=xp;xmax+=xp;ymin-=yp;ymax+=yp;
+  function X(v){return pl+(v-xmin)/(xmax-xmin)*(W-pl-pr);}function Y(v){return H-pb-(v-ymin)/(ymax-ymin)*(H-pt-pb);}
+  var xd=X(xd0),yd=Y(yd0),i;
+  var ticks='';for(i=0;i<=4;i++){var tx=xmin+i/4*(xmax-xmin),ty=ymin+i/4*(ymax-ymin);
+    ticks+='<line x1="'+X(tx).toFixed(1)+'" y1="'+pt+'" x2="'+X(tx).toFixed(1)+'" y2="'+(H-pb)+'" stroke="#f3f4f9"/><text x="'+X(tx).toFixed(1)+'" y="'+(H-pb+15)+'" text-anchor="middle" font-size="9.5" fill="#9aa0b4">'+Math.round(tx)+'</text>';
+    ticks+='<line x1="'+pl+'" y1="'+Y(ty).toFixed(1)+'" x2="'+(W-pr)+'" y2="'+Y(ty).toFixed(1)+'" stroke="#f3f4f9"/><text x="'+(pl-7)+'" y="'+(Y(ty)+3).toFixed(1)+'" text-anchor="end" font-size="9.5" fill="#9aa0b4">'+Math.round(ty)+'</text>';}
+  var divs='<line x1="'+xd.toFixed(1)+'" y1="'+pt+'" x2="'+xd.toFixed(1)+'" y2="'+(H-pb)+'" stroke="#b9bdcf" stroke-dasharray="5 4"/><line x1="'+pl+'" y1="'+yd.toFixed(1)+'" x2="'+(W-pr)+'" y2="'+yd.toFixed(1)+'" stroke="#b9bdcf" stroke-dasharray="5 4"/>';
+  var d=pts.slice().sort(function(a,b){return (b.r||0)-(a.r||0);}).map(function(p){return '<circle cx="'+X(p.x).toFixed(1)+'" cy="'+Y(p.y).toFixed(1)+'" r="'+(3.4+Math.min(p.r||0,6)*0.95).toFixed(1)+'" fill="'+p.c+'" fill-opacity=".46" stroke="'+p.c+'" stroke-opacity=".7" stroke-width="1"><title>'+p.label+'</title></circle>';}).join('');
+  var ql=o.quad?'<text x="'+(W-pr-4)+'" y="'+(pt+14)+'" text-anchor="end" font-size="11" font-weight="700" fill="#10b981">'+o.quad[0]+'</text><text x="'+(pl+5)+'" y="'+(pt+14)+'" font-size="11" font-weight="700" fill="#3831FA">'+o.quad[1]+'</text><text x="'+(W-pr-4)+'" y="'+(H-pb-7)+'" text-anchor="end" font-size="11" font-weight="700" fill="#e5484d">'+o.quad[2]+'</text><text x="'+(pl+5)+'" y="'+(H-pb-7)+'" font-size="11" fill="#9aa0b4">'+o.quad[3]+'</text>':'';
+  var ax='<text x="'+((pl+W-pr)/2).toFixed(0)+'" y="'+(H-9)+'" text-anchor="middle" font-size="10.5" fill="#5b6075">'+(o.xLabel||'')+'</text><text transform="rotate(-90 13 '+((pt+H-pb)/2).toFixed(0)+')" x="13" y="'+((pt+H-pb)/2).toFixed(0)+'" text-anchor="middle" font-size="10.5" fill="#5b6075">'+(o.yLabel||'')+'</text>';
+  return '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;display:block">'+ticks+divs+ax+ql+d+'</svg>';
+}
+function chHist(bins,o){o=o||{};var W=o.w||640,H=o.h||210,pl=32,pr=14,pt=16,pb=38;var mx=Math.max.apply(null,bins.map(function(b){return b[1];}))||1;var n=bins.length,bw=(W-pl-pr)/n;function Y(v){return H-pb-v/mx*(H-pt-pb);}
+  var bars=bins.map(function(b,i){var x=pl+i*bw+bw*0.13,w=bw*0.74;return '<rect x="'+x.toFixed(1)+'" y="'+Y(b[1]).toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+(H-pb-Y(b[1])).toFixed(1)+'" rx="4" fill="'+(b[2]||C.brand)+'"/><text x="'+(x+w/2).toFixed(1)+'" y="'+(Y(b[1])-6).toFixed(1)+'" text-anchor="middle" font-size="10.5" font-weight="800" fill="#0f1222">'+b[1]+'</text><text x="'+(x+w/2).toFixed(1)+'" y="'+(H-13)+'" text-anchor="middle" font-size="10" fill="#5b6075">'+b[0]+'</text>';}).join('');
+  return '<svg viewBox="0 0 '+W+' '+H+'" width="100%">'+bars+'</svg>';
+}
+function chRadar(axes,series){var W=320,H=300,cx=160,cy=148,R=104,n=axes.length;function ang(i){return -Math.PI/2+i/n*2*Math.PI;}function P(i,r){return [cx+Math.cos(ang(i))*R*r,cy+Math.sin(ang(i))*R*r];}
+  var rings='';[0.25,0.5,0.75,1].forEach(function(rr){rings+='<polygon points="'+axes.map(function(a,i){return P(i,rr).map(function(x){return x.toFixed(1);}).join(',');}).join(' ')+'" fill="none" stroke="#eef0f4"/>';});
+  var spokes=axes.map(function(a,i){var e=P(i,1);return '<line x1="'+cx+'" y1="'+cy+'" x2="'+e[0].toFixed(1)+'" y2="'+e[1].toFixed(1)+'" stroke="#eef0f4"/>';}).join('');
+  var labels=axes.map(function(a,i){var e=P(i,1.18);return '<text x="'+e[0].toFixed(1)+'" y="'+e[1].toFixed(1)+'" text-anchor="middle" font-size="10" font-weight="600" fill="#5b6075">'+a+'</text>';}).join('');
+  var polys=series.map(function(s){return '<polygon points="'+axes.map(function(a,i){return P(i,clamp(s.vals[i]/100,0,1)).map(function(x){return x.toFixed(1);}).join(',');}).join(' ')+'" fill="'+s.color+'" fill-opacity="'+(s.fill||.16)+'" stroke="'+s.color+'" stroke-width="2.2"/>';}).join('');
+  var leg='<div class="lgrow">'+series.map(function(s){return '<span class="lgi"><i style="background:'+s.color+'"></i>'+s.name+'</span>';}).join('')+'</div>';
+  return leg+'<svg viewBox="0 0 '+W+' '+H+'" width="100%" style="max-width:340px;display:block;margin:0 auto">'+rings+spokes+polys+labels+'</svg>';
+}
+function chFunnel(stages){var mx=stages[0][1]||1;return '<div class="funnel">'+stages.map(function(s){return '<div class="fnrow"><span class="fnlab">'+s[0]+'</span><span class="fntrack"><i style="width:'+Math.max(8,s[1]/mx*100)+'%;background:'+s[2]+'"></i></span><b class="fnval">'+s[1]+'</b></div>';}).join('')+'</div>';}
+function chStacked(cats,legend){var mx=Math.max.apply(null,cats.map(function(c){return c.parts.reduce(function(a,p){return a+p[1];},0);}))||1;var l=legend?'<div class="lgrow">'+legend.map(function(g){return '<span class="lgi"><i style="background:'+g[1]+'"></i>'+g[0]+'</span>';}).join('')+'</div>':'';
+  return l+'<div class="stk">'+cats.map(function(c){var tot=c.parts.reduce(function(a,p){return a+p[1];},0);return '<div class="stkrow"><span class="stklab">'+c.label+'</span><span class="stktrack">'+c.parts.map(function(p){return p[1]>0?'<i style="width:'+(p[1]/mx*100)+'%;background:'+p[2]+'" title="'+p[0]+': '+p[1]+'"></i>':'';}).join('')+'</span><b class="stkval">'+tot+'</b></div>';}).join('')+'</div>';}
+function chMatrix(grid,rateColor){var imps=['Insignificant','Minor','Moderate','Major','Severe'],liks=['Almost certain','Likely','Possible','Unlikely','Rare'];
+  var html='<div class="rmx">';for(var li=5;li>=1;li--){html+='<div class="rmxyl">'+liks[5-li]+'</div>';for(var im=1;im<=5;im++){var cnt=grid[im+'_'+li]||0;var sc=im*li;var col=sc<=4?C.ok:(sc<=9?C.warn:(sc<=14?'#f97316':C.bad));html+='<div class="rmxc" style="background:'+col+'">'+(cnt||'')+'</div>';}}
+  html+='<div class="rmxyl"></div>'+imps.map(function(x){return '<div class="rmxxl">'+x+'</div>';}).join('')+'</div>';return html;}
+
+/* ---------- data accessors (global-filter driven) ---------- */
+var MULTI=[{name:'Audit & Advisory',lines:['Audit & Assurance','Business Advisory']},{name:'Advisory & Corporate',lines:['Business Advisory','Corporate Advisory','Management Services']},{name:'Tax & Corporate',lines:['Taxation','Corporate Advisory']}];
+var lens={view:'org',sel:null};
+var scope={alt:'org',sel:null};
+function basePeople(){if(lens.view==='mgr'&&lens.sel)return ROSTER.filter(function(p){return p.mgr===lens.sel;});if(lens.view==='multi'&&lens.sel){var m=MULTI.filter(function(x){return x.name===lens.sel;})[0];if(m)return ROSTER.filter(function(p){return m.lines.indexOf(p.serviceLine)>=0;});}return ROSTER;}
+function activePeople(){var P=basePeople();if(scope.alt==='team'&&scope.sel)P=P.filter(function(p){return p.serviceLine===scope.sel;});else if(scope.alt==='person'&&scope.sel)P=P.filter(function(p){return p.name===scope.sel;});return P;}
+var K={fb:function(p){return p.idx;},li:function(p){return Math.round(0.55*p.eng+0.45*p.safety);},wb:function(p){return p.safety;},pd:function(p){return p.util;},rater:function(p){return p.rater;}};
+function avg(P,f){return P.length?Math.round(P.reduce(function(a,p){return a+f(p);},0)/P.length):0;}
+function avg1(P,f){return P.length?Math.round(P.reduce(function(a,p){return a+f(p);},0)/P.length*10)/10:0;}
+
+/* ---------- KPI cards ---------- */
+var CARDS=[
+ {key:'experience',label:'Experience',dom:'Pulse & wellbeing',icon:'sentiment_satisfied'},
+ {key:'performance',label:'Performance',dom:'Scorecard · signals · measures',icon:'speed'},
+ {key:'inbox',label:'Inbox',dom:'Accountabilities',icon:'inbox'},
+ {key:'signals',label:'Signals',dom:'Risk triggers',icon:'sensors'},
+ {key:'compliance',label:'Compliance',dom:'Risk registers',icon:'verified_user'}
+];
+var sel='experience';
+function spark(data,color){var W=120,H=30,mn=Math.min.apply(null,data),mx=Math.max.apply(null,data),r=(mx-mn)||1;var p=data.map(function(v,i){return (i/(data.length-1)*W).toFixed(1)+','+(H-4-(v-mn)/r*(H-8)).toFixed(1);}).join(' ');return '<svg class="kspark" viewBox="0 0 '+W+' '+H+'" width="100%" preserveAspectRatio="none"><polyline points="'+p+'" fill="none" stroke="'+color+'" stroke-width="2"/></svg>';}
+function renderCards(){var P=activePeople();
+  var wb=avg(P,K.wb),pd=avg(P,K.pd),flags=P.reduce(function(a,p){return a+p.sigs;},0),atrisk=P.filter(function(p){return p.status!=='ok';}).length,open=P.reduce(function(a,p){return a+p.tix;},0);
+  var _closed=P.reduce(function(a,p){return a+(p.closed||0);},0);var _resol=Math.round(_closed/((_closed+open)||1)*100);var _arr=Math.round(atrisk/(P.length||1)*100);
+  var BM={experience:{you:Math.round(wb),ind:64,top:85,suf:'',cap:'Wellbeing index'},performance:{you:Math.round(pd),ind:70,top:86,suf:'%',cap:'Productivity'},inbox:{you:_resol,ind:48,top:78,suf:'%',cap:'Resolution rate'},signals:{you:_arr,ind:32,top:14,suf:'%',cap:'At-risk rate',lower:true},compliance:{you:100,ind:74,top:100,suf:'%',cap:'Register coverage'}};
+  var vals={experience:[wb,'',[68,70,71,71,72,wb]],performance:[pd,'%',[97,99,100,101,102,Math.round(pd/80*100)]],inbox:[open,' open',[260,270,280,285,289,open]],signals:[atrisk,' at risk',[22,24,28,30,34,atrisk]],compliance:[REG.length,' registers',[14,15,16,17,17,17]]};
+  document.getElementById('cards').innerHTML=CARDS.map(function(c){var v=vals[c.key];var on=sel===c.key?' on':'';return '<div class="kcard'+on+'" onclick="pick(\''+c.key+'\')"><div class="kl">'+c.label+'</div><div class="kd">'+c.dom+'</div><div class="kv">'+v[0]+'<u>'+v[1]+'</u></div>'+spark(v[2],sel===c.key?C.brand:'#c7c9f7')+bench(c.key,BM)+'</div>';}).join('');
+}
+function pick(k){sel=k;renderCards();renderCanvas();}
+
+/* ---------- per-card canvas ---------- */
+function panel(t,s,body,ins,cls){return '<div class="panel '+(cls||'')+'"><div class="ph"><span class="pt">'+t+'</span><span class="ps">'+(s||'')+'</span></div>'+body+(ins?'<div class="pins">'+ins+'</div>':'')+'</div>';}
+function sect(t,d){return '<div class="secthead"><span class="t">'+t+'</span><span class="d">'+d+'</span></div>';}
+
+function peopleList(arr,metric,label){return '<div class="plist">'+arr.map(function(p){var i=ROSTER.indexOf(p);var v=metric(p);return '<div class="prow" onclick="openProfile('+i+')"><div><div class="t">'+p.name+'</div><div class="s">'+p.role+' · '+p.serviceLine+'</div></div><b class="pv" style="color:'+ragScore(v)+'">'+v+'</b></div>';}).join('')+'</div>';}
+
+function viewExperience(P){
+  var facs=EP.factors.slice().sort(function(a,b){return b.score-a.score;});
+  var wv=EP.pulseWaves;
+  // 1. pulse trend (line)
+  var line=chLine([{name:'Overall pulse',data:wv.map(function(w){return w.overall;}),color:C.brand},{name:'Response rate %',data:wv.map(function(w){return Math.round(w.respondents/131*100);}),color:C.teal}],wv.map(function(w){return w.label;}),{min:40,max:100});
+  // 2. wellbeing distribution (histogram)
+  var bands=[['<50',0],['50-59',0],['60-64',0],['65-69',0],['70-74',0],['75-79',0],['80-84',0],['85+',0]];
+  P.forEach(function(p){var v=p.safety;var i=v<50?0:v<60?1:v<65?2:v<70?3:v<75?4:v<80?5:v<85?6:7;bands[i][1]++;});
+  bands.forEach(function(b){var lo=parseInt(b[0])||(b[0]==='<50'?0:90);b[2]=lo<65?C.bad:(lo<80?C.warn:C.ok);});
+  var wbHist=chHist(bands,{});
+  // 3. experience by pillar (grouped bars) — replaces heatmap/category
+  var pil={};EP.factors.forEach(function(f){(pil[f.pillar]=pil[f.pillar]||[]).push(f.score);});
+  var pilOrder=['Wellbeing','Engagement','Performance','Compliance'];
+  var pilbars=chHBar(pilOrder.filter(function(k){return pil[k];}).map(function(k){var a=pil[k];return [k+' ('+a.length+' factors)',Math.round(a.reduce(function(x,y){return x+y;},0)/a.length*10)/10,PILL[k]];}),{max:100});
+  // 4. participation by service line (people involvement)
+  var pl={};P.forEach(function(p){(pl[p.serviceLine]=pl[p.serviceLine]||[]).push(p.rater);});
+  var SLc={'Audit & Assurance':C.brand,'Business Advisory':'#6366f1','Corporate Advisory':C.violet,'Management Services':C.sky,'Taxation':C.teal};
+  var partbar=chHBar(Object.keys(pl).map(function(k){var a=pl[k];return [k.replace(' Services',''),Math.round(a.reduce(function(x,y){return x+y;},0)/a.length),SLc[k]||C.brand];}),{max:100,unit:'%'});
+  var firmPart=Math.round(P.reduce(function(a,p){return a+p.rater;},0)/(P.length||1));
+  // 5. strengths & watch (replaces overwhelming 18-bar list)
+  var strong=chHBar(facs.slice(0,6).map(function(f){return [f.name,Math.round(f.score*10)/10,C.ok];}),{max:100});
+  var watch=chHBar(facs.slice(-6).reverse().map(function(f){return [f.name,Math.round(f.score*10)/10,f.score<70?C.bad:C.warn];}),{max:100});
+  // 6. people lists (involvement + profile)
+  var byExp=P.slice().sort(function(a,b){return b.safety-a.safety;});
+  var topP=peopleList(byExp.slice(0,7),function(p){return p.safety;});
+  var lowP=peopleList(byExp.slice(-7).reverse(),function(p){return p.safety;});
+  var atRisk=P.filter(function(p){return p.safety<65;}).length;
+
+  return sect('Experience','Pulse engagement & wellbeing — trends, factors and the people behind them')
+   +'<div class="grid g2">'
+     +panel('Pulse trend · 5 weekly waves',wv[wv.length-1].date,line,'Overall pulse '+wv[wv.length-1].overall+' on '+wv[wv.length-1].respondents+' responses — response rate dipped in the latest wave.')
+     +panel('Wellbeing distribution',P.length+' people',wbHist,EP.cohort.wb.lt65+' below 65 (watch) · '+EP.cohort.wb.ge80+' at 80+ (strong).')
+   +'</div>'
+   +'<div class="grid g2" style="margin-top:14px">'
+     +panel('Experience by pillar','firm average, 0–100','<div class="lgrow">'+pilOrder.map(function(k){return '<span class="lgi"><i style="background:'+PILL[k]+'"></i>'+k+'</span>';}).join('')+'</div>'+pilbars,'Engagement factors lead; wellbeing factors (fatigue, workload) trail.')
+     +panel('Pulse participation by service line','% responding · firm '+firmPart+'%',partbar,'Taxation is the least engaged with the pulse — participation drives signal quality.')
+   +'</div>'
+   +'<div class="grid g2" style="margin-top:14px">'
+     +panel('Strengths · top 6 factors','what is working',strong,'')
+     +panel('Watch areas · lowest 6 factors','where to focus',watch,'Workload satisfaction, fatigue and training & development are the firm-wide drags.')
+   +'</div>'
+   +'<div class="grid g2" style="margin-top:14px">'
+     +panel('Thriving · highest wellbeing','click for profile',topP,'')
+     +panel('Needs support · lowest wellbeing','click for profile',lowP,atRisk+' people sit below 65 wellbeing — prioritise 1:1s here.')
+   +'</div>';
+}
+
+function openProfile(i){var p=ROSTER[i];if(!p)return;
+  var reports=ROSTER.filter(function(x){return x.mgr===p.name&&x.name!==p.name;});
+  var ed=p.expd||{},ib=p.inbox||{open:0,pending:0,overdue:0,closed:0,missed:0};
+  var tag=function(arr,cls){return (arr&&arr.length)?arr.map(function(t){return '<span class="ptag '+(cls||'')+'">'+t+'</span>';}).join(''):'<span class="pnone">None</span>';};
+  var tile=function(l,v,col){return '<div class="ptile"><div class="pl">'+l+'</div><div class="pv"'+(col?' style="color:'+col+'"':'')+'>'+(v!=null?v:'–')+'</div></div>';};
+  var form='';for(var j=1;j<p.trend.length;j++){form+='<span class="fdot" style="background:'+(p.trend[j]>=p.trend[j-1]?'#34d399':'#fb7185')+'"></span>';}
+  var chips='<span class="pchip">'+p.team+'</span><span class="pchip">Tenure '+p.tenure+'</span><span class="pchip">Reports to '+p.mgr+'</span>'+(reports.length?'<span class="pchip">'+reports.length+' direct report'+(reports.length>1?'s':'')+'</span>':'');
+  var radar=chRadar(['Workload','Role clarity','Support','Change','Recognition','Fatigue'],[{name:p.name.split(' ')[0],color:C.brand,vals:p.radar,fill:.16},{name:'Team avg',color:'#c7c9f7',vals:[62,70,66,58,64,60],fill:.05}]);
+  var trend=chLine([{name:'Signal index',data:p.trend,color:C.brand}],['Jan','Feb','Mar','Apr','May','Jun'],{min:50,max:100,h:170});
+  var comments=(p.comments||[]).map(function(c){var txt=Array.isArray(c)?(c[1]||c[0]):c;var src=Array.isArray(c)?(c[0]||''):'';var sent=Array.isArray(c)?(c[2]||'neu'):'neu';return '<div class="pcomment '+sent+'">'+txt+(src?'<span>'+src+'</span>':'')+'</div>';}).join('')||'<span class="pnone">None</span>';
+  var flags=((p.sig&&p.sig.length)?p.sig:[['No active flags','amber']]).map(function(s){return '<span class="sig '+(s[1]==='amber'?'amber':'')+'">'+s[0]+'</span>';}).join('')+' <span class="sig amber">'+p.tix+' open ticket'+(p.tix===1?'':'s')+'</span>';
+  var ring='conic-gradient('+ragScore(p.idx)+' '+(p.idx*3.6)+'deg,rgba(255,255,255,.25) 0)';
+  document.getElementById('pdrawer').innerHTML=
+   '<div class="phero">'
+     +'<div class="phtop"><span class="phav" style="background:'+ring+'"><b>'+p.id+'</b></span>'
+     +'<div class="phid"><div class="phname">'+p.name+'</div><div class="phrole">'+p.role+' · '+p.serviceLine+'</div></div>'
+     +'<div class="phidx"><div class="phnum">'+p.idx+'</div><div class="phlbl">index</div></div>'
+     +'<span class="phx" onclick="closeProfile()">✕</span></div>'
+     +'<div class="phform" title="6-month form">'+form+'</div>'
+     +'<div class="phchips">'+chips+'</div>'
+   +'</div>'
+   +'<div class="pbody">'
+     +'<div class="psec"><div class="seclbl">Reporting line</div><div class="pquad">'+tile('Reports to',p.mgr)+tile('Team',p.team)+tile('Service line',p.serviceLine)+tile('Direct reports',reports.length)+'</div>'
+       +(reports.length?'<div class="pmini">Direct reports</div><div class="ptags">'+reports.map(function(r){return '<span class="ptag" style="cursor:pointer" onclick="openProfile('+ROSTER.indexOf(r)+')">'+r.name+'</span>';}).join('')+'</div>':'')+'</div>'
+     +'<div class="psec"><div class="seclbl">Experience · Pulse</div><div class="pquad">'+tile('Psychosocial',ed.psych)+tile('Performance',ed.perf)+tile('Engagement',ed.eng)+tile('Wellbeing',ed.wb)+'</div>'
+       +'<div class="pchart"><div class="seclbl" style="margin:12px 0 2px">Attributes vs team</div>'+radar+'</div>'
+       +'<div class="pmini">Top scores</div><div class="ptags">'+tag(p.top,'g')+'</div>'
+       +'<div class="pmini">Low / no scores</div><div class="ptags">'+tag(p.low,'r')+'</div>'
+       +'<div class="pmini">Comments</div>'+comments+'</div>'
+     +'<div class="psec"><div class="seclbl">Performance · Measures</div><div class="pquad">'+tile('Productivity %',p.util)+tile('Performance',p.prod)+'</div>'
+       +'<div class="pmini">Doing well</div><div class="ptags">'+tag(p.well,'g')+'</div>'
+       +'<div class="pmini">Not yet</div><div class="ptags">'+tag(p.notwell,'r')+'</div></div>'
+     +'<div class="psec"><div class="seclbl">Inbox · their action items</div><div class="pquad">'+tile('Open',ib.open)+tile('Pending',ib.pending)+tile('Overdue',ib.overdue,ib.overdue?C.bad:null)+tile('Closed',ib.closed)+'</div></div>'
+     +'<div class="psec"><div class="seclbl">Signals &amp; next play</div><div class="pflags">'+flags+'</div>'
+       +'<div class="pchart"><div class="seclbl" style="margin:12px 0 2px">Signal trend · 6 months</div>'+trend+'</div>'
+       +'<div class="nextplay"><div class="ic"><span class="material-symbols-outlined">sports</span></div><div><div class="t">Next play: '+(p.reco[0]||'')+'</div><div class="d">'+(p.reco[1]||'')+'</div></div></div></div>'
+   +'</div>';
+  document.getElementById('pdrawer').classList.add('on');document.getElementById('pscrim').classList.add('on');
+}
+function closeProfile(){document.getElementById('pdrawer').classList.remove('on');document.getElementById('pscrim').classList.remove('on');}
+
+function viewPerformance(P){
+  // radar scorecard
+  var firm=[avg(P,K.fb),avg(P,K.wb),avg(P,K.li),avg(P,K.pd),avg(P,K.rater)];
+  var radar=chRadar(['Feedback','Wellbeing','Lead ind.','Productivity','Rater'],[{name:'Firm',color:C.brand,vals:firm},{name:'Industry',color:C.faint,vals:[66,68,67,72,70],fill:.05}]);
+  // scatter risk signals
+  var pts=P.map(function(p){return {x:p.util,y:p.safety,r:p.sigs,c:p.status==='bad'?C.bad:(p.status==='warn'?C.warn:C.ok),label:p.name+' · util '+p.util+' · wb '+p.safety+' · '+p.sigs+' flags'};});
+  var scat=chScatter(pts,{xLabel:'Productivity / utilisation %',yLabel:'Wellbeing',xDiv:75,yDiv:65,quad:['Thriving','Headroom','Over-extracted','Disengaged']});
+  var oe=P.filter(function(p){return p.util>=75&&p.safety<65;}).length;var oeP=P.filter(function(p){return p.util>=75&&p.safety<65;}).sort(function(a,b){return a.safety-b.safety;});var _o=AFS.org,_nb=_o.nbCats,_nbcol={'Admin/Support':C.brand,'Client':C.eng,'Firm':C.violet,'Operational':C.sky,'Personal':C.teal,'Team':C.warn};
+var _pm=['Wellbeing','Compliance','Performance'].map(function(k){var pl=_o.pillars[k];var c=ragScore(pl.score);var d=pl.var;return '<div class="pmrow"><span class="pmn">'+k+'</span><span class="pmbar"><i style="width:'+pl.score+'%;background:'+c+'"></i></span><b class="pmv" style="color:'+c+'">'+pl.score+'</b><span class="pmd '+(d>=0?'up':'down')+'">'+(d>=0?'▲ +':'▼ ')+d+'</span></div>';}).join('');
+var _hours=chHBar([['Available',_o.available,C.faint],['Std',_o.std,C.faint],['Timesheet',_o.timesheet,C.sky],['Productive',_o.productive,C.ok],['Non-billable',_o.nonbillable,C.warn],['Leave',_o.leave,'#cbd5e1']],{unit:'h'});
+var _ptbl=function(rows){return '<table class="ptbl"><thead><tr><th>Period</th><th>Actual</th><th>Target</th><th>Progress</th></tr></thead><tbody>'+rows.map(function(r){var pc=r[3]>=100?C.ok:(r[3]>=80?C.warn:C.bad);return '<tr><td>'+r[0]+'</td><td>'+fmt(r[1])+'h</td><td>'+fmt(r[2])+'h</td><td style="color:'+pc+';font-weight:700">'+r[3]+'%</td></tr>';}).join('')+'</tbody></table>';};
+var _periods=_ptbl([['Productive (mth)',_o.productive,_o.productiveTarget,Math.round(_o.productive/_o.productiveTarget*100)],['Productive MTD (mth)',_o.prodMtd,_o.mtdTarget,_o.mtdProgress],['Productive MTD (YTD)',_o.prodYtd,_o.ytdTarget,_o.ytdProgress],['Variance MTD (mth)',_o.varMth.actual,_o.varMth.target,_o.varMth.progress],['Variance MTD (YTD)',_o.varYtd.actual,_o.varYtd.target,_o.varYtd.progress]]);
+var afsBlock='<div class="secthead" style="margin-top:24px"><span class="t" style="font-size:15px">Time &amp; utilisation</span><span class="d">AFS data points — billable vs non-billable, hours, MTD/YTD &amp; variance, charge rate</span></div>'
++'<div class="grid g2">'
++panel('Where non-billable time goes',fmt(_o.nonbillable)+'h non-billable',chPie(Object.keys(_nb).map(function(k){return [k,_nb[k],_nbcol[k]];})),'Admin/Support is the biggest non-billable drain — '+Math.round(_nb['Admin/Support']/_o.nonbillable*100)+'%.')
++panel('Time allocation by service line','productive · non-billable · leave',chStacked(AFS.lines.map(function(l){return {label:l.name.replace(' Services',''),parts:[['Productive',l.productive,C.ok],['Non-billable',l.nonbillable,C.warn],['Leave',l.leave,C.faint]]};}),[['Productive',C.ok],['Non-billable',C.warn],['Leave',C.faint]]),'Of '+fmt(_o.available)+'h available, '+fmt(_o.productive)+'h ('+_o.productivityActual+'%) is billable.')
++'</div>'
++'<div class="grid g2" style="margin-top:14px">'
++panel('Three pillars · score &amp; momentum','Wellbeing · Compliance · Performance','<div class="pmwrap">'+_pm+'</div>','Score with variance vs last pulse — Wellbeing is sliding fastest.')
++panel('Hours summary','where the month goes',_hours,'Timesheet '+fmt(_o.timesheet)+'h of '+fmt(_o.available)+'h available.')
++'</div>'
++'<div class="grid g2" style="margin-top:14px">'
++panel('Productive hours · periods','MTD · YTD · variance (actual / target / progress)',_periods,'AFS tracks month-to-date and year-to-date plus the variance to target.')
++panel('Average charge rate','$/hr by service line',chHBar(AFS.lines.map(function(l){return [l.name.replace(' Services',''),l.rate,C.teal];}),{}),'Firm average $'+_o.avgRate+'/hr · Corporate Advisory highest.')
++'</div>';
+  // measures: productive hours actual vs target by line
+  var SL={'Audit & Assurance':[4458.8,3759.7],'Business Advisory':[3872.6,4037.4],'Corporate Advisory':[1248.3,1389.3],'Management Services':[91.7,105.3],'Taxation':[1723.7,1924.6]};
+  var present={};P.forEach(function(p){present[p.serviceLine]=1;});
+  var items=Object.keys(SL).filter(function(k){return present[k];}).map(function(k){return [k.replace(' Services',''),SL[k][0],SL[k][1]];});
+  var cols=chCols(items,{});
+  return sect('Performance','Scorecard, risk signals and productivity measures')
+    +'<div class="grid g2"><div>'+panel('Scorecard · pillar profile','firm vs industry',radar,'Feedback '+firm[0]+' · Wellbeing '+firm[1]+' · Lead '+firm[2]+' · Productivity '+firm[3]+' · Rater '+firm[4]+'.')+'</div>'
+    +'<div>'+panel('Productivity measures · hours vs target','by service line',cols,'Audit runs hottest above target; advisory & tax sit below.')+'</div></div>'
+    +'<div class="grid" style="grid-template-columns:1.5fr 1fr;margin-top:14px">'+panel('Risk-signal scatter · utilisation × wellbeing',P.length+' people · bubble = flags',scat,oe+' over-extracted — high load, low wellbeing.')+panel('Rebalance first · over-extracted',oe+' people',(oeP.length?peopleList(oeP,function(p){return p.safety;}):'<div class="prow"><div class="s" style="color:var(--faint)">No one in this quadrant</div></div>'),'Click a name for their profile.')+'</div>'+afsBlock;
+}
+function chPie(segs){var total=segs.reduce(function(a,s){return a+s[1];},0)||1;var cx=66,cy=66,R=60,a0=-Math.PI/2;
+  var wed=segs.filter(function(s){return s[1]>0;}).map(function(s){var a1=a0+s[1]/total*2*Math.PI;var x0=cx+R*Math.cos(a0),y0=cy+R*Math.sin(a0),x1=cx+R*Math.cos(a1),y1=cy+R*Math.sin(a1);var lg=(a1-a0)>Math.PI?1:0;var p='<path d="M'+cx+' '+cy+' L'+x0.toFixed(2)+' '+y0.toFixed(2)+' A'+R+' '+R+' 0 '+lg+' 1 '+x1.toFixed(2)+' '+y1.toFixed(2)+' Z" fill="'+s[2]+'" stroke="#fff" stroke-width="1.5"/>';a0=a1;return p;}).join('');
+  var leg=segs.map(function(s){return '<div class="pielg"><span class="dot" style="background:'+s[2]+'"></span><span class="lab">'+s[0]+'</span><span class="cnt">'+s[1]+'</span><span class="pct">'+Math.round(s[1]/total*100)+'%</span></div>';}).join('');
+  return '<div class="piewrap"><svg viewBox="0 0 132 132" width="132" height="132">'+wed+'</svg><div class="pielgs">'+leg+'</div></div>';
+}
+function pList(arr,valFn,colFn,suf){return '<div class="plist">'+arr.map(function(p){var i=ROSTER.indexOf(p);var v=valFn(p);return '<div class="prow" onclick="openProfile('+i+')"><div><div class="t">'+p.name+'</div><div class="s">'+p.role+' · '+p.serviceLine+'</div></div><b class="pv" style="color:'+colFn(p,v)+'">'+v+(suf||'')+'</b></div>';}).join('')+'</div>';}
+function viewInbox(P){
+  var open=P.reduce(function(a,p){return a+p.tix;},0),closed=P.reduce(function(a,p){return a+(p.closed||0);},0),tot=open+closed||1;
+  var stages=[['Raised',tot,C.faint],['Acknowledged',Math.round(tot*0.82),'#60a5fa'],['Investigating',Math.round(tot*0.58),'#fbbf24'],['Actioning',Math.round(tot*0.39),C.violet],['Monitoring',Math.round(tot*0.22),'#34d399'],['Closed',closed,'#6b7280']];
+  var funnel=chFunnel(stages);
+  var tcol={Experience:C.brand,Signal:C.eng,Review:C.violet,Development:C.sky,Action:C.warn};
+  var pie=chPie(EP.inbox.byCategory.map(function(x){return [x.name,x.count,tcol[x.name]||C.faint];}));
+  var top=P.slice().filter(function(p){return (p.closed||0)>0;}).sort(function(a,b){return ((b.closed||0)-b.tix)-((a.closed||0)-a.tix);}).slice(0,7);
+  var under=P.slice().filter(function(p){return p.tix>0;}).sort(function(a,b){return b.tix-a.tix;}).slice(0,7);
+  var topList=pList(top,function(p){return (p.closed||0);},function(){return C.ok;},' closed');
+  var underList=pList(under,function(p){return p.tix;},function(p,v){return v>=6?C.bad:C.warn;},' open');
+  var behind=P.filter(function(p){return p.tix>=6;}).length;
+  return sect('Inbox','Manager accountabilities — workflow, mix and the people behind them')
+   +'<div class="grid g2">'
+     +panel('Workflow funnel · by stage','where items sit',funnel,'Most items are early-stage; '+closed+' resolved. The drop from Raised to Actioning is throughput.')
+     +panel('Inbox by type · '+EP.inbox.total+' items','source mix',pie,'Pulse-automation items (Experience) make up the bulk of the inbox.')
+   +'</div>'
+   +'<div class="grid g2" style="margin-top:14px">'
+     +panel('Top performers · closing accountabilities','items closed · click for profile',topList,'')
+     +panel('Needs attention · backlog building','most open · click for profile',underList,behind+' people are carrying 6+ open items — unblock these first.')
+   +'</div>';
+}
+function viewSignals(P){
+  var buckets=[['0',0],['1',0],['2',0],['3',0],['4',0],['5',0],['6',0],['7+',0]];
+  P.forEach(function(p){var s=Math.min(p.sigs,7);buckets[s][1]++;});
+  buckets.forEach(function(b){var n=b[0]==='7+'?7:parseInt(b[0]);b[2]=n===0?C.ok:(n<=2?C.warn:C.bad);});
+  var legend='<div class="lgrow"><span class="lgi"><i style="background:'+C.ok+'"></i>0 flags · no risk</span><span class="lgi"><i style="background:'+C.warn+'"></i>1–2 · watch</span><span class="lgi"><i style="background:'+C.bad+'"></i>3+ · at risk</span></div>';
+  var hist=chHist(buckets,{});
+  var trend=chLine([{name:'At-risk people',data:EP.trend.atRisk,color:C.bad},{name:'Total flags',data:EP.trend.flags,color:C.warn}],EP.trend.labels,{min:0});
+  var atrisk=P.filter(function(p){return p.sigs>=1;}).sort(function(a,b){return b.sigs-a.sigs;}).slice(0,9);
+  var arList=pList(atrisk,function(p){return p.sigs;},function(p,v){return v>=3?C.bad:C.warn;},' flag'+(atrisk.length&&atrisk[0].sigs===1?'':'s'));
+  // flags by manager group (a different cut than service line)
+  var mg={};P.forEach(function(p){if(p.sigs>0)mg[p.mgr]=(mg[p.mgr]||0)+p.sigs;});
+  var mgArr=Object.keys(mg).map(function(k){return [k,mg[k]];}).sort(function(a,b){return b[1]-a[1];}).slice(0,8);
+  var mgBar=chHBar(mgArr.map(function(x){return [x[0],x[1],x[1]>=10?C.bad:(x[1]>=5?C.warn:C.brand)];}),{unit:' flags'});
+  var multi=P.filter(function(p){return p.sigs>=3;}).length,none=buckets[0][1];var _li=AFS.org.li;
+var _rater=Math.round(ROSTER.reduce(function(a,p){return a+p.rater;},0)/ROSTER.length);
+var _phP=Math.round(AFS.org.productive/AFS.org.productiveTarget*100),_pdP=Math.round(AFS.org.productivityActual/AFS.org.productivityTarget*100);
+var _rp=function(v){return v>=100?C.ok:(v>=80?C.warn:C.bad);};
+var _kpi='<table class="ptbl"><thead><tr><th>Metric</th><th>Actual</th><th>Target</th><th>Progress</th></tr></thead><tbody>'
+ +'<tr><td>Rater compliance</td><td>'+_rater+'%</td><td>—</td><td>—</td></tr>'
+ +'<tr><td>Productive hours (mth)</td><td>'+fmt(AFS.org.productive)+'h</td><td>'+fmt(AFS.org.productiveTarget)+'h</td><td style="color:'+_rp(_phP)+';font-weight:700">'+_phP+'%</td></tr>'
+ +'<tr><td>Productivity %</td><td>'+AFS.org.productivityActual+'%</td><td>'+AFS.org.productivityTarget+'%</td><td style="color:'+_rp(_pdP)+';font-weight:700">'+_pdP+'%</td></tr>'
+ +'</tbody></table>';
+var _liPanel='<div class="listat">'
+ +'<div class="ls"><div class="lsl">Lead Indicators score</div><div class="lsv" style="color:'+ragScore(_li.curr)+'">'+_li.curr+'</div><div class="lsd '+(_li.var>=0?'up':'down')+'">'+(_li.var>=0?'▲ +':'▼ ')+_li.var+' vs '+_li.prev+' prev</div></div>'
+ +'<div class="ls"><div class="lsl">At-risk lead factors</div><div class="lsv" style="color:'+(_li.rfCurr>=3?C.bad:C.warn)+'">'+_li.rfCurr+'</div><div class="lsd '+(_li.rfCurr<=_li.rfPrev?'up':'down')+'">was '+_li.rfPrev+' prev</div></div>'
+ +'</div>';
+var _matRows=['Wellbeing','Compliance','Performance'].map(function(k){var pl=AFS.org.pillars[k];return '<tr><td>'+k+'</td><td style="color:'+ragScore(pl.score)+';font-weight:700">'+pl.score+'</td><td class="'+(pl.var>=0?'up':'down')+'" style="font-weight:700">'+(pl.var>=0?'+':'')+pl.var+'</td><td style="color:'+C.ok+';font-weight:700">▲ '+pl.pos+'</td><td style="color:'+C.bad+';font-weight:700">▼ '+pl.neg+'</td><td style="font-weight:800">'+pl.atrisk+'</td></tr>';}).join('');
+var _mat='<table class="ptbl"><thead><tr><th>Pillar</th><th>Score</th><th>Δ</th><th>Improved</th><th>Declined</th><th>At-risk</th></tr></thead><tbody>'+_matRows+'</tbody></table>';
+var sigBlock='<div class="grid g2" style="margin-top:14px">'
++panel('Productivity &amp; rater · risk-signal KPIs','rater · productive hours · productivity %',_kpi,'Rater compliance '+_rater+'% · billable '+_phP+'% to target.')
++panel('Leadership Index','lead-indicator early-warning · curr vs prev',_liPanel,'LI '+_li.curr+' is up '+_li.var+' on last period; at-risk lead factors down from '+_li.rfPrev+' to '+_li.rfCurr+'.')
++'</div>'
++'<div class="grid" style="margin-top:14px">'
++panel('Movers &amp; at-risk by pillar','score Δ · improved / declined · at-risk',_mat,'Wellbeing has the most decliners ('+AFS.org.pillars.Wellbeing.neg+'); Compliance the most at-risk ('+AFS.org.pillars.Compliance.atrisk+').')
++'</div>';
+  return sect('Signals','Risk triggers — distribution, trend and the people to act on')
+   +'<div class="grid g2">'
+     +panel('Flags carried · people by number of flags','distribution',legend+hist,multi+' people carry 3+ flags (the at-risk working list); '+none+' carry none.')
+     +panel('Risk trend · 3 months','Mar–May',trend,'At-risk people rose to '+EP.org.atRisk+' with '+EP.org.totalFlags+' total flags this period.')
+   +'</div>'
+   +'<div class="grid g2" style="margin-top:14px">'
+     +panel('At-risk people · working list','most flags first · click for profile',arList,'')
+     +panel('Flags by manager · accountability','whose team carries the risk',mgBar,'Use this to direct manager 1:1s and coaching.')+'</div>'+sigBlock;
+}
+function viewCompliance(){
+  var grid={};REG.forEach(function(r){var k=r.impN+'_'+r.likN;grid[k]=(grid[k]||0)+1;});
+  var matrix=chMatrix(grid);
+  var dom={};REG.forEach(function(r){dom[r.domain]=(dom[r.domain]||0)+1;});
+  var dombar=chHBar(Object.keys(dom).map(function(k){return [k,dom[k],C.brand];}),{unit:' reg'});
+  var st={};REG.forEach(function(r){st[r.status]=(st[r.status]||0)+1;});
+  var stbar=chHBar([['Not Started',st['Not Started']||0,C.faint],['To Do',st['To Do']||0,C.warn],['In Progress',st['In Progress']||0,C.brand],['Monitoring',st['Monitoring']||0,C.ok]],{unit:' reg'});
+  var RC={Critical:C.bad,High:'#f97316',Medium:C.warn,Low:C.ok};
+  var list='<div class="reglist">'+REG.map(function(r){return '<div class="regrow"><div><div style="font-weight:600;color:var(--ink)">'+r.h+'</div><div style="font-size:11px;color:var(--faint)">'+r.domain+' · '+r.status+'</div></div><span class="tpill" style="background:'+(RC[r.rating]||C.warn)+'1f;color:'+(RC[r.rating]||C.warn)+'">'+r.rating+'</span></div>';}).join('')+'</div>';
+  return sect('Compliance','The 17 standard psychosocial risk registers')
+    +'<div class="grid g2">'+panel('Risk matrix · impact × likelihood','all 17 registers',matrix,'All 17 sit at Moderate × Possible = Medium. None escalated — a uniform baseline awaiting refinement.')
+    +panel('The 17 registers','hazard · domain · status',list,'')+'</div>'
+    +'<div class="grid g2" style="margin-top:14px">'+panel('By domain','ISO 45003 groups',dombar,'')
+    +panel('Mitigation status','workflow stage',stbar,'16 To Do, 1 Not Started — assessment done, mitigation not yet started.')+'</div>';
+}
+function renderCanvas(){var P=activePeople();var h='';
+  if(sel==='experience')h=viewExperience(P);
+  else if(sel==='performance')h=viewPerformance(P);
+  else if(sel==='inbox')h=viewInbox(P);
+  else if(sel==='signals')h=viewSignals(P);
+  else h=viewCompliance();
+  document.getElementById('canvas').innerHTML=h;
+}
+
+/* ---------- global filter ---------- */
+document.getElementById('alt').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;[].forEach.call(this.children,function(x){x.classList.remove('on');});b.classList.add('on');scope.alt=b.dataset.a;scope.sel=null;
+  var selEl=document.getElementById('sel');var base=basePeople();
+  if(b.dataset.a==='org'){selEl.style.display='none';}
+  else{var opts=[];
+    if(b.dataset.a==='team'){var s={};base.forEach(function(p){s[p.serviceLine]=1;});opts=Object.keys(s).sort();}
+    else{opts=base.slice().sort(function(a,c){return a.name<c.name?-1:1;}).map(function(p){return p.name;});}
+    selEl.innerHTML='<option value="">All '+(b.dataset.a==='team'?'teams':'people')+'</option>'+opts.map(function(o){return '<option>'+o+'</option>';}).join('');selEl.style.display='';}
+  syncScope();renderCards();renderCanvas();
+});
+document.getElementById('lens').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;[].forEach.call(this.children,function(x){x.classList.remove('on');});b.classList.add('on');lens.view=b.dataset.l;lens.sel=null;
+  var ls=document.getElementById('lensSel');
+  if(b.dataset.l==='org'){ls.style.display='none';}
+  else{var opts=[];
+    if(b.dataset.l==='mgr'){var m={};ROSTER.forEach(function(p){m[p.mgr]=(m[p.mgr]||0)+1;});opts=Object.keys(m).sort(function(a,c){return m[c]-m[a];});}
+    else{opts=MULTI.map(function(x){return x.name;});}
+    lens.sel=opts[0];
+    ls.innerHTML=opts.map(function(o,i){return '<option'+(i===0?' selected':'')+'>'+o+'</option>';}).join('');ls.style.display='';}
+  scope.alt='org';scope.sel=null;document.getElementById('sel').style.display='none';
+  var ab=document.getElementById('alt').children;[].forEach.call(ab,function(x,i){x.classList.toggle('on',i===0);});
+  syncScope();renderCards();renderCanvas();
+});
+document.getElementById('lensSel').addEventListener('change',function(){lens.sel=this.value;syncScope();renderCards();renderCanvas();});
+document.getElementById('sel').addEventListener('change',function(){scope.sel=this.value||null;syncScope();renderCards();renderCanvas();});
+function syncScope(){var P=activePeople();var parts=['AFS & Associates'];parts.push(lens.view==='org'?'Org view':(lens.view==='mgr'?'Manager view · '+lens.sel:'Multi-manager view · '+lens.sel));if(scope.alt!=='org'&&scope.sel)parts.push(scope.sel);parts.push(P.length+' people');parts.push('May 2026');document.getElementById('scopeln').textContent=parts.join(' · ');}
+function bench(key,BM){var b=BM[key];if(!b)return '';var p=function(v){return Math.max(3,Math.min(97,v));};return '<div class="bm"><div class="bmcap">'+b.cap+(b.lower?' · lower is better':'')+'</div><div class="bmtrack"><i style="width:'+p(b.you)+'%"></i><span class="bmk ind" style="left:'+p(b.ind)+'%"></span><span class="bmk tq" style="left:'+p(b.top)+'%"></span><span class="bmyou" style="left:'+p(b.you)+'%"></span></div><div class="bml"><span>Industry '+b.ind+b.suf+'</span><span class="you">You '+b.you+b.suf+'</span><span>Top '+b.top+b.suf+'</span></div></div>';}
+function eliShow(){var p=document.getElementById('elipanel');p.style.display='flex';p.classList.remove('min');}
+function eliMin(){document.getElementById('elipanel').classList.toggle('min');}
+function eliMax(){document.getElementById('elipanel').classList.toggle('max');}
+function eliClose(){var p=document.getElementById('elipanel');p.style.display='none';p.classList.remove('max');document.getElementById('elimsgs').innerHTML='';}
+function addMsg(who,html){var m=document.getElementById('elimsgs');var div=document.createElement('div');div.className='emsg '+who;div.innerHTML=html;m.appendChild(div);m.scrollTop=m.scrollHeight;}
+function ask(b){var inp=document.getElementById('eliin');var t=b?b.textContent:((inp.value||'').trim());if(!t)return;inp.value='';eliShow();addMsg('u',t);var r=eliReply(t);setTimeout(function(){addMsg('a',r);},220);}
+function eliReply(q){
+  var P=activePeople();var ql=q.toLowerCase();
+  var list=function(arr,fn){return '<ul>'+arr.slice(0,5).map(function(p){return '<li><b>'+p.name+'</b> · '+p.serviceLine+' — '+fn(p)+'</li>';}).join('')+'</ul>';};
+  if(/attention|who needs|at.?risk|worst|priorit/.test(ql)){var a=P.filter(function(p){return p.status!=='ok';}).sort(function(x,y){return y.sigs-x.sigs;});return '<b>'+a.length+' people are at risk.</b> Act on these first:'+list(a,function(p){return p.sigs+' flags · wellbeing '+p.safety;});}
+  if(/wellbeing|declin|pulse/.test(ql)){var lo=P.filter(function(p){return p.safety<65;}).length;var w=EP.pulseWaves;return 'Wellbeing is sliding firm-wide — overall pulse moved '+w[0].overall+' → '+w[w.length-1].overall+' across 5 weekly waves, and <b>'+lo+'</b> people now sit below 65. Weakest factors: Workload satisfaction, Fatigue, Training &amp; development.';}
+  if(/productiv|target|utilis|hours|billable/.test(ql)){var pr=Math.round(AFS.org.productive/AFS.org.productiveTarget*100);return 'Productive hours are <b>'+fmt(AFS.org.productive)+'h</b> vs '+fmt(AFS.org.productiveTarget)+'h target (<b>'+pr+'%</b>); utilisation is '+AFS.org.productivityActual+'% against an 80% target. Audit &amp; Assurance runs hottest; Management Services and Taxation sit below target.';}
+  if(/over.?extract|rebalance|burnout/.test(ql)){var oe=P.filter(function(p){return p.util>=75&&p.safety<65;});return '<b>'+oe.length+'</b> people are over-extracted (high utilisation, low wellbeing) — rebalance first: '+(oe.slice(0,6).map(function(p){return p.name;}).join(', ')||'none')+'.';}
+  if(/complian|register|psychosocial|hazard/.test(ql)){return 'All 17 standard psychosocial risk registers sit at <b>Medium</b> (Moderate × Possible). None escalated; 16 are "To Do" and 1 "Not Started" — assessment done, mitigation not yet started.';}
+  if(/leadership|lead indicator|\bli\b/.test(ql)){var li=AFS.org.li;return 'Leadership Index is <b>'+li.curr+'</b> ('+(li.var>=0?'+':'')+li.var+' vs '+li.prev+' last period). At-risk lead factors fell from '+li.rfPrev+' to '+li.rfCurr+'.';}
+  if(/flag|signal/.test(ql)){var m3=P.filter(function(p){return p.sigs>=3;}).length;return P.reduce(function(a,p){return a+p.sigs;},0)+' active flags across '+P.length+' people; <b>'+m3+'</b> carry 3+ flags (the working list).';}
+  var wb=avg(P,K.wb);return 'Snapshot ('+P.length+' people): wellbeing <b>'+wb+'</b>, '+P.filter(function(p){return p.status!=='ok';}).length+' at risk, productivity '+AFS.org.productivityActual+'% vs 80% target. Ask me about <i>who needs attention</i>, <i>wellbeing</i>, <i>productivity</i>, <i>over-extraction</i>, <i>compliance</i> or the <i>leadership index</i>.';
+}
+renderCards();renderCanvas();syncScope();
+</script>
+<div class="pscrim" id="pscrim" onclick="closeProfile()"></div>
+<div class="pdrawer" id="pdrawer"></div>
+</body></html>
