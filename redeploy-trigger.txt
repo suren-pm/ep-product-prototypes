@@ -1,1 +1,1 @@
-trigger Pages rebuild for 25f3f81
+redeploy 2026-07-07T11:21:05Z dashboard: notes removed, benchmark parity, enablement+compliance updates
