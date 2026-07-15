@@ -281,12 +281,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <!-- Subject line preview -->
 <div class="subj-bar">
   <span class="lbl">Subject:</span>
-  <span class="val" id="subj">AFS Solutions — Pulse Digest: Engagement Monthly</span>
+  <span class="val" id="subj">Everperform — Pulse Digest: Engagement Monthly</span>
 </div>
 
 <!-- Org logo — above email card, matching real EP email layout -->
 <div style="max-width:620px;margin:0 auto 14px;text-align:center">
-  <div style="display:inline-flex;align-items:center;justify-content:center;width:148px;height:48px;border:2px dashed #c7d2fe;border-radius:10px;font-size:11px;color:#4338CA;font-weight:700;letter-spacing:.5px;background:#f5f3ff">COMPANY LOGO</div>
+  <img src="everperform-logo.png" alt="Everperform" style="height:34px;width:auto;display:inline-block">
 </div>
 
 <!-- Email -->
@@ -1240,7 +1240,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           <div class="ticket-icon pulse">📋</div>
           <div class="ticket-body">
             <div class="ticket-id">EXP-140</div>
-            <div class="ticket-title">Org Experience Review — AFS Solutions</div>
+            <div class="ticket-title">Org Experience Review — Everperform</div>
             <div class="ticket-meta"><span>📁 pulse_generated</span><span>👤 Assigned: You</span></div>
           </div>
         </div>
@@ -1270,7 +1270,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 
   <!-- Footer — Org-branded -->
   <div class="e-foot">
-    <p id="footText">This email was sent by <strong>AFS Solutions</strong> because you completed a pulse survey.<br><a href="#">Manage notification preferences</a> · <a href="#">Unsubscribe from digests</a></p>
+    <p id="footText">This email was sent by <strong>Everperform</strong> because you completed a pulse survey.<br><a href="#">Manage notification preferences</a> · <a href="#">Unsubscribe from digests</a></p>
     <p style="margin-top:8px;font-size:11px;color:#c0c5ce">Powered by <a href="https://everperform.com" style="color:#c0c5ce">Everperform</a></p>
   </div>
 </div>
@@ -1282,10 +1282,10 @@ function sw(v){
     document.getElementById('tog-'+k).classList.toggle('on',v===k);
   });
   var subjects={
-    emp:"AFS Solutions — Pulse Digest: Engagement Monthly",
-    mgr:"AFS Solutions — Pulse Digest: Engagement Monthly",
-    mm:"AFS Solutions — Pulse Digest: Engagement Monthly (Group Overview)",
-    admin:"AFS Solutions — Pulse Digest: Engagement Monthly (Org Overview)"
+    emp:"Everperform — Pulse Digest: Engagement Monthly",
+    mgr:"Everperform — Pulse Digest: Engagement Monthly",
+    mm:"Everperform — Pulse Digest: Engagement Monthly (Group Overview)",
+    admin:"Everperform — Pulse Digest: Engagement Monthly (Org Overview)"
   };
   document.getElementById('subj').textContent=subjects[v];
   var subheads={
@@ -1301,7 +1301,7 @@ function sw(v){
     mm:"because a pulse closed for your teams",
     admin:"because a pulse closed for your organisation"
   };
-  document.getElementById('footText').innerHTML='This email was sent by <strong>AFS Solutions</strong> '+footTexts[v]+'.<br><a href="#">Manage notification preferences</a> · <a href="#">Unsubscribe from digests</a>';
+  document.getElementById('footText').innerHTML='This email was sent by <strong>Everperform</strong> '+footTexts[v]+'.<br><a href="#">Manage notification preferences</a> · <a href="#">Unsubscribe from digests</a>';
 }
 </script>
 </body>
