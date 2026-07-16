@@ -354,16 +354,31 @@ body{margin:0;font-family:'Open Sans',system-ui,sans-serif;background:var(--bg);
 .tdnavl{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--faint);font-weight:800;margin-right:2px}
 .cards .kcard{display:flex;flex-direction:column}
 .cards .kcard .bm{margin-top:auto}
-.kwstats{font-size:11.5px;color:var(--faint);font-weight:600;margin-bottom:10px}
-.kwrow{border:1px solid #edeef4;border-left:3px solid #e5484d;border-radius:0 10px 10px 0;padding:10px 12px;margin-bottom:8px}
-.kwrow.cleared{border-left-color:#9aa0b4}
-.kwc{font-size:13px;line-height:1.55;color:var(--text)}
-.kwc mark{background:#FCEBEB;color:#A32D2D;border-radius:4px;padding:0 4px;font-weight:700}
-.kwrow.cleared .kwc mark{background:#F1EFE8;color:#5F5E5A}
-.kwmeta{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
-.kwchip{font-size:10.5px;font-weight:700;border-radius:20px;padding:3px 9px;background:#eef0f4;color:#5b6075}
-.kwchip.warn{background:#FAEEDA;color:#854F0B}
-.kwchip.bad{background:#FCEBEB;color:#A32D2D}
+.kwstats2{display:flex;gap:10px;flex-wrap:wrap;margin:2px 0 14px}
+.kwst{flex:1;min-width:140px;border:1px solid var(--line);border-radius:10px;padding:9px 12px}
+.kwst .v{font-size:20px;font-weight:800;color:var(--ink)}
+.kwst .l{font-size:11px;color:var(--faint);margin-top:1px}
+.kwst.bad .v{color:#A32D2D}
+.kwst.hot{flex:1.4;min-width:180px;background:#FAECE7;border-color:#F5C4B3}
+.kwst.hot .v{color:#712B13}.kwst.hot .l{color:#993C1D}
+.kwgrid{display:flex;gap:16px;flex-wrap:wrap}
+.kwside{flex:0 0 200px;min-width:180px}
+.kwlab{font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);margin-bottom:8px}
+.kwcat{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #f2f3f7;font-size:12.5px;color:var(--text)}
+.kwcat i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px}
+.kwcat b{font-weight:800}
+.kwmon{font-size:11px;color:var(--faint);margin-top:9px}
+.kwterms{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}
+.kwterm{font-size:10.5px;border:1px solid var(--line);border-radius:20px;padding:2px 8px;color:var(--sub)}
+.kwmain{flex:1;min-width:280px}
+.kwrow{border:1px solid var(--line);border-left:3px solid #e5484d;border-radius:0 10px 10px 0;padding:11px 13px;margin-bottom:9px}
+.kwrow.cleared{opacity:.75;border-left-color:#c2c7d2}
+.kwc{font-size:13.5px;line-height:1.6;color:var(--text)}
+.kwc mark{border-radius:4px;padding:0 4px;font-weight:700}
+.kwmeta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:8px}
+.kwtag{font-size:10.5px;font-weight:700;border-radius:20px;padding:3px 9px}
+.kwsent{font-size:11.5px;color:var(--sub)}
+.kwbtn{margin-left:auto;font-size:11px;font-weight:700;border-radius:8px;padding:5px 11px;background:var(--brand);color:#fff}
 .tdt-top{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:1px}
 .tdtl{display:inline-flex;align-items:center;gap:5px}
 .tdt-ic{font-size:15px;color:var(--faint)}
@@ -2172,16 +2187,25 @@ function voiceCard(P){var V=VOICE;var f=Math.max(0.06,(P.length||131)/131);var N
  var tline=chLine([{name:'Net sentiment',data:V.trend.map(function(x){return x.net;}),color:C.brand}],V.trend.map(function(x){return x.w;}),{min:0,max:30,h:150});
  var mix='<div class="vseg"><i style="width:'+s.pos+'%;background:'+C.ok+'"></i><i style="width:'+s.neu+'%;background:#c8ccd8"></i><i style="width:'+s.neg+'%;background:'+C.bad+'"></i></div><div class="vkey"><span><i style="background:'+C.ok+'"></i>Positive '+s.pos+'%</span><span><i style="background:#c8ccd8"></i>Neutral '+s.neu+'%</span><span><i style="background:'+C.bad+'"></i>Negative '+s.neg+'%</span></div>';
  var phrases=V.phrases.map(function(p){return '<span class="vchip">'+p[0]+'<b>'+Math.round(p[1]*f)+'</b></span>';}).join('');
+ var KWCOL={harm:['#e5484d','#FCEBEB','#A32D2D'],distress:['#EF9F27','#FAEEDA','#854F0B'],harass:['#D4537E','#FBEAF0','#993556']};
+ function kwMark(t,cat){return '<mark style="background:'+KWCOL[cat][1]+';color:'+KWCOL[cat][2]+'">'+t+'</mark>';}
  var KW=[
-  {c:'My customer would have <mark>killed</mark> themselves if I hadn’t helped',ai:'AI sentiment: Positive',lab:'Positive with concern',st:'Needs Administrator / Manager follow-up',cl:false},
-  {c:'Honestly at <mark>breaking point</mark> with this workload, I <mark>can’t cope</mark> with another month like June',ai:'AI sentiment: Negative',lab:'Negative, urgent',st:'Needs Administrator / Manager follow-up',cl:false},
-  {c:'I’m completely <mark>burnt out</mark>, but the client win made it all worth it',ai:'AI sentiment: Positive',lab:'Positive with concern',st:'Needs Administrator / Manager follow-up',cl:false},
-  {c:'Some of the banter crosses the line, I’ve felt <mark>intimidated</mark> in a couple of meetings this month',ai:'AI sentiment: Neutral',lab:'Neutral with concern',st:'Needs Administrator / Manager follow-up',cl:false},
-  {c:'That deadline was a <mark>killer</mark>, but we smashed it as a team',ai:'AI sentiment: Positive',lab:'Reviewed: figure of speech',st:'Cleared, no action',cl:true}
+  {c:'My customer would have '+kwMark('killed','harm')+' themselves if I hadn’t helped',cat:'harm',tag:'Harm language',sent:'Scored positive &middot; reads as <b style="color:#854F0B">positive with concern</b>',cl:false},
+  {c:'Honestly at '+kwMark('breaking point','distress')+' with this workload, I '+kwMark('can’t cope','distress')+' with another month like June',cat:'distress',tag:'Distress',sent:'Scored negative &middot; <b style="color:#A32D2D">urgent</b>',cl:false},
+  {c:'I’m completely '+kwMark('burnt out','distress')+', but the client win made it all worth it',cat:'distress',tag:'Distress',sent:'Scored positive &middot; reads as <b style="color:#854F0B">positive with concern</b>',cl:false},
+  {c:'Some of the banter crosses the line, I’ve felt '+kwMark('intimidated','harass')+' in a couple of meetings this month',cat:'harass',tag:'Harassment',sent:'Scored neutral &middot; reads as <b style="color:#854F0B">neutral with concern</b>',cl:false},
+  {c:'That deadline was a <mark style="background:#F1EFE8;color:#5F5E5A">killer</mark>, but we smashed it as a team',cat:null,tag:'Reviewed',sent:'Figure of speech &middot; cleared, no action',cl:true}
  ];
  var kwOpen=KW.filter(function(k){return !k.cl;}).length;
- var kwRows=KW.map(function(k){return '<div class="kwrow'+(k.cl?' cleared':'')+'"><div class="kwc">&ldquo;'+k.c+'&rdquo;</div><div class="kwmeta"><span class="kwchip">'+k.ai+'</span><span class="kwchip warn">'+k.lab+'</span><span class="kwchip'+(k.cl?'':' bad')+'">'+k.st+'</span></div></div>';}).join('');
- var kwPanel=panel('Keyword analysis','flagged for follow-up regardless of context','<div class="kwstats">'+KW.length+' comments flagged this cycle &middot; '+kwOpen+' awaiting follow-up &middot; 18 watchlist terms</div>'+kwRows,'Every pulse comment is scanned against the safety watchlist independently of AI sentiment. Matches are flagged for an Administrator or Manager to follow up regardless of context.');
+ var kwStats='<div class="kwstats2"><div class="kwst"><div class="v">'+KW.length+'</div><div class="l">comments flagged this cycle</div></div><div class="kwst bad"><div class="v">'+kwOpen+'</div><div class="l">awaiting follow-up</div></div><div class="kwst hot"><div class="v">3 of 5</div><div class="l">flags came from positive or neutral comments</div></div></div>';
+ var kwSide='<div class="kwside"><div class="kwlab">Watchlist</div>'
+  +'<div class="kwcat"><span><i style="background:'+KWCOL.harm[0]+'"></i>Harm language</span><b>2</b></div>'
+  +'<div class="kwcat"><span><i style="background:'+KWCOL.distress[0]+'"></i>Distress</span><b>2</b></div>'
+  +'<div class="kwcat"><span><i style="background:'+KWCOL.harass[0]+'"></i>Harassment</span><b>1</b></div>'
+  +'<div class="kwmon">18 terms monitored</div>'
+  +'<div class="kwterms"><span class="kwterm">killed</span><span class="kwterm">breaking point</span><span class="kwterm">burnt out</span><span class="kwterm">intimidated</span><span class="kwterm">+14 more</span></div></div>';
+ var kwRows=KW.map(function(k){var edge=k.cl?'#c2c7d2':KWCOL[k.cat][0];var tag=k.cl?'<span class="kwtag" style="border:1px solid var(--line);color:var(--sub)">Reviewed</span>':'<span class="kwtag" style="background:'+KWCOL[k.cat][1]+';color:'+KWCOL[k.cat][2]+'">'+k.tag+'</span>';return '<div class="kwrow'+(k.cl?' cleared':'')+'" style="border-left-color:'+edge+'"><div class="kwc">&ldquo;'+k.c+'&rdquo;</div><div class="kwmeta">'+tag+'<span class="kwsent">'+k.sent+'</span>'+(k.cl?'':'<span class="kwbtn">Follow up</span>')+'</div></div>';}).join('');
+ var kwPanel=panel('Keyword analysis','flagged for follow-up regardless of context',kwStats+'<div class="kwgrid">'+kwSide+'<div class="kwmain">'+kwRows+'</div></div>','Every pulse comment is checked against the safety watchlist, separately from sentiment scoring. A match is flagged for an Administrator or Manager to follow up regardless of context.');
  var negF=chHBar(V.negFactors.map(function(x){return [x[0],x[1],C.bad];}),{max:100,unit:'%'});
  var posF=chHBar(V.posFactors.map(function(x){return [x[0],x[1],C.ok];}),{max:100,unit:'%'});
  var negSample=V.negFactors.slice(0,2).map(function(x){return '<div class="vq" style="border-color:'+C.bad+'">&ldquo;'+x[2]+'&rdquo;<span>'+x[0]+'</span></div>';}).join('');
