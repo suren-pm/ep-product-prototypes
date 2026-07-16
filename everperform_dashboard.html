@@ -354,6 +354,16 @@ body{margin:0;font-family:'Open Sans',system-ui,sans-serif;background:var(--bg);
 .tdnavl{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--faint);font-weight:800;margin-right:2px}
 .cards .kcard{display:flex;flex-direction:column}
 .cards .kcard .bm{margin-top:auto}
+.kwstats{font-size:11.5px;color:var(--faint);font-weight:600;margin-bottom:10px}
+.kwrow{border:1px solid #edeef4;border-left:3px solid #e5484d;border-radius:0 10px 10px 0;padding:10px 12px;margin-bottom:8px}
+.kwrow.cleared{border-left-color:#9aa0b4}
+.kwc{font-size:13px;line-height:1.55;color:var(--text)}
+.kwc mark{background:#FCEBEB;color:#A32D2D;border-radius:4px;padding:0 4px;font-weight:700}
+.kwrow.cleared .kwc mark{background:#F1EFE8;color:#5F5E5A}
+.kwmeta{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+.kwchip{font-size:10.5px;font-weight:700;border-radius:20px;padding:3px 9px;background:#eef0f4;color:#5b6075}
+.kwchip.warn{background:#FAEEDA;color:#854F0B}
+.kwchip.bad{background:#FCEBEB;color:#A32D2D}
 .tdt-top{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:1px}
 .tdtl{display:inline-flex;align-items:center;gap:5px}
 .tdt-ic{font-size:15px;color:var(--faint)}
@@ -439,6 +449,8 @@ body{margin:0;font-family:'Open Sans',system-ui,sans-serif;background:var(--bg);
 .ep-in .vtr:nth-child(2){animation-delay:.06s}.ep-in .vtr:nth-child(3){animation-delay:.12s}.ep-in .vtr:nth-child(4){animation-delay:.18s}.ep-in .vtr:nth-child(5){animation-delay:.24s}
 .ep-in .vq{animation:epFadeUp .45s ease-out both}
 .ep-in .vq:nth-child(2){animation-delay:.08s}.ep-in .vq:nth-child(3){animation-delay:.16s}.ep-in .vq:nth-child(4){animation-delay:.24s}
+.ep-in .kwrow{animation:epFadeUp .4s ease-out both}
+.ep-in .kwrow:nth-of-type(2){animation-delay:.07s}.ep-in .kwrow:nth-of-type(3){animation-delay:.14s}.ep-in .kwrow:nth-of-type(4){animation-delay:.21s}.ep-in .kwrow:nth-of-type(5){animation-delay:.28s}
 .emsg{animation:epFadeUp .3s ease-out}
 .kcard,.tdtile,.dirrow,.qlink{transition:transform .16s ease,box-shadow .16s ease,background .12s ease}
 .kcard:hover,.tdtile:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(16,18,40,.07)}
@@ -2160,6 +2172,16 @@ function voiceCard(P){var V=VOICE;var f=Math.max(0.06,(P.length||131)/131);var N
  var tline=chLine([{name:'Net sentiment',data:V.trend.map(function(x){return x.net;}),color:C.brand}],V.trend.map(function(x){return x.w;}),{min:0,max:30,h:150});
  var mix='<div class="vseg"><i style="width:'+s.pos+'%;background:'+C.ok+'"></i><i style="width:'+s.neu+'%;background:#c8ccd8"></i><i style="width:'+s.neg+'%;background:'+C.bad+'"></i></div><div class="vkey"><span><i style="background:'+C.ok+'"></i>Positive '+s.pos+'%</span><span><i style="background:#c8ccd8"></i>Neutral '+s.neu+'%</span><span><i style="background:'+C.bad+'"></i>Negative '+s.neg+'%</span></div>';
  var phrases=V.phrases.map(function(p){return '<span class="vchip">'+p[0]+'<b>'+Math.round(p[1]*f)+'</b></span>';}).join('');
+ var KW=[
+  {c:'My customer would have <mark>killed</mark> themselves if I hadn’t helped',ai:'AI sentiment: Positive',lab:'Positive with concern',st:'Needs Administrator / Manager follow-up',cl:false},
+  {c:'Honestly at <mark>breaking point</mark> with this workload, I <mark>can’t cope</mark> with another month like June',ai:'AI sentiment: Negative',lab:'Negative, urgent',st:'Needs Administrator / Manager follow-up',cl:false},
+  {c:'I’m completely <mark>burnt out</mark>, but the client win made it all worth it',ai:'AI sentiment: Positive',lab:'Positive with concern',st:'Needs Administrator / Manager follow-up',cl:false},
+  {c:'Some of the banter crosses the line, I’ve felt <mark>intimidated</mark> in a couple of meetings this month',ai:'AI sentiment: Neutral',lab:'Neutral with concern',st:'Needs Administrator / Manager follow-up',cl:false},
+  {c:'That deadline was a <mark>killer</mark>, but we smashed it as a team',ai:'AI sentiment: Positive',lab:'Reviewed: figure of speech',st:'Cleared, no action',cl:true}
+ ];
+ var kwOpen=KW.filter(function(k){return !k.cl;}).length;
+ var kwRows=KW.map(function(k){return '<div class="kwrow'+(k.cl?' cleared':'')+'"><div class="kwc">&ldquo;'+k.c+'&rdquo;</div><div class="kwmeta"><span class="kwchip">'+k.ai+'</span><span class="kwchip warn">'+k.lab+'</span><span class="kwchip'+(k.cl?'':' bad')+'">'+k.st+'</span></div></div>';}).join('');
+ var kwPanel=panel('Keyword analysis','flagged for follow-up regardless of context','<div class="kwstats">'+KW.length+' comments flagged this cycle &middot; '+kwOpen+' awaiting follow-up &middot; 18 watchlist terms</div>'+kwRows,'Every pulse comment is scanned against the safety watchlist independently of AI sentiment. Matches are flagged for an Administrator or Manager to follow up regardless of context.');
  var negF=chHBar(V.negFactors.map(function(x){return [x[0],x[1],C.bad];}),{max:100,unit:'%'});
  var posF=chHBar(V.posFactors.map(function(x){return [x[0],x[1],C.ok];}),{max:100,unit:'%'});
  var negSample=V.negFactors.slice(0,2).map(function(x){return '<div class="vq" style="border-color:'+C.bad+'">&ldquo;'+x[2]+'&rdquo;<span>'+x[0]+'</span></div>';}).join('');
@@ -2177,6 +2199,7 @@ function voiceCard(P){var V=VOICE;var f=Math.max(0.06,(P.length||131)/131);var N
  var slbar=chHBar(Object.keys(sl).map(function(k){var a=sl[k];var avg=a.reduce(function(x,y){return x+y;},0)/a.length;var ns=Math.round(avg-62);return [k.replace(' Services',''),ns,ns<8?C.bad:(ns<16?C.warn:C.ok)];}),{max:28});
  return '<div class="voice">'+kstrip
   +'<div class="grid g2">'+panel('Sentiment trend · 5 waves','net sentiment over time',tline,'Net sentiment has softened for three consecutive waves — worth a closer look before it compounds.')+panel('Sentiment mix & top phrases','share of all comments','<div class="vsub">Sentiment mix</div>'+mix+'<div class="vsub" style="margin-top:18px">Most-used phrases</div><div class="vchips">'+phrases+'</div>','')+'</div>'
+  +'<div class="grid" style="margin-top:14px">'+kwPanel+'</div>'
   +'<div class="grid g2" style="margin-top:14px">'+panel('Factors attracting negative comments','% of mentions negative',negF+'<div class="vquotes" style="margin-top:13px">'+negSample+'</div>','Workload, fatigue and resourcing are the loudest pain points.')+panel('Factors attracting positive comments','% of mentions positive',posF+'<div class="vquotes" style="margin-top:13px">'+posSample+'</div>','Collaboration, growth and client wins are what people celebrate.')+'</div>'
   +'<div class="grid g2" style="margin-top:14px">'+panel('Themes · sentiment split','mentions & polarity','<div class="vthemes">'+themeRows+'</div>','')+panel('Trending themes','vs last wave','<div class="vsub">Rising</div>'+rising+'<div class="vsub" style="margin-top:14px">Falling</div>'+falling,'')+'</div>'
   +'<div class="grid g2" style="margin-top:14px">'+panel('Voices to hear','lowest sentiment · click for profile',voices,'These people are most likely to be raising concerns — prioritise a conversation.')+panel('Advocates','highest sentiment · click for profile',advocates,'')+'</div>'
