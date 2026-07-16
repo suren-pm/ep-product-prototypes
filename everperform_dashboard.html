@@ -38,6 +38,7 @@ body{margin:0;font-family:'Open Sans',system-ui,sans-serif;background:var(--bg);
 .fsec.collapsed .fsec-t{margin-bottom:0}
 .fsec.collapsed .fsec-t::after{content:'\25B8'}
 .fsec.collapsed > *:not(.fsec-t){display:none!important}
+.fopt.navail{opacity:.4;pointer-events:none}
 .fopt{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 10px;border-radius:8px;font-size:13px;font-weight:600;color:var(--sub);cursor:pointer}
 .fopt:hover{background:var(--line2)}
 .fopt.on{background:#eef0ff;color:var(--brand)}
@@ -1880,6 +1881,25 @@ var AFS={"org": {"name": "AFS & Associates", "ppl": 131, "productive": 11395.1, 
 </script>
 <script>
 (function(){var oe={'Lane Ward':78,'Avery Tate':79,'Kai Boyd':77,'Avery Osborne':77,'Nat Locke':76,'Wren Ortiz':76,'Phoenix Nash':77,'Rowan Evers':76};ROSTER.forEach(function(p){if(oe[p.name]!=null)p.util=oe[p.name];});})();
+(function(){
+ var st={'Poor Working Environments':'Closed','Low Job Demands':'Closed','Intrusive Surveillance':'Closed','Lack Of Role Clarity':'Closed','Remote Or Isolated Work':'Monitoring','Poor Workplace Relationships':'Monitoring','Low Recognition And Reward':'Monitoring','High Job Demands':'In Progress','Fatigue':'In Progress','Poor Support':'In Progress','Sexual Or Gender Based Harassment':'Not Started'};
+ REG.forEach(function(r){if(st[r.h])r.status=st[r.h];});
+ var ib={'Jamie Keller':[2,1],'Wyatt Doyle':[2,0],'Cameron Locke':[1,0],'Sam Knox':[1,0],'Sage Sloan':[1,0]};
+ ROSTER.forEach(function(p){
+  if(ib[p.name]){p.inbox=p.inbox||{};p.inbox.overdue=ib[p.name][0];p.inbox.missed=ib[p.name][1];if((p.inbox.open||0)<p.inbox.overdue){p.inbox.open=p.inbox.overdue+1;p.inbox.pending=p.inbox.open;}if((p.tix||0)<p.inbox.open)p.tix=p.inbox.open;}
+ });
+ var lowUtil={'Jules Vega':56,'Jamie Sloan':58,'Will Evers':54};
+ ROSTER.forEach(function(p){if(lowUtil[p.name]!=null)p.util=lowUtil[p.name];});
+ var byMgr={};
+ ROSTER.forEach(function(p){(byMgr[p.mgr]=byMgr[p.mgr]||[]).push(p);});
+ Object.keys(byMgr).forEach(function(m){
+  var team=byMgr[m];
+  if(!team.some(function(p){return (p.inbox&&p.inbox.overdue||0)>0;})){
+   var t=team.slice().sort(function(a,c){return (c.sigs||0)-(a.sigs||0)||(a.safety||99)-(c.safety||99);})[0];
+   if(t){t.inbox=t.inbox||{};t.inbox.overdue=1;t.inbox.missed=t.inbox.missed||0;if((t.inbox.open||0)<1){t.inbox.open=1;t.inbox.pending=1;}if((t.tix||0)<1)t.tix=1;}
+  }
+ });
+})();
 var C={brand:'#3831FA',ink:'#0f1222',sub:'#5b6075',faint:'#9aa0b4',ok:'#10b981',warn:'#f59e0b',bad:'#e5484d',eng:'#7048e8',blue:'#3b82f6',violet:'#8b5cf6',teal:'#14b8a6',sky:'#0ea5e9'};
 var PILL={Wellbeing:C.ok,Performance:C.brand,Engagement:C.eng,Compliance:C.warn};
 function hsh(s){var h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return Math.abs(h);}
@@ -1948,6 +1968,8 @@ var hier={scope:'all',mgr:null,person:null,team:null};
 function scopeOpts(){return lens.view==='mgr'?[['me','Me'],['direct','Direct reports']]:(lens.view==='multi'?[['me','Me'],['direct','Direct reports'],['all','All reports']]:[['me','Me'],['direct','Direct reports'],['all','All reports'],['org','Organisation']]);}
 function defScope(){return lens.view==='mgr'?'direct':'all';}
 function _clientFilter(a){return clientType==='nonbilling'?a.filter(function(p){return p.serviceLine==='Management Services';}):a;}
+function nbCount(){var base;if(lens.view==='mgr'){var mk=hier.mgr||mgrKeys()[0];base=ROSTER.filter(function(p){return p.mgr===mk;});}else if(lens.view==='multi'){base=hier.team?ROSTER.filter(function(p){return p.serviceLine===hier.team;}):ROSTER;}else{base=ROSTER;}return base.filter(function(p){return p.serviceLine==='Management Services';}).length;}
+function updateBtype(){var el=document.getElementById('btype');if(!el)return;var nb=el.querySelector('[data-b="nonbilling"]');var avail=nbCount()>0;if(nb){nb.classList.toggle('navail',!avail);nb.title=avail?'':'No non-billing people in this view';}if(!avail&&clientType==='nonbilling'){clientType='billing';[].forEach.call(el.children,function(x){x.classList.toggle('on',x.dataset.b==='billing');});}}
 function basePeople(){var base;if(lens.view==='mgr'){var mk=hier.mgr||mgrKeys()[0];base=ROSTER.filter(function(p){return p.mgr===mk;});}else if(lens.view==='multi'){base=hier.team?ROSTER.filter(function(p){return p.serviceLine===hier.team;}):ROSTER;}else{base=ROSTER;}return _clientFilter(base);}
 function activePeople(){var P=basePeople();if(hier.person)return P.filter(function(p){return p.name===hier.person;});if((lens.view==='org'||lens.view==='multi')&&hier.mgr)return P.filter(function(p){return p.mgr===hier.mgr;});if(hier.scope==='me'){if(lens.view==='mgr')return [mgrSelf(hier.mgr||mgrKeys()[0])];return P.slice().sort(_bySenior).slice(0,1);}if(hier.scope==='direct'){if(lens.view==='mgr')return P;var pa=P.filter(function(p){return /partner/i.test(p.role);});return pa.length?pa:P;}return P;}
 var K={fb:function(p){return p.idx;},li:function(p){return Math.round(0.55*p.eng+0.45*p.safety);},wb:function(p){return p.safety;},pd:function(p){return p.util;},rater:function(p){return p.rater;}};
@@ -2035,7 +2057,7 @@ var STRIP=[{key:'experience',tab:'expperf'},{key:'performance',tab:'expperf'},{k
 var MAINCARDS=[{key:'experience',label:'Experience',dom:'Pulse & wellbeing',bm:'experience'},{key:'signals',label:'Signals',dom:'Risk triggers',bm:'signals'},{key:'inbox',label:'Inbox',dom:'Accountabilities',bm:'inbox'},{key:'enablement',label:'Enablement',dom:'Coaching & development',bm:'enablement'},{key:'risk',label:'Risk',dom:'Risk registers',bm:'compliance'},{key:'compliance',label:'Compliance & Audit',dom:'Overdue & deviations',bm:'audit'}];
 var SUBCARDS=[{key:'pulse',label:'Pulse',dom:'Engagement & wellbeing',bm:'experience'},{key:'productivity',label:'Productivity',dom:'Vs target',bm:'performance'},{key:'voice',label:'Voice of Org',dom:'Sentiment & themes'}];
 function kcardHTML(cfg,P,active,oc){if(cfg.ph){return '<div class="kcard kcardph'+(active?' on':'')+'" onclick="'+oc+'"><div class="kl">'+cfg.label+'</div><div class="kd">'+cfg.dom+'</div><div class="kvsoon">Coming next</div></div>';}if(cfg.key==='voice'){var nt=VOICE.trend.map(function(x){return x.net;});return '<div class="kcard'+(active?' on':'')+'" onclick="'+oc+'"><div class="kl">'+cfg.label+'</div><div class="kd">'+cfg.dom+'</div><div class="kv">+'+VOICE.net+'<u> net sentiment</u></div>'+spark(nt,active?C.brand:'#c7c9f7')+bench('voice',{voice:{you:VOICE.net,ind:VOICE.bench.net.ind,tgt:18,top:VOICE.bench.net.top,suf:'',cap:'Net sentiment'}})+'</div>';}if(cfg.simple){return '<div class="kcard'+(active?' on':'')+'" onclick="'+oc+'"><div class="kl">'+cfg.label+'</div><div class="kd">'+cfg.dom+'</div><div class="kv">'+cfg.sv+'<u> '+cfg.su+'</u></div></div>';}var m=computeKPI(P);var v=m.vals[cfg.bm];return '<div class="kcard'+(active?' on':'')+'" onclick="'+oc+'"><div class="kl">'+cfg.label+'</div><div class="kd">'+cfg.dom+'</div><div class="kv">'+v[0]+'<u>'+v[1]+'</u></div>'+spark(v[2],active?C.brand:'#c7c9f7')+bench(cfg.bm,m.BM)+'</div>';}
-function renderCards(){var cc=document.getElementById('cards');if(typeof view!=='undefined'&&view==='today'){cc.style.display='none';return;}cc.style.display='';cc.className='cards';var P=activePeople();cc.innerHTML=MAINCARDS.map(function(c){return kcardHTML(c,P,sel===c.key,"pick('"+c.key+"')");}).join('');epReveal();}
+function renderCards(){updateBtype();var cc=document.getElementById('cards');if(typeof view!=='undefined'&&view==='today'){cc.style.display='none';return;}cc.style.display='';cc.className='cards';var P=activePeople();cc.innerHTML=MAINCARDS.map(function(c){return kcardHTML(c,P,sel===c.key,"pick('"+c.key+"')");}).join('');epReveal();}
 function placeholder(icon,title,desc,chips){return '<div class="phcard"><span class="material-symbols-outlined phicon">'+icon+'</span><div class="pht">'+title+'</div><div class="phd">'+desc+'</div>'+(chips?'<div class="phchips">'+chips.map(function(c){return '<span class="phchip">'+c+'</span>';}).join('')+'</div>':'')+'</div>';}
 function viewEnablement(){
   var P=activePeople();var S=enablementStats(P);
@@ -2708,7 +2730,7 @@ function epReveal(){
  if(!window._epio){window._epio=new IntersectionObserver(function(ents){ents.forEach(function(en){if(en.isIntersecting){en.target.classList.add('ep-in');en.target.classList.remove('ep-o');window._epio.unobserve(en.target);animateCounts(en.target);}});},{threshold:.12,rootMargin:'0px 0px -30px 0px'});}
  [].forEach.call(els,function(e){if(e.classList.contains('ep-in')||e.classList.contains('ep-o'))return;e.classList.add('ep-o');window._epio.observe(e);});
 }
-function renderCanvas(){renderHPCBar();if(typeof view!=='undefined'&&view==='today'){var _cv=document.getElementById('canvas');_cv.innerHTML=todayHTML();epReveal();return;}var P=activePeople();var h='';
+function renderCanvas(){updateBtype();renderHPCBar();if(typeof view!=='undefined'&&view==='today'){var _cv=document.getElementById('canvas');_cv.innerHTML=todayHTML();epReveal();return;}var P=activePeople();var h='';
   if(sel==='experience'){
     var esubs=SUBCARDS.filter(function(s){return clientType!=='nonbilling'||s.key!=='productivity';});
     var ecur=subEP; if(clientType==='nonbilling'&&ecur==='productivity')ecur='pulse';
