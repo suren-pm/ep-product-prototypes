@@ -2085,6 +2085,7 @@ function hpCmpBar(m){
 var CASUBCARDS=[{key:'reg',label:'Risk registers',dom:'Overdue'},{key:'inbox',label:'Inbox',dom:'Overdue items'},{key:'conv',label:'Conversations',dom:'Overdue'},{key:'sig',label:'Signals',dom:'Awaiting action'},{key:'lines',label:'Lines below target',dom:'Productivity'},{key:'rater',label:'Rater compliance',dom:'Reporting'},{key:'dev',label:'Deviations',dom:'Billing & data flags'}];
 function spark(data,color){var W=120,H=30,mn=Math.min.apply(null,data),mx=Math.max.apply(null,data),r=(mx-mn)||1;var p=data.map(function(v,i){return (i/(Math.max(1,data.length-1))*W).toFixed(1)+','+(H-4-(v-mn)/r*(H-8)).toFixed(1);}).join(' ');return '<svg class="kspark" viewBox="0 0 '+W+' '+H+'" width="100%" preserveAspectRatio="none"><polyline points="'+p+'" pathLength="1" fill="none" stroke="'+color+'" stroke-width="2"/></svg>';}
 function recencyBars(list){var rows=list.map(function(f){var t=(typeof FTREND!=='undefined')?FTREND[f.name]:null;var series=(t&&t.spk&&t.spk.length)?t.spk:[f.score];var latest=(t&&typeof t.cur==='number')?t.cur:series[series.length-1];var avg=series.reduce(function(a,b){return a+b;},0)/series.length;var d=Math.round((latest-avg)*10)/10;var col=ragScore(latest);var dcol=d<0?C.bad:(d>0?C.ok:C.faint);var ar=d<0?'▼':(d>0?'▲':'▬');return '<div class="recrow"><span class="reclab" title="'+f.name+'">'+f.name+'</span><span class="recspk">'+spark(series,col)+'</span><span class="rectrack"><i style="width:'+Math.max(3,latest)+'%;background:'+col+'"></i><b class="recavgmk" style="left:'+Math.min(99,Math.max(1,avg))+'%" title="average '+Math.round(avg)+'"></b></span><span class="recval"><b>'+Math.round(latest*10)/10+'</b><span class="recavg">avg '+Math.round(avg)+'</span></span><span class="recdelta" style="color:'+dcol+'">'+ar+' '+Math.abs(d)+'</span></div>';}).join('');return '<div class="recwrap"><div class="reclegend"><span><i class="lgbar"></i>Latest reading (coloured bar)</span><span><i class="lgavg"></i>Average (grey line)</span><span><i class="lgspk"></i>Trend across recent waves</span></div><div class="rechd"><span>Factor</span><span>Trend</span><span>Latest vs average</span><span>Latest</span><span>Change</span></div><div class="recbars">'+rows+'</div></div>';}
+function recencyRow(items,opts){opts=opts||{};var first=opts.first||'Item';var rows=items.map(function(it){var series=(it.series&&it.series.length)?it.series:[it.latest||0];var latest=(typeof it.latest==='number')?it.latest:series[series.length-1];var avg=(typeof it.avg==='number')?it.avg:series.reduce(function(a,b){return a+b;},0)/series.length;var mx=it.max||opts.max||100;var d=Math.round((latest-avg)*10)/10;var col=it.color||ragScore(latest);var dcol=d<0?C.bad:(d>0?C.ok:C.faint);var ar=d<0?'▼':(d>0?'▲':'▬');var unit=(it.unit!=null?it.unit:(opts.unit||''));var sg=it.signed||opts.signed;var fmtL=(sg&&latest>0?'+':'')+(Math.round(latest*10)/10);var wid=Math.min(100,Math.max(3,latest/mx*100));var mkl=Math.min(99,Math.max(1,avg/mx*100));return '<div class="recrow"><span class="reclab" title="'+it.label+'">'+it.label+'</span><span class="recspk">'+spark(series,col)+'</span><span class="rectrack"><i style="width:'+wid+'%;background:'+col+'"></i><b class="recavgmk" style="left:'+mkl+'%" title="average '+Math.round(avg)+'"></b></span><span class="recval"><b>'+fmtL+unit+'</b><span class="recavg">avg '+(sg&&avg>0?'+':'')+Math.round(avg)+'</span></span><span class="recdelta" style="color:'+dcol+'">'+ar+' '+Math.abs(d)+'</span></div>';}).join('');var legend=opts.legend===false?'':'<div class="reclegend"><span><i class="lgbar"></i>Latest reading (coloured bar)</span><span><i class="lgavg"></i>Average (grey line)</span><span><i class="lgspk"></i>Trend across recent waves</span></div>';return '<div class="recwrap">'+legend+'<div class="rechd"><span>'+first+'</span><span>Trend</span><span>Latest vs average</span><span>Latest</span><span>Change</span></div><div class="recbars">'+rows+'</div></div>';}
 function enablementStats(P){
   var N=P.length||1;
   function eb(p){var t=p.trend||[];var slope=t.length?t[t.length-1]-t[0]:0;var u=p.util||70;
@@ -2210,12 +2211,17 @@ function viewComplianceAudit(){
     conv:{v:enOver,u:' overdue',spk:vals.enablement[2],bench:BM.enablement},
     sig:{v:sigTotal,u:' awaiting',spk:vals.signals[2],bench:BM.signals},
     lines:{v:linesBelow+' / 5',u:'',spk:vals.performance[2],bench:BM.performance},
-    rater:{v:firmRater,u:'%',spk:[74,76,77,78,firmRater-1,firmRater],bench:{you:firmRater,ind:72,tgt:80,top:95,suf:'%',cap:'Rater compliance'}},
+    rater:{v:firmRater,u:'%',spk:((typeof EP!=='undefined'&&EP.trend&&EP.trend.rater)||[firmRater]),bench:{you:firmRater,ind:72,tgt:80,top:95,suf:'%',cap:'Rater compliance'}},
     dev:{v:afTotal,u:' flags',spk:[9,10,11,10,12,afTotal]}
   };
   var subs=CASUBCARDS.filter(function(s){return billing || (s.key!=='lines'&&s.key!=='dev');});
   var cur=subCA; if(!billing&&cur==='lines')cur='reg';
   var cards='<div class="subcards">'+subs.map(function(s){return caCard(s,CAV,cur===s.key);}).join('')+'</div>';
+  var _raterSpk=((typeof EP!=='undefined'&&EP.trend&&EP.trend.rater)||[firmRater]);
+  var _hc=((typeof EP!=='undefined'&&EP.org&&EP.org.headcount)||131);
+  var _partSpk=((typeof EP!=='undefined'&&EP.pulseWaves)||[]).map(function(w){return Math.round(w.respondents/_hc*100);});
+  var _carecItems=[{label:'Rater compliance',series:_raterSpk,latest:firmRater,unit:'%'},{label:'Pulse participation',series:(_partSpk.length?_partSpk:[0]),unit:'%'}];
+  var _carec='<div style="margin-top:14px">'+panel('Recency &middot; firm compliance','latest reading vs recent average',recencyRow(_carecItems,{first:'Metric'}),'Where the latest bar sits below the grey line, a recent drop is hidden by the average.')+'</div>';
   var d='';
   if(cur==='reg'){
     var byDom={};REG.forEach(function(r,i){(byDom[r.domain]=byDom[r.domain]||[]).push([r,i]);});
@@ -2259,7 +2265,7 @@ function viewComplianceAudit(){
      +'<div class="grid g2" style="margin-top:14px">'+panel('Rater compliance by line','% reporting vs 80%',chHBar(byRater,{unit:'%',max:100,ref:80}),'Taxation lowest; '+raterBelow+' of '+P.length+' report below the bar.')+panel('Standing vs references','rater compliance',bench('_c',{_c:CAV.rater.bench}),firmRater+'% vs 95% top.')+'</div>'
      +'<div class="panel" style="margin-top:14px"><div class="ph"><span class="pt">People to follow up &middot; lowest reporting</span><span class="ps">click for profile</span></div>'+pList(follow,function(p){return (p.rater||0);},function(p,v){return v>=80?C.ok:(v>=65?C.warn:C.bad);},'%')+'</div>';
   }
-  return cards+d;
+  return cards+_carec+d;
 }
 function pick(k){sel=k;renderCards();renderCanvas();}
 
@@ -2318,7 +2324,10 @@ function voiceCard(P){var V=VOICE;var f=Math.max(0.06,(P.length||131)/131);var N
  var posV=V.posQuotes.map(function(q){return '<div class="vq" style="border-color:'+C.ok+'">&ldquo;'+q[0]+'&rdquo;<span>'+q[1]+'</span></div>';}).join('');
  var sl={};P.forEach(function(p){(sl[p.serviceLine]=sl[p.serviceLine]||[]).push(p.safety);});
  var slbar=chHBar(Object.keys(sl).map(function(k){var a=sl[k];var avg=a.reduce(function(x,y){return x+y;},0)/a.length;var ns=Math.round(avg-62);return [k.replace(' Services',''),ns,ns<8?C.bad:(ns<16?C.warn:C.ok)];}),{max:28});
- return '<div class="voice">'+kstrip
+ var _vnet=V.trend.map(function(x){return x.net;});
+ var _vrecItems=[{label:'Net sentiment',series:_vnet,max:30,signed:true,color:(_vnet[_vnet.length-1]>=0?C.teal:C.bad)}];
+ var _vrec='<div class="grid" style="margin-bottom:14px">'+panel('Recency · net sentiment','latest wave vs 5-wave average · scale 0 to 30',recencyRow(_vrecItems,{first:'Metric'}),'The average still reads positive while the latest wave has fallen. This is the late signal that averaging hides.')+'</div>';
+ return '<div class="voice">'+kstrip+_vrec
   +'<div class="grid g2">'+panel('Sentiment trend · 5 waves','net sentiment over time',tline,'Net sentiment has softened for three consecutive waves — worth a closer look before it compounds.')+panel('Sentiment mix & top phrases','share of all comments','<div class="vsub">Sentiment mix</div>'+mix+'<div class="vsub" style="margin-top:18px">Most-used phrases</div><div class="vchips">'+phrases+'</div>','')+'</div>'
   +'<div class="grid" style="margin-top:14px">'+kwPanel+'</div>'
   +'<div class="grid g2" style="margin-top:14px">'+panel('Factors attracting negative comments','% of mentions negative',negF+'<div class="vquotes" style="margin-top:13px">'+negSample+'</div>','Workload, fatigue and resourcing are the loudest pain points.')+panel('Factors attracting positive comments','% of mentions positive',posF+'<div class="vquotes" style="margin-top:13px">'+posSample+'</div>','Collaboration, growth and client wins are what people celebrate.')+'</div>'
@@ -2530,7 +2539,11 @@ var afsBlock='<div class="secthead" style="margin-top:24px"><span class="t" styl
   var present={};P.forEach(function(p){present[p.serviceLine]=1;});
   var items=Object.keys(SL).filter(function(k){return present[k];}).map(function(k){return [k.replace(' Services',''),SL[k][0],SL[k][1]];});
   var cols=chCols(items,{});
+  var _php=((typeof EP!=='undefined'&&EP.trend&&EP.trend.prodHrsProgress)||[100]);
+  var _precItems=[{label:'Productive hrs vs target',series:_php,latest:_php[_php.length-1],max:120,unit:'%'}];
+  var _prec='<div class="grid" style="margin-bottom:14px">'+panel('Recency · firm productivity','productive hours vs target, last 3 months · 100 = on target',recencyRow(_precItems,{first:'Metric'}),'Latest month vs its recent average. Shown at firm level: per-line productivity is a single current figure without wave history.')+'</div>';
   return sect('Performance','Scorecard, risk signals and productivity measures')
+    +_prec
     +'<div class="grid g2"><div>'+panel('Scorecard · pillar profile','firm vs industry',radar,'Feedback '+firm[0]+' · Wellbeing '+firm[1]+' · Lead '+firm[2]+' · Productivity '+firm[3]+' · Rater '+firm[4]+'.')+'</div>'
     +'<div>'+panel('Productivity measures · hours vs target','by service line',cols,'Audit runs hottest above target; advisory & tax sit below.')+'</div></div>'
     +'<div class="grid" style="grid-template-columns:1.5fr 1fr;margin-top:14px">'+panel('Risk-signal scatter · utilisation × wellbeing',P.length+' people · bubble = flags',scat,oe+' over-extracted — high load, low wellbeing.')+panel('Rebalance first · over-extracted',oe+' people',(oeP.length?peopleList(oeP,function(p){return p.safety;}):'<div class="prow"><div class="s" style="color:var(--faint)">No one in this quadrant</div></div>'),'Click a name for their profile.')+'</div>'+afsBlock+hpcStand(computeKPI(P).BM.performance,'Productivity vs the high-performance standard.');
@@ -2665,8 +2678,8 @@ function riskView(idx){var tab=RISK_TABS[idx]||RISK_TABS[0];var scope=tab.k;var 
  var domRows=Object.keys(domHot).sort(function(a,b){return domHot[b]-domHot[a];}).map(function(d){return [d,domHot[d],tcol];});
  var domPanel=panel('Concentration by domain',(isAll?'registers':scope+' registers')+' per ISO 45003 domain',(domRows.length?chHBar(domRows,{unit:' reg'}):'<div style="padding:16px;color:var(--faint)">None</div>'),'');
  var fs={};rs.forEach(function(x){((RISK_MODEL[x.r.h]||{}).facs||[]).forEach(function(f){fs[f]=_fscore(f);});});
- var drvRows=Object.keys(fs).map(function(f){return [f,Math.round(fs[f]),fs[f]<50?C.bad:(fs[f]<65?C.warn:C.ok)];}).sort(function(a,b){return a[1]-b[1];}).slice(0,6);
- var drvPanel=panel('What&rsquo;s driving '+(isAll?'risk':scope+' risk'),'lowest pulse factors behind these registers',(drvRows.length?chHBar(drvRows,{unit:'',max:100,ref:80}):'<div style="padding:16px;color:var(--faint)">None</div>'),'Lift these and the linked registers de-escalate.');
+ var drvItems=Object.keys(fs).map(function(f){var t=(typeof FTREND!=='undefined')?FTREND[f]:null;var series=(t&&t.spk&&t.spk.length)?t.spk:[fs[f]];var latest=(t&&typeof t.cur==='number')?t.cur:fs[f];return {label:f,series:series,latest:latest};}).sort(function(a,b){return a.latest-b.latest;}).slice(0,6);
+ var drvPanel=panel('What&rsquo;s driving '+(isAll?'risk':scope+' risk'),'lowest pulse factors behind these registers &middot; latest reading vs their own recent average',(drvItems.length?recencyRow(drvItems,{first:'Factor'}):'<div style="padding:16px;color:var(--faint)">None</div>'),'A falling factor is an escalating risk. Lift these and the linked registers de-escalate.');
  var stc={};rs.forEach(function(x){stc[x.r.status]=(stc[x.r.status]||0)+1;});
  var stPanel=panel('Mitigation status',(isAll?'all registers':scope+' registers')+' &middot; workflow stage',chHBar([['To Do',stc['To Do']||0,C.warn],['Not Started',stc['Not Started']||0,C.bad],['In Progress',stc['In Progress']||0,C.brand],['Monitoring',stc['Monitoring']||0,C.ok]],{unit:' reg'}),'');
  var expoPanel='';if(isAll){var expo={};ROSTER.forEach(function(p){if(p.status!=='ok')expo[p.serviceLine]=(expo[p.serviceLine]||0)+1;});var expoRows=Object.keys(expo).sort(function(a,b){return expo[b]-expo[a];}).map(function(l){return [l,expo[l],'#f97316'];});expoPanel=panel('People exposed &middot; by service line','at-risk people carrying psychosocial flags',chHBar(expoRows,{unit:' ppl'}),'');}
