@@ -15,6 +15,57 @@ body{margin:0;font-family:'Open Sans',system-ui,sans-serif;background:var(--bg);
 .nav a .material-symbols-outlined{font-size:20px}
 .nav a.on{background:var(--brand-50);color:var(--brand-700);font-weight:600}
 .nav a:hover:not(.on){background:var(--line2)}
+body.docmode .filterbar{display:none}
+body.docmode .eli{display:none}
+body.docmode .chips{display:none}
+body.docmode .elibox{display:none}
+body.docmode .viewtabs{display:none}
+body.docmode .topsub{display:none}
+.navdocs{position:absolute;bottom:64px;left:12px;right:12px;border-top:1px solid var(--line);padding-top:8px}
+.navdocs .ndt{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);font-weight:700;padding:0 10px 4px}
+.navdocs a{display:flex;align-items:center;gap:11px;padding:8px 10px;border-radius:8px;color:var(--sub);text-decoration:none;font-weight:500;margin-bottom:2px;cursor:pointer;font-size:13px}
+.navdocs a .material-symbols-outlined{font-size:18px}
+.navdocs a.on{background:var(--bg2,#F4F3EF);color:var(--ink);font-weight:600}
+.docwrap{max-width:900px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:38px 42px;margin:6px auto 30px;color:var(--ink);line-height:1.5}
+.docwrap .dmeta{font-size:12px;color:var(--faint);margin-bottom:22px}
+.docwrap h1{font-size:22px;font-weight:600;margin:0 0 4px;letter-spacing:-.01em}
+.docwrap h2{font-size:14.5px;font-weight:600;margin:26px 0 9px}
+.docwrap p{font-size:13.5px;margin:0 0 9px;color:var(--ink)}
+.docwrap .dmut{color:var(--sub);font-size:12.5px}
+.dcols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.dpanel{background:#FAFAF8;border:1px solid var(--line);border-radius:8px;padding:13px 16px}
+.dpanel h3{font-size:12.5px;font-weight:600;margin:0 0 7px}
+.docwrap ul{list-style:none;margin:0;padding:0}
+.docwrap ul li{font-size:13px;padding:3.5px 0 3.5px 16px;position:relative}
+.docwrap ul li:before{content:"";position:absolute;left:2px;top:11px;width:5px;height:5px;border-radius:50%;background:#8B897F}
+.dgate{display:grid;grid-template-columns:66px 1fr;border:1px solid var(--line);border-top:none;font-size:13px}
+.dgate:first-of-type{border-top:1px solid var(--line);border-radius:8px 8px 0 0}
+.dgate:last-of-type{border-radius:0 0 8px 8px}
+.dgate .g{background:#FAFAF8;padding:10px 11px;font-weight:700;font-size:11.5px;color:var(--sub);border-right:1px solid var(--line)}
+.dgate .d{padding:10px 13px}
+.dgate .d b{display:block;font-size:13px}
+.dgate .d span{color:var(--sub);font-size:12px}
+.drule{border:1px solid var(--line);background:#FAFAF8;border-radius:8px;padding:11px 15px;font-size:12.5px;margin-top:12px}
+.dfoot{margin-top:26px;padding-top:12px;border-top:1px solid var(--line);color:var(--faint);font-size:11.5px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.pcards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.pcard2{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
+.pcard2 .ph{padding:13px 15px;border-bottom:1px solid var(--line);background:#FAFAF8;display:flex;gap:10px;align-items:center}
+.pcard2 .ph .pin{width:34px;height:34px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:700;font-size:12px;flex:0 0 34px}
+.pcard2 .ph h3{font-size:13.5px;font-weight:600;margin:0;line-height:1.2}
+.pcard2 .ph .pp{font-size:11px;color:var(--sub)}
+.pcard2 .pb{padding:12px 15px;display:flex;flex-direction:column;gap:10px}
+.pcard2 .pl{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);font-weight:700;margin-bottom:3px}
+.pcard2 .pq{font-size:12.5px;font-style:italic;color:var(--sub);border-left:2px solid var(--line);padding-left:9px}
+.pcard2 ul li{font-size:12.3px;padding:2.5px 0 2.5px 14px}
+.pcard2 ul li:before{top:9.5px;width:4px;height:4px}
+.pafs{background:#FAFAF8;border:1px solid var(--line);border-radius:7px;padding:8px 11px;font-size:11.8px;color:var(--sub)}
+.dtbl{border-collapse:collapse;width:100%;font-size:12.8px}
+.dtbl th,.dtbl td{border:1px solid var(--line);padding:8px 11px;text-align:center}
+.dtbl th{background:#FAFAF8;font-weight:600;font-size:12px}
+.dtbl td:first-child,.dtbl th:first-child{text-align:left}
+.ddot{display:inline-block;width:12px;height:12px;border-radius:50%}
+.ddp{background:var(--ink)} .dds{background:#B8B6AE} .ddn{width:8px;height:2px;border-radius:2px;background:#D8D6CE;display:inline-block;vertical-align:middle}
+@media (max-width:1100px){.pcards{grid-template-columns:1fr}.dcols{grid-template-columns:1fr}}
 .who{position:absolute;bottom:14px;left:12px;right:12px;display:flex;gap:9px;align-items:center;font-size:12px;color:var(--sub)}
 .who .av{width:30px;height:30px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:700}
 .main{flex:1;min-width:0;display:flex;flex-direction:column}
@@ -59,6 +110,18 @@ body{margin:0;font-family:'Open Sans',system-ui,sans-serif;background:var(--bg);
 .kcard .kdelta{font-size:11.5px;font-weight:700}
 .kcard .up{color:var(--ok)}.kcard .down{color:var(--bad)}.kcard .flat{color:var(--faint)}
 .kspark{margin-top:8px;height:30px}
+.recbars{display:flex;flex-direction:column;gap:10px;margin-top:2px}
+.recrow{display:grid;grid-template-columns:130px 82px 1fr 56px 52px;align-items:center;gap:10px}
+.reclab{font-size:12.5px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.recspk{height:22px}
+.recspk .kspark{margin-top:0;height:22px}
+.rectrack{position:relative;height:8px;border-radius:5px;background:var(--line2);overflow:hidden}
+.rectrack i{position:absolute;left:0;top:0;height:100%;border-radius:5px;display:block}
+.recval{display:flex;flex-direction:column;align-items:flex-end;line-height:1.08}
+.recval b{font-size:13px;font-weight:700;color:var(--ink)}
+.recavg{font-size:10px;color:var(--faint)}
+.recdelta{font-size:11.5px;font-weight:700;text-align:right}
+@media(max-width:760px){.recrow{grid-template-columns:96px 56px 1fr 46px 42px;gap:7px}}
 /* section + panels */
 .secthead{display:flex;align-items:center;gap:10px;margin:4px 0 14px}
 .secthead .t{font-weight:800;font-size:16px;color:var(--ink)}
@@ -561,13 +624,14 @@ body{margin:0;font-family:'Open Sans',system-ui,sans-serif;background:var(--bg);
   <aside class="side">
     <div class="brand"><span class="lg">e</span> Everperform</div>
     <nav class="nav">
-      <a class="on"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
+      <a class="on" id="nav-dash" onclick="setView(window._lastView||'today')"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
       <a><span class="material-symbols-outlined">inbox</span> Inbox</a>
       <a><span class="material-symbols-outlined">bar_chart</span> Reports</a>
       <a><span class="material-symbols-outlined">shield</span> Register</a>
       <a><span class="material-symbols-outlined">bolt</span> Automation</a>
       <a><span class="material-symbols-outlined">settings</span> Settings</a>
     </nav>
+    <div class="navdocs"><div class="ndt">Docs</div><a id="nd-def" onclick="setView('docdef')"><span class="material-symbols-outlined">description</span> Definition</a><a id="nd-per" onclick="setView('docpersonas')"><span class="material-symbols-outlined">group</span> User personas</a></div>
     <div class="who"><span class="av">SK</span><div>Surendran Kandasamy<div style="color:var(--faint);font-size:11px">Senior PM</div></div></div>
   </aside>
   <aside class="filterbar">
@@ -2010,6 +2074,7 @@ function hpCmpBar(m){
 }
 var CASUBCARDS=[{key:'reg',label:'Risk registers',dom:'Overdue'},{key:'inbox',label:'Inbox',dom:'Overdue items'},{key:'conv',label:'Conversations',dom:'Overdue'},{key:'sig',label:'Signals',dom:'Awaiting action'},{key:'lines',label:'Lines below target',dom:'Productivity'},{key:'rater',label:'Rater compliance',dom:'Reporting'},{key:'dev',label:'Deviations',dom:'Billing & data flags'}];
 function spark(data,color){var W=120,H=30,mn=Math.min.apply(null,data),mx=Math.max.apply(null,data),r=(mx-mn)||1;var p=data.map(function(v,i){return (i/(Math.max(1,data.length-1))*W).toFixed(1)+','+(H-4-(v-mn)/r*(H-8)).toFixed(1);}).join(' ');return '<svg class="kspark" viewBox="0 0 '+W+' '+H+'" width="100%" preserveAspectRatio="none"><polyline points="'+p+'" pathLength="1" fill="none" stroke="'+color+'" stroke-width="2"/></svg>';}
+function recencyBars(list){return '<div class="recbars">'+list.map(function(f){var t=(typeof FTREND!=='undefined')?FTREND[f.name]:null;var series=(t&&t.spk&&t.spk.length)?t.spk:[f.score];var latest=(t&&typeof t.cur==='number')?t.cur:series[series.length-1];var avg=series.reduce(function(a,b){return a+b;},0)/series.length;var d=Math.round((latest-avg)*10)/10;var col=ragScore(latest);var dcol=d<0?C.bad:(d>0?C.ok:C.faint);var ar=d<0?'\u25bc':(d>0?'\u25b2':'\u25ac');return '<div class="recrow"><span class="reclab" title="'+f.name+'">'+f.name+'</span><span class="recspk">'+spark(series,col)+'</span><span class="rectrack"><i style="width:'+Math.max(3,latest)+'%;background:'+col+'"></i></span><span class="recval"><b>'+Math.round(latest*10)/10+'</b><span class="recavg">avg '+Math.round(avg)+'</span></span><span class="recdelta" style="color:'+dcol+'">'+ar+' '+Math.abs(d)+'</span></div>';}).join('')+'</div>';}
 function enablementStats(P){
   var N=P.length||1;
   function eb(p){var t=p.trend||[];var slope=t.length?t[t.length-1]-t[0]:0;var u=p.util||70;
@@ -2057,7 +2122,7 @@ var STRIP=[{key:'experience',tab:'expperf'},{key:'performance',tab:'expperf'},{k
 var MAINCARDS=[{key:'experience',label:'Experience',dom:'Pulse & wellbeing',bm:'experience'},{key:'signals',label:'Signals',dom:'Risk triggers',bm:'signals'},{key:'inbox',label:'Inbox',dom:'Accountabilities',bm:'inbox'},{key:'enablement',label:'Enablement',dom:'Coaching & development',bm:'enablement'},{key:'risk',label:'Risk',dom:'Risk registers',bm:'compliance'},{key:'compliance',label:'Compliance & Audit',dom:'Overdue & deviations',bm:'audit'}];
 var SUBCARDS=[{key:'pulse',label:'Pulse',dom:'Engagement & wellbeing',bm:'experience'},{key:'productivity',label:'Productivity',dom:'Vs target',bm:'performance'},{key:'voice',label:'Voice of Org',dom:'Sentiment & themes'}];
 function kcardHTML(cfg,P,active,oc){if(cfg.ph){return '<div class="kcard kcardph'+(active?' on':'')+'" onclick="'+oc+'"><div class="kl">'+cfg.label+'</div><div class="kd">'+cfg.dom+'</div><div class="kvsoon">Coming next</div></div>';}if(cfg.key==='voice'){var nt=VOICE.trend.map(function(x){return x.net;});return '<div class="kcard'+(active?' on':'')+'" onclick="'+oc+'"><div class="kl">'+cfg.label+'</div><div class="kd">'+cfg.dom+'</div><div class="kv">+'+VOICE.net+'<u> net sentiment</u></div>'+spark(nt,active?C.brand:'#c7c9f7')+bench('voice',{voice:{you:VOICE.net,ind:VOICE.bench.net.ind,tgt:18,top:VOICE.bench.net.top,suf:'',cap:'Net sentiment'}})+'</div>';}if(cfg.simple){return '<div class="kcard'+(active?' on':'')+'" onclick="'+oc+'"><div class="kl">'+cfg.label+'</div><div class="kd">'+cfg.dom+'</div><div class="kv">'+cfg.sv+'<u> '+cfg.su+'</u></div></div>';}var m=computeKPI(P);var v=m.vals[cfg.bm];return '<div class="kcard'+(active?' on':'')+'" onclick="'+oc+'"><div class="kl">'+cfg.label+'</div><div class="kd">'+cfg.dom+'</div><div class="kv">'+v[0]+'<u>'+v[1]+'</u></div>'+spark(v[2],active?C.brand:'#c7c9f7')+bench(cfg.bm,m.BM)+'</div>';}
-function renderCards(){updateBtype();var cc=document.getElementById('cards');if(typeof view!=='undefined'&&view==='today'){cc.style.display='none';return;}cc.style.display='';cc.className='cards';var P=activePeople();cc.innerHTML=MAINCARDS.map(function(c){return kcardHTML(c,P,sel===c.key,"pick('"+c.key+"')");}).join('');epReveal();}
+function renderCards(){updateBtype();var cc=document.getElementById('cards');if(typeof view!=='undefined'&&(view==='today'||view==='docdef'||view==='docpersonas')){cc.style.display='none';return;}cc.style.display='';cc.className='cards';var P=activePeople();cc.innerHTML=MAINCARDS.map(function(c){return kcardHTML(c,P,sel===c.key,"pick('"+c.key+"')");}).join('');epReveal();}
 function placeholder(icon,title,desc,chips){return '<div class="phcard"><span class="material-symbols-outlined phicon">'+icon+'</span><div class="pht">'+title+'</div><div class="phd">'+desc+'</div>'+(chips?'<div class="phchips">'+chips.map(function(c){return '<span class="phchip">'+c+'</span>';}).join('')+'</div>':'')+'</div>';}
 function viewEnablement(){
   var P=activePeople();var S=enablementStats(P);
@@ -2273,8 +2338,10 @@ function viewExperience(P){
   var partbar=chHBar(Object.keys(pl).map(function(k){var a=pl[k];return [k.replace(' Services',''),Math.round(a.reduce(function(x,y){return x+y;},0)/a.length),SLc[k]||C.brand];}),{max:100,unit:'%',ref:80});
   var firmPart=Math.round(P.reduce(function(a,p){return a+p.rater;},0)/(P.length||1));
   // 5. strengths & watch (replaces overwhelming 18-bar list)
-  var strong=chHBar(facs.slice(0,6).map(function(f){return [f.name,Math.round(f.score*10)/10,C.ok];}),{max:100,ref:80});
-  var watch=chHBar(facs.slice(-6).reverse().map(function(f){return [f.name,Math.round(f.score*10)/10,f.score<70?C.bad:C.warn];}),{max:100,ref:80});
+  var _lt=function(f){var t=(typeof FTREND!=='undefined')?FTREND[f.name]:null;return (t&&typeof t.cur==='number')?t.cur:f.score;};
+  var facsL=EP.factors.slice().sort(function(a,b){return _lt(b)-_lt(a);});
+  var strong=recencyBars(facsL.slice(0,6));
+  var watch=recencyBars(facsL.slice(-6).reverse());
   // 6. people lists (involvement + profile)
   var byExp=P.slice().sort(function(a,b){return b.safety-a.safety;});
   var topP=peopleList(byExp.slice(0,7),function(p){return p.safety;});
@@ -2291,8 +2358,8 @@ function viewExperience(P){
      +panel('Pulse participation by service line','% responding · firm '+firmPart+'%',partbar,'Taxation is the least engaged with the pulse — participation drives signal quality.')
    +'</div>'
    +'<div class="grid g2" style="margin-top:14px">'
-     +panel('Strengths · top 6 factors','what is working',strong,'')
-     +panel('Watch areas · lowest 6 factors','where to focus',watch,'Workload satisfaction, fatigue and training & development are the firm-wide drags.')
+     +panel('Strengths · top 6 factors','latest reading · trend',strong,'Each bar is the latest pulse reading, not the running average (grey). The sparkline shows recent waves so a recent move is never hidden by the average.')
+     +panel('Watch areas · lowest 6 factors','latest reading · trend',watch,'Latest reading leads; grey shows the average it would otherwise hide. Workload satisfaction and fatigue fell sharply in the most recent wave.')
    +'</div>'
    +'<div class="grid g2" style="margin-top:14px">'
      +panel('Thriving · highest wellbeing','click for profile',topP,'')
@@ -2329,7 +2396,7 @@ function profileHTML(P){var Z=LZDATA,th=Z.th;
  var mgr=(P&&P.mgr)?P.mgr:'—',team=(P&&P.team)?P.team:'—',tenure=(P&&P.tenure)?P.tenure:'—';
  var ring='conic-gradient('+ragScore(th.o)+' '+(th.o*3.6)+'deg,rgba(255,255,255,.25) 0)';
  var chips='<span class="pchip">'+role+'</span><span class="pchip">Tenure '+tenure+'</span><span class="pchip">Reports to '+mgr+'</span><span class="pchip">'+team+'</span>';
- function ftr(c){var t=(typeof FTREND!=='undefined')?FTREND[c]:null;if(!t)return '<span class="ftr"></span>';var col=t.dir<0?C.bad:(t.dir>0?C.ok:'#9aa0b4');var ar=t.dir<0?'▼':(t.dir>0?'▲':'▬');return '<span class="ftr">'+spark(t.spk,col)+'<span class="ftar" style="color:'+col+'">'+ar+'</span></span>';}
+ function ftr(c){var t=(typeof FTREND!=='undefined')?FTREND[c]:null;if(!t)return '<span class="ftr"></span>';var col=t.dir<0?C.bad:(t.dir>0?C.ok:'#9aa0b4');var ar=t.dir<0?'▼':(t.dir>0?'▲':'▬');return '<span class="ftr">'+spark(t.spk,col)+'<span class="ftar" style="color:'+col+'">'+ar+' '+Math.abs(Math.round((t.d||0)))+'</span></span>';}
  var fbars=WF.map(function(f){return '<div class="fbar"><span class="fl">'+f.c+'</span><span class="ft"><i style="width:'+Math.max(3,f.a)+'%;background:'+fcol(f.a)+'"></i></span><span class="fv" style="color:'+fcol(f.a)+'">'+f.a+'</span>'+ftr(f.c)+'</div>';}).join('');
  var cmts=Z.comments.map(function(c){return '<div class="pcomment neg">'+c.t+(c.f?'<span>'+c.f+'</span>':'')+'</div>';}).join('');
  var iss=Z.issues.map(function(x){var col=x.priority==='High'?'#b3322d':'#a45b06';var stcol=x.status==='Done'?C.ok:C.warn;var sm=(x.summary||'').replace(/Lirize Loots/g,nm);var ds=(x.desc||'').replace(/Lirize Loots/g,nm);return '<div class="iss"><div class="ih"><span class="ibadge" style="background:#fdecec;color:'+col+'">'+x.priority+' priority</span><span class="ibadge" style="background:#eef0f4;color:'+stcol+'">'+x.status+'</span><span style="font-size:11px;color:var(--faint);font-weight:600">#'+String(x.id).replace(/\.0$/,'')+' &middot; '+sm+'</span></div><div class="idesc">'+ds+'</div></div>';}).join('');
@@ -2619,7 +2686,141 @@ function hierClearMgr(){hier.mgr=null;hier.person=null;syncScope();renderHier();
 function hierSetTeam(t){hier.team=t||null;hier.mgr=null;hier.person=null;syncScope();renderHier();renderCards();renderCanvas();}
 function renderHier(){var v=lens.view;var opts=scopesFor(v);if(!opts.some(function(o){return o[0]===hier.scope;}))hier.scope=defScope();var el=document.getElementById('hier');if(el)el.innerHTML=opts.map(function(o){return '<div class="fopt'+(hier.scope===o[0]?' on':'')+'" data-h="'+o[0]+'">'+o[1]+'</div>';}).join('');var mSec=document.getElementById('mgrSec'),tSec=document.getElementById('teamSec');var showMgr=(hier.scope==='all'&&(v==='org'||v==='multi'))||(v==='mgr');var showTeam=(v==='multi');if(mSec){mSec.style.display=showMgr?'':'none';var mt=mSec.querySelector('.fsec-t');if(mt)mt.textContent=(v==='mgr'?'View as manager':'Managers');}if(tSec)tSec.style.display=showTeam?'':'none';if(showMgr)renderMgr();else{var ml=document.getElementById('mgrList');if(ml)ml.innerHTML='';}if(showTeam)renderTeam();renderPeopleList();}
 var view='today';
-function setView(v){view=v;var a=document.getElementById('vt-today'),b=document.getElementById('vt-dash');if(a)a.classList.toggle('on',v==='today');if(b)b.classList.toggle('on',v==='dash');renderCards();renderCanvas();}
+
+function docDefHTML(){
+  return '<div class="docwrap">'
+  +'<h1>People Performance Dashboard: definition and scope criteria</h1>'
+  +'<div class="dmeta">Draft v0.1 for review &middot; 20 July 2026 &middot; Owner: Product &middot; Companion: User personas (sidebar)</div>'
+  +'<h2>1. Definition</h2>'
+  +'<p>The People Performance Dashboard is the daily management read on people performance and wellbeing. It answers three questions: what needs attention now, how people are tracking against targets, industry benchmarks and the high performance standard, and where to act. It rolls up from organisation to team to person.</p>'
+  +'<h2>2. Problem statement</h2>'
+  +'<p>Everperform already captures the underlying data: pulses, measures, signals, conversations and registers. The management read is currently assembled by hand. Reports are run one at a time, summaries are produced manually, and flagged comments can sit unseen inside positive-looking results. Leaders receive information late, managers prepare conversations without evidence in front of them, and administrators cross-check registers manually. The dashboard replaces that manual assembly with one prioritised read that routes to action.</p>'
+  +'<h2>3. Audience</h2>'
+  +'<p>Three personas, defined by organisational position: the Practice Leader, the Team Manager, and the People and Culture / Operations Lead. Each persona receives its own experience, delivered one at a time. Detail and the persona-to-role mapping are in the User personas document. The individual employee is out of scope for v1: their surface is the personal profile and pulse experience.</p>'
+  +'<h2>4. Boundaries</h2>'
+  +'<div class="dcols">'
+  +'<div class="dpanel"><h3>What it is</h3><ul>'
+  +'<li>A prioritised read over data Everperform already captures</li>'
+  +'<li>Summary first, with drill-down to team and person</li>'
+  +'<li>A comparison surface: targets, industry benchmarks, the high performance standard</li>'
+  +'<li>A router to action: each flag leads to an inbox item, a conversation or a profile</li>'
+  +'</ul></div>'
+  +'<div class="dpanel"><h3>What it is not</h3><ul>'
+  +'<li>A replacement for operational systems (practice management, timesheets, billing)</li>'
+  +'<li>A report builder or analytics workbench</li>'
+  +'<li>An admin console: pulse setup and user management remain in Settings</li>'
+  +'<li>A data entry surface, beyond acting on flagged items</li>'
+  +'<li>Real-time monitoring: it is a daily and weekly management read</li>'
+  +'</ul></div>'
+  +'</div>'
+  +'<h2>5. Scope criteria</h2>'
+  +'<p class="dmut">Each proposed item, from any source, is assessed against all six criteria.</p>'
+  +'<div class="dgate"><div class="g">G1 Persona</div><div class="d"><b>Serves at least one of the three personas in their regular read.</b><span>Items that serve no persona are out of scope.</span></div></div>'
+  +'<div class="dgate"><div class="g">G2 Question</div><div class="d"><b>Helps answer attention, tracking, or action.</b><span>The three questions in the definition.</span></div></div>'
+  +'<div class="dgate"><div class="g">G3 Data</div><div class="d"><b>Runs on data Everperform already captures.</b><span>New collection instruments are separate product initiatives.</span></div></div>'
+  +'<div class="dgate"><div class="g">G4 Lane</div><div class="d"><b>Stays in the productivity and wellbeing lane.</b><span>The dashboard overlays customer operational systems. It does not rebuild them.</span></div></div>'
+  +'<div class="dgate"><div class="g">G5 Summary</div><div class="d"><b>Lands as a rollup with drill-down.</b><span>Per-employee lists are not a landing view.</span></div></div>'
+  +'<div class="dgate"><div class="g">G6 Action</div><div class="d"><b>Each flag routes to an action.</b><span>An inbox item, a conversation, or a profile. No dead-end statistics.</span></div></div>'
+  +'<div class="drule"><b>Assessment rule:</b> passes all six: in scope, prioritised within the persona sequence. Fails any: out of scope, or deferred with the failing criterion recorded. The red pen list from 20 July is triaged through these criteria first.</div>'
+  +'<h2>6. Deferred items</h2>'
+  +'<ul>'
+  +'<li>Inbox structural consolidation (pulses and signals flowing automatically into the inbox)</li>'
+  +'<li>Long-term participant prediction report</li>'
+  +'<li>PDF generation and unified search (Comprehensive Dashboard scope)</li>'
+  +'<li>Items dependent on the data source decision (architecture session to be rescheduled)</li>'
+  +'</ul>'
+  +'<h2>7. Success measures</h2>'
+  +'<ul>'
+  +'<li>A team manager identifies who needs attention this week in under one minute</li>'
+  +'<li>A practice leader prepares the monthly leadership view without requesting a manual summary</li>'
+  +'<li>Flagged comments are followed up and the follow-up is visible</li>'
+  +'<li>Managers return weekly without prompting</li>'
+  +'</ul>'
+  +'<div class="dfoot"><span>Sources: dashboard prototype, 13 Jul MVP requirements meeting, 20 Jul red pen session, customer feedback threads.</span><span>Draft for review: Suren Kandasamy</span></div>'
+  +'</div>';
+}
+function docPersonasHTML(){
+  function card(ini,name,pos,q,jobs,pains,opens,cad,afs){
+    return '<div class="pcard2"><div class="ph"><span class="pin">'+ini+'</span><div><h3>'+name+'</h3><div class="pp">'+pos+'</div></div></div>'
+    +'<div class="pb">'
+    +'<div class="pq">'+q+'</div>'
+    +'<div><div class="pl">Jobs to be done</div><ul>'+jobs.map(function(j){return '<li>'+j+'</li>';}).join('')+'</ul></div>'
+    +'<div><div class="pl">Pain today</div><ul>'+pains.map(function(j){return '<li>'+j+'</li>';}).join('')+'</ul></div>'
+    +'<div><div class="pl">Opens first</div><div style="font-size:12.3px">'+opens+'</div></div>'
+    +'<div><div class="pl">Cadence</div><div style="font-size:12.3px">'+cad+'</div></div>'
+    +'<div class="pafs"><b>At AFS:</b> '+afs+'</div>'
+    +'</div></div>';
+  }
+  var svg='<svg viewBox="0 0 860 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:860px;display:block;margin:4px auto 2px">'
+  +'<style>text{font-family:inherit}.bx{fill:#FAFAF8;stroke:#8B897F;rx:8}.tt{font-size:13px;font-weight:600;fill:#2C2C2A}.ts{font-size:11px;fill:#5F5E5A}</style>'
+  +'<rect class="bx" x="240" y="18" width="150" height="46" rx="8"/><text class="tt" x="315" y="38" text-anchor="middle">Co-lead</text><text class="ts" x="315" y="53" text-anchor="middle">top of the firm</text>'
+  +'<rect class="bx" x="430" y="18" width="150" height="46" rx="8"/><text class="tt" x="505" y="38" text-anchor="middle">Co-lead</text><text class="ts" x="505" y="53" text-anchor="middle">top of the firm</text>'
+  +'<line x1="390" y1="41" x2="430" y2="41" stroke="#8B897F" stroke-width="1.6" stroke-dasharray="5 4"/>'
+  +'<text class="ts" x="410" y="12" text-anchor="middle">report to each other</text>'
+  +'<rect class="bx" x="680" y="18" width="160" height="46" rx="8"/><text class="tt" x="760" y="38" text-anchor="middle">People &amp; Culture</text><text class="ts" x="760" y="53" text-anchor="middle">stands as its own function</text>'
+  +'<line x1="315" y1="64" x2="315" y2="108" stroke="#8B897F" stroke-width="1.6"/><line x1="505" y1="64" x2="505" y2="108" stroke="#8B897F" stroke-width="1.6"/>'
+  +'<rect class="bx" x="170" y="108" width="480" height="52" rx="8"/><text class="tt" x="410" y="130" text-anchor="middle">13+ team managers</text><text class="ts" x="410" y="146" text-anchor="middle">run teams day to day, team sizes vary</text>'
+  +'<line x1="410" y1="160" x2="410" y2="204" stroke="#8B897F" stroke-width="1.6"/>'
+  +'<rect class="bx" x="110" y="204" width="600" height="52" rx="8"/><text class="tt" x="410" y="226" text-anchor="middle">109 people in total</text><text class="ts" x="410" y="242" text-anchor="middle">108 of 109 roll up beneath the two co-leads &middot; 2 people report to two managers at once</text>'
+  +'<text class="ts" x="410" y="286" text-anchor="middle">Reference structure: AFS hierarchy export, July 2026. Positions generalised, no individuals named.</text>'
+  +'</svg>';
+  return '<div class="docwrap">'
+  +'<h1>People Performance Dashboard: user personas</h1>'
+  +'<div class="dmeta">Draft v0.1 for review &middot; 20 July 2026 &middot; Owner: Product &middot; Companion: Definition (sidebar)</div>'
+  +'<p class="dmut">Personas are defined by organisational position and the job being done. The term role is reserved for the permission levels in the product (Administrator, Manager, Employee). The mapping between the two is many-to-many and is shown in section 3. Quotes are illustrative. Derived from the AFS reporting structure, customer feedback threads, the 13 Jul requirements meeting and the 20 Jul red pen session; to be validated in upcoming customer conversations.</p>'
+  +'<h2>1. The organisation shape the dashboard must serve</h2>'+svg
+  +'<h2>2. The three personas</h2>'
+  +'<div class="pcards">'
+  +card('PL','The Practice Leader','Partner, director, firm owner',
+    '"Do not give me another report. Tell me where I would spend an hour this month."',
+    ['Read firm standing against targets, industry and the high performance standard','Spot systemic risk early: fatigue, attrition signals, compliance exposure','Decide where to intervene, then delegate','Bring evidence to the leadership meeting'],
+    ['Waits on manually assembled summaries','Risk arrives as anecdote, late'],
+    'Summary, scorecard, benchmarks, trends',
+    'Weekly scan, monthly deep read',
+    'the firm top is a pair of leaders who report to each other; 108 of 109 people roll up beneath them. Their read must cover the whole firm.')
+  +card('TM','The Team Manager','Team lead or practice manager with direct reports',
+    '"Who in my team needs me this week, and what am I walking into?"',
+    ['Triage the day: overdue actions, new signals, conversations due','Prepare one-to-ones with evidence','Watch workload, fatigue and participation across the team','Close the loop on every flagged item'],
+    ['Signals scattered across reports, found late','People with two managers fall between chairs'],
+    'Next actions, team pulse, profiles',
+    'Daily. The habit-forming user.',
+    '13 or more people run teams day to day. Two staff members report to two managers at once and must appear in both managers team views.')
+  +card('PC','The People &amp; Culture / Ops Lead','P&amp;C manager, office or operations manager',
+    '"Is the system running, are we compliant, and has anything slipped through?"',
+    ['Monitor pulse health and participation firm-wide','Work the compliance and risk registers to closure','Ensure flagged comments are followed up regardless of the sentiment score','Keep the people data clean and current'],
+    ['Cross-checks multiple registers by hand','Critical comments can hide inside positive-looking results'],
+    'Compliance, registers, keyword flags, participation',
+    'Weekly operating rhythm, plus event-driven',
+    'People and Culture stands as its own function in the structure. AFS also raised the question of administrators who run their own team, which is the worked example in section 3.')
+  +'</div>'
+  +'<h2>3. Personas and system roles</h2>'
+  +'<p class="dmut">The mapping is many-to-many in both directions, which is why the persona, not the role, defines the experience.</p>'
+  +'<table class="dtbl"><thead><tr><th>Persona</th><th>Usual role held</th><th>Also common</th><th>Data scope needed</th></tr></thead><tbody>'
+  +'<tr><td>Practice Leader</td><td>Administrator</td><td>Manager</td><td>Whole organisation</td></tr>'
+  +'<tr><td>Team Manager</td><td>Manager</td><td>Administrator</td><td>Their team, including dual-manager staff</td></tr>'
+  +'<tr><td>People &amp; Culture / Ops Lead</td><td>Administrator</td><td>Employee</td><td>Whole organisation, register and process centric</td></tr>'
+  +'</tbody></table>'
+  +'<div class="drule"><b>Worked example:</b> an administrator with their own team is one person holding two roles and doing two jobs. Running their team, they are the Team Manager persona. Running the system, they are the People and Culture / Ops persona. Same login, two experiences, selected by the job at hand rather than the permission flag. The same logic covers staff with multiple managers: they appear in every one of their managers team views.</div>'
+  +'<h2>4. Shared blocks, different emphasis</h2>'
+  +'<p class="dmut">All three experiences assemble from the same building blocks. What changes per persona is which blocks lead, and at what scope.</p>'
+  +'<table class="dtbl"><thead><tr><th style="width:32%">Dashboard block</th><th>Practice Leader</th><th>Team Manager</th><th>P&amp;C / Ops Lead</th></tr></thead><tbody>'
+  +'<tr><td>Next actions (prioritised inbox)</td><td><span class="ddot dds"></span></td><td><span class="ddot ddp"></span></td><td><span class="ddot ddp"></span></td></tr>'
+  +'<tr><td>Org summary and trends</td><td><span class="ddot ddp"></span></td><td><span class="ddot dds"></span></td><td><span class="ddot dds"></span></td></tr>'
+  +'<tr><td>High performance scorecard and benchmarks</td><td><span class="ddot ddp"></span></td><td><span class="ddot dds"></span></td><td><span class="ddn"></span></td></tr>'
+  +'<tr><td>Team pulse and experience views</td><td><span class="ddot dds"></span></td><td><span class="ddot ddp"></span></td><td><span class="ddot dds"></span></td></tr>'
+  +'<tr><td>Person profiles</td><td><span class="ddn"></span></td><td><span class="ddot ddp"></span></td><td><span class="ddot dds"></span></td></tr>'
+  +'<tr><td>Signals and risk drivers</td><td><span class="ddot dds"></span></td><td><span class="ddot ddp"></span></td><td><span class="ddot ddp"></span></td></tr>'
+  +'<tr><td>Compliance and registers</td><td><span class="ddot dds"></span></td><td><span class="ddn"></span></td><td><span class="ddot ddp"></span></td></tr>'
+  +'<tr><td>Voice of org and keyword flags</td><td><span class="ddot dds"></span></td><td><span class="ddot dds"></span></td><td><span class="ddot ddp"></span></td></tr>'
+  +'<tr><td>Enablement conversations</td><td><span class="ddn"></span></td><td><span class="ddot ddp"></span></td><td><span class="ddot dds"></span></td></tr>'
+  +'</tbody></table>'
+  +'<p class="dmut" style="margin-top:7px">Solid dot: leads the experience. Light dot: present, secondary. Dash: rarely needed.</p>'
+  +'<h2>5. Delivery sequence</h2>'
+  +'<p>One persona experience at a time, each landing as that persona default view on sign-in, without toggles. The order is a decision to make together: the Team Manager is the daily user and the fastest path to proving value; the Practice Leader is the renewal audience and the sponsor. Recommendation: select one, ship it whole, validate with users, then assemble the next experience from the same blocks.</p>'
+  +'<div class="dfoot"><span>Terminology per system convention: role means the permission level only. Personas describe position and job.</span><span>Draft for review: Suren Kandasamy</span></div>'
+  +'</div>';
+}
+function setView(v){view=v;var a=document.getElementById('vt-today'),b=document.getElementById('vt-dash');if(a)a.classList.toggle('on',v==='today');if(b)b.classList.toggle('on',v==='dash');var _isdoc=(v==='docdef'||v==='docpersonas');if(!_isdoc)window._lastView=v;document.body.classList.toggle('docmode',_isdoc);var _ndash=document.getElementById('nav-dash');if(_ndash)_ndash.classList.toggle('on',!_isdoc);if(v==='docdef'||v==='docpersonas'){window.scrollTo(0,0);}var nd=document.getElementById('nd-def'),np=document.getElementById('nd-per');if(nd)nd.classList.toggle('on',v==='docdef');if(np)np.classList.toggle('on',v==='docpersonas');renderCards();renderCanvas();}
 function goArea(k,sub){sel=k;if(sub&&k==='experience')subEP=sub;setView('dash');}
 function todayHTML(){
   var P=activePeople();var V=VOICE;var km=computeKPI(P);var vals=km.vals;
@@ -2730,7 +2931,7 @@ function epReveal(){
  if(!window._epio){window._epio=new IntersectionObserver(function(ents){ents.forEach(function(en){if(en.isIntersecting){en.target.classList.add('ep-in');en.target.classList.remove('ep-o');window._epio.unobserve(en.target);animateCounts(en.target);}});},{threshold:.12,rootMargin:'0px 0px -30px 0px'});}
  [].forEach.call(els,function(e){if(e.classList.contains('ep-in')||e.classList.contains('ep-o'))return;e.classList.add('ep-o');window._epio.observe(e);});
 }
-function renderCanvas(){updateBtype();renderHPCBar();if(typeof view!=='undefined'&&view==='today'){var _cv=document.getElementById('canvas');_cv.innerHTML=todayHTML();epReveal();return;}var P=activePeople();var h='';
+function renderCanvas(){updateBtype();if(typeof view!=='undefined'&&(view==='docdef'||view==='docpersonas')){var _hl=document.getElementById('hpclegend');if(_hl)_hl.innerHTML='';var _dc=document.getElementById('canvas');_dc.innerHTML=(view==='docdef'?docDefHTML():docPersonasHTML());return;}renderHPCBar();if(typeof view!=='undefined'&&view==='today'){var _cv=document.getElementById('canvas');_cv.innerHTML=todayHTML();epReveal();return;}var P=activePeople();var h='';
   if(sel==='experience'){
     var esubs=SUBCARDS.filter(function(s){return clientType!=='nonbilling'||s.key!=='productivity';});
     var ecur=subEP; if(clientType==='nonbilling'&&ecur==='productivity')ecur='pulse';
