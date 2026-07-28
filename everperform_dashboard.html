@@ -2787,7 +2787,7 @@ function docReqHTML(){
  function row(id,txt,src,st){return '<tr><td style="white-space:nowrap"><strong>'+id+'</strong></td><td>'+txt+'</td><td style="white-space:nowrap">'+src+'</td><td style="white-space:nowrap">'+st+'</td></tr>';}
  function tbl(rows){return '<table class="dtbl"><thead><tr><th style="width:6%">#</th><th>Requirement</th><th style="width:17%">Source</th><th style="width:11%">Status</th></tr></thead><tbody>'+rows.join('')+'</tbody></table>';}
  var F=[
- row('F1','Three persona experiences: Practice Leader, Team Manager, P&amp;C / Ops Lead. Each lands as that persona’s default view on sign-in. No user-facing toggles between experiences in production; the prototype switcher stands in for sign-in.','Alok, 20 Jul; locked 28 Jul','Partly built'),
+ row('F1','Three persona experiences: Practice Leader, Team Manager, P&amp;C / Ops Lead. Each lands as that persona’s default view on sign-in. No user-facing toggles between experiences in production; the prototype switcher stands in for sign-in.','Alok, 20 Jul; locked 28 Jul','Built'),
  row('F2','Personas are defined by position and the job at hand, not by permission role. A person holding two jobs (an administrator who also runs a team) gets both experiences, selected by the job, never merged into one screen.','Personas doc s3','Rule'),
  row('F3','The home screen is a summary directory: one combined, prioritised next-actions list across inbox, signals and pulses, sorted critical and high first, then longest overdue. Every row clicks through to the work item. No parallel lists.','Wade, 13 Jul; Cathy','Built'),
  row('F4','Recency over averaging on every surface where a period average can hide a late move: the latest reading is shown against the measure’s own average with a trend. Scores and percentages get the full treatment; counts get trend plus vs-typical; categorical statuses are excluded.','Simon, Emil, Cathy, 20 Jul','Built'),
@@ -2795,7 +2795,7 @@ function docReqHTML(){
  row('F6','Multi-manager visibility is a data scope, not a persona: an all-reports scope on the Practice Leader and Team Manager experiences, following the reporting structure direct and indirect, enabled per organisation by an administrator.','Simon; Peta gating; locked 28 Jul','Built'),
  row('F7','The Practice Leader sees everything, including person profiles (full 360) and enablement conversations. Persona experiences differ by which blocks lead, never by narrowing Practice Leader access.','Suren, 28 Jul','Built'),
  row('F8','Billing and non-billing filtering is available and kept discreet; a filter combination that would produce an empty cohort falls back rather than rendering an empty view.','Simon, 20 Jul','Built'),
- row('F9','The P&amp;C / Ops experience leads with compliance, registers, participation and keyword flags, firm-wide by default.','Personas doc; Peta, Cathy','Partly built'),
+ row('F9','The P&amp;C / Ops experience leads with compliance, registers, participation and keyword flags, firm-wide by default.','Personas doc; Peta, Cathy','Built'),
  row('F10','Every people list drills into the person profile; the profile shows factor movement (latest, direction and magnitude), not period averages alone.','Cathy; recency principle','Built'),
  row('F11','Eli chips support summarise and next-action prompts on the dashboard. Generated board-report or PDF export from Eli is excluded from the MVP.','Suren pitch; Alok ruling, 20 Jul','Built'),
  ];
@@ -2980,6 +2980,17 @@ function todayHTML(){
    +tile('Signals',vals.signals[0],'people at risk','signals',C.bad,'notifications_active',{d:sigDelta,good:sigDelta<=0,cmp:'was '+atrPrev+' last month'})
    +(lens.view==='mgr'?tile('Enablement',en.total,'conversations due','enablement',C.teal,'school',null):tile('Compliance',vals.audit[0],'items overdue','compliance',C.warn,'fact_check',{d:odDelta,good:odDelta<=0,cmp:'was '+odPrev+' last month'}))
    +'</div></div>';
+  if(lens.view==='pnc'){
+    var _wv=EP.pulseWaves||[];var _lastW=_wv[_wv.length-1]||{};var _part=Math.round(((_lastW.respondents||0)/((EP.org&&EP.org.headcount)||131))*100);
+    var _rater=Math.round(P.reduce(function(a,p){return a+(p.rater||0);},0)/(P.length||1));
+    var _sigAw=P.reduce(function(a,p){return a+(p.sigs||0);},0);
+    tiles='<div class="pcard"><div class="cardlbl">System health, compliance &amp; follow-up</div><div class="tdtiles wide">'
+     +tile('Participation',_part+'%','last pulse wave','experience',(_part>=70?C.ok:(_part>=55?C.warn:C.bad)),'how_to_reg',null)
+     +tile('Rater compliance',_rater+'%','reporting','compliance',(_rater>=80?C.ok:(_rater>=70?C.warn:C.bad)),'fact_check',null)
+     +tile('Registers overdue',regOverdue,'not yet actioned','risk',C.warn,'shield',null)
+     +tile('Signals awaiting',_sigAw,'across '+P.length+' people','signals',C.bad,'notifications_active',null)
+     +'</div></div>';
+  }
 
   // recently active
   var acts=[['Team Health pulse closed, '+V.coverage+'% responded','2d'],[flags+' active signals across '+atrisk.length+' at-risk people','today'],[vals.inbox[0]+' open inbox items awaiting action','today'],[REG.length+' psychosocial registers, all assessed','1w']];
@@ -3013,7 +3024,7 @@ function todayHTML(){
   var linkCard='<div class="tdnav"><span class="tdnavl">Where to go</span>'+links.map(function(l){return '<button class="qlink" onclick="goArea(\''+l[0]+'\')"><span class="material-symbols-outlined">'+l[2]+'</span>'+l[1]+'</button>';}).join('')+'</div>';
   var _tstrip='';if(lens.view==='mgr'){var _tp=P.filter(function(p){return !p.isSelf;});_tstrip='<div class="pcard"><div class="cardlbl">My team &middot; profiles (full 360)</div><div class="tmstrip">'+_tp.map(function(p){var _i=ROSTER.indexOf(p);var _c=ragScore(p.idx||p.safety||0);return '<div class="tmpp"'+(_i>=0?' onclick="openProfile('+_i+')"':'')+'><span class="av2" style="background:'+_c+'1a;color:'+_c+'">'+(p.id||'')+'</span><div class="tmppn">'+p.name+'<div class="tmppr">'+(p.role||'')+'</div></div><b style="color:'+_c+'">'+(p.idx||p.safety||'')+'</b>'+((p.sigs||0)>0?'<span class="tmppsig">'+p.sigs+' sig</span>':'')+'</div>';}).join('')+'</div></div>';}
    var _asofbar='<div class="asofbar"><span class="asofl">Data currency</span>'+asofChip('pulse')+asofChip('timesheet')+asofChip('live')+'<span class="asof" title="The default reporting window"><span class="material-symbols-outlined" style="font-size:13px">date_range</span>Default range: last 6 months ('+dateRangeLabel()+')</span></div>';
-   return '<div class="today">'+_asofbar+tiles+'<div class="grid g2 tdgrid">'+inboxCard+convCard+'</div>'+(lens.view==='mgr'?_tstrip:'<div class="grid g2 tdgrid">'+compCard+riskCard+'</div>')+'<div class="grid g2 tdgrid">'+topPplCard+declPplCard+'</div><div class="grid g2 tdgrid">'+actCard+upcCard+'</div><div class="grid g2 tdgrid">'+suggCard+trCard+'</div>'+linkCard+'</div>';
+   return '<div class="today">'+_asofbar+tiles+'<div class="grid g2 tdgrid">'+(lens.view==='pnc'?inboxCard+compCard:inboxCard+convCard)+'</div>'+(lens.view==='mgr'?_tstrip:(lens.view==='pnc'?'<div class="grid g2 tdgrid">'+riskCard+convCard+'</div>':'<div class="grid g2 tdgrid">'+compCard+riskCard+'</div>'))+(lens.view==='pnc'?'':'<div class="grid g2 tdgrid">'+topPplCard+declPplCard+'</div>')+'<div class="grid g2 tdgrid">'+actCard+upcCard+'</div><div class="grid g2 tdgrid">'+suggCard+trCard+'</div>'+linkCard+'</div>';
 }
 var EP_COUNT_SEL='.tdtv,.kv,.lsv,.hbval,.pmv,.fnval,.stkval,.fv,.pv,.cmp td:nth-child(2)';
 function animateCounts(root){
@@ -3056,7 +3067,7 @@ function renderCanvas(){updateBtype();if(typeof view!=='undefined'&&(view==='doc
 
 /* ---------- global filter ---------- */
 document.getElementById('hier').addEventListener('click',function(e){var b=e.target.closest('.fopt');if(!b)return;hier.scope=b.dataset.h;if(lens.view!=='mgr')hier.mgr=null;hier.person=null;syncScope();renderHier();renderCards();renderCanvas();});
-document.getElementById('lens').addEventListener('click',function(e){var b=e.target.closest('.fopt');if(!b)return;[].forEach.call(this.children,function(x){x.classList.remove('on');});b.classList.add('on');lens.view=b.dataset.l;lens.sel=null;document.getElementById('lensSel').style.display='none';hier.person=null;hier.team=null;hier.scope=defScope();if(lens.view==='mgr'){hier.mgr=mgrKeys()[0];}else{hier.mgr=null;}renderHier();syncScope();if(lens.view==='pnc'){sel='compliance';setView('dash');}else{setView('today');}});
+document.getElementById('lens').addEventListener('click',function(e){var b=e.target.closest('.fopt');if(!b)return;[].forEach.call(this.children,function(x){x.classList.remove('on');});b.classList.add('on');lens.view=b.dataset.l;lens.sel=null;document.getElementById('lensSel').style.display='none';hier.person=null;hier.team=null;hier.scope=defScope();if(lens.view==='mgr'){hier.mgr=mgrKeys()[0];}else{hier.mgr=null;}renderHier();syncScope();if(lens.view==='pnc'){sel='compliance';}setView('today');});
 document.getElementById('lensSel').addEventListener('change',function(){lens.sel=this.value;hier.mgr=null;hier.person=null;renderHier();syncScope();renderCards();renderCanvas();});
 document.getElementById('btype').addEventListener('click',function(e){var b=e.target.closest('.fopt');if(!b)return;[].forEach.call(this.children,function(x){x.classList.remove('on');});b.classList.add('on');clientType=b.dataset.b;syncScope();renderCards();renderCanvas();renderHPCBar();});
 document.getElementById('dates').addEventListener('click',function(e){var b=e.target.closest('.fopt');if(!b)return;[].forEach.call(this.children,function(x){x.classList.remove('on');});b.classList.add('on');var cd=document.getElementById('customDates');if(b.dataset.d==='custom'){cd.style.display='';applyCustom();}else{cd.style.display='none';winMonths=+b.dataset.d;winOffset=+(b.dataset.off||0);syncScope();renderCards();renderCanvas();if(document.getElementById('pdrawer').classList.contains('on'))reopenProfile();}});
