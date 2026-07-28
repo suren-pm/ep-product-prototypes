@@ -654,7 +654,7 @@ body.docmode .topsub{display:none}
       <a><span class="material-symbols-outlined">bolt</span> Automation</a>
       <a><span class="material-symbols-outlined">settings</span> Settings</a>
     </nav>
-    <div class="navdocs"><div class="ndt">Docs</div><a id="nd-def" onclick="setView('docdef')"><span class="material-symbols-outlined">description</span> Definition</a><a id="nd-per" onclick="setView('docpersonas')"><span class="material-symbols-outlined">group</span> User personas</a></div>
+    <div class="navdocs"><div class="ndt">Docs</div><a id="nd-def" onclick="setView('docdef')"><span class="material-symbols-outlined">description</span> Definition</a><a id="nd-per" onclick="setView('docpersonas')"><span class="material-symbols-outlined">group</span> User personas</a><a id="nd-req" onclick="setView('docreq')"><span class="material-symbols-outlined">checklist</span> Requirements</a></div>
     <div class="who"><span class="av">SK</span><div>Surendran Kandasamy<div style="color:var(--faint);font-size:11px">Senior PM</div></div></div>
   </aside>
   <aside class="filterbar">
@@ -2146,7 +2146,7 @@ var STRIP=[{key:'experience',tab:'expperf'},{key:'performance',tab:'expperf'},{k
 var MAINCARDS=[{key:'experience',label:'Experience',dom:'Pulse & wellbeing',bm:'experience'},{key:'signals',label:'Signals',dom:'Risk triggers',bm:'signals'},{key:'inbox',label:'Inbox',dom:'Accountabilities',bm:'inbox'},{key:'enablement',label:'Enablement',dom:'Coaching & development',bm:'enablement'},{key:'risk',label:'Risk',dom:'Risk registers',bm:'compliance'},{key:'compliance',label:'Compliance & Audit',dom:'Overdue & deviations',bm:'audit'}];
 var SUBCARDS=[{key:'pulse',label:'Pulse',dom:'Engagement & wellbeing',bm:'experience'},{key:'productivity',label:'Productivity',dom:'Vs target',bm:'performance'},{key:'voice',label:'Voice of Org',dom:'Sentiment & themes'}];
 function kcardHTML(cfg,P,active,oc){if(cfg.ph){return '<div class="kcard kcardph'+(active?' on':'')+'" onclick="'+oc+'"><div class="kl">'+cfg.label+'</div><div class="kd">'+cfg.dom+'</div><div class="kvsoon">Coming next</div></div>';}if(cfg.key==='voice'){var nt=VOICE.trend.map(function(x){return x.net;});return '<div class="kcard'+(active?' on':'')+'" onclick="'+oc+'"><div class="kl">'+cfg.label+'</div><div class="kd">'+cfg.dom+'</div><div class="kv">+'+VOICE.net+'<u> net sentiment</u></div>'+spark(nt,active?C.brand:'#c7c9f7')+bench('voice',{voice:{you:VOICE.net,ind:VOICE.bench.net.ind,tgt:18,top:VOICE.bench.net.top,suf:'',cap:'Net sentiment'}})+'</div>';}if(cfg.simple){return '<div class="kcard'+(active?' on':'')+'" onclick="'+oc+'"><div class="kl">'+cfg.label+'</div><div class="kd">'+cfg.dom+'</div><div class="kv">'+cfg.sv+'<u> '+cfg.su+'</u></div></div>';}var m=computeKPI(P);var v=m.vals[cfg.bm];return '<div class="kcard'+(active?' on':'')+'" onclick="'+oc+'"><div class="kl">'+cfg.label+'</div><div class="kd">'+cfg.dom+'</div><div class="kv">'+v[0]+'<u>'+v[1]+'</u></div>'+spark(v[2],active?C.brand:'#c7c9f7')+bench(cfg.bm,m.BM)+'</div>';}
-function renderCards(){updateBtype();var cc=document.getElementById('cards');if(typeof view!=='undefined'&&(view==='today'||view==='docdef'||view==='docpersonas')){cc.style.display='none';return;}cc.style.display='';cc.className='cards';var P=activePeople();cc.innerHTML=MAINCARDS.map(function(c){return kcardHTML(c,P,sel===c.key,"pick('"+c.key+"')");}).join('');epReveal();}
+function renderCards(){updateBtype();var cc=document.getElementById('cards');if(typeof view!=='undefined'&&(view==='today'||view==='docdef'||view==='docpersonas'||view==='docreq')){cc.style.display='none';return;}cc.style.display='';cc.className='cards';var P=activePeople();cc.innerHTML=MAINCARDS.map(function(c){return kcardHTML(c,P,sel===c.key,"pick('"+c.key+"')");}).join('');epReveal();}
 function placeholder(icon,title,desc,chips){return '<div class="phcard"><span class="material-symbols-outlined phicon">'+icon+'</span><div class="pht">'+title+'</div><div class="phd">'+desc+'</div>'+(chips?'<div class="phchips">'+chips.map(function(c){return '<span class="phchip">'+c+'</span>';}).join('')+'</div>':'')+'</div>';}
 function viewEnablement(){
   var P=activePeople();var S=enablementStats(P);
@@ -2783,6 +2783,61 @@ function docDefHTML(){
   +'<div class="dfoot"><span>Sources: dashboard prototype, 13 Jul MVP requirements meeting, 20 Jul red pen session, customer feedback threads.</span><span>Draft for review: Suren Kandasamy</span></div>'
   +'</div>';
 }
+function docReqHTML(){
+ function row(id,txt,src,st){return '<tr><td style="white-space:nowrap"><strong>'+id+'</strong></td><td>'+txt+'</td><td style="white-space:nowrap">'+src+'</td><td style="white-space:nowrap">'+st+'</td></tr>';}
+ function tbl(rows){return '<table class="dtbl"><thead><tr><th style="width:6%">#</th><th>Requirement</th><th style="width:17%">Source</th><th style="width:11%">Status</th></tr></thead><tbody>'+rows.join('')+'</tbody></table>';}
+ var F=[
+ row('F1','Three persona experiences: Practice Leader, Team Manager, P&amp;C / Ops Lead. Each lands as that persona’s default view on sign-in. No user-facing toggles between experiences in production; the prototype switcher stands in for sign-in.','Alok, 20 Jul; locked 28 Jul','Partly built'),
+ row('F2','Personas are defined by position and the job at hand, not by permission role. A person holding two jobs (an administrator who also runs a team) gets both experiences, selected by the job, never merged into one screen.','Personas doc s3','Rule'),
+ row('F3','The home screen is a summary directory: one combined, prioritised next-actions list across inbox, signals and pulses, sorted critical and high first, then longest overdue. Every row clicks through to the work item. No parallel lists.','Wade, 13 Jul; Cathy','Built'),
+ row('F4','Recency over averaging on every surface where a period average can hide a late move: the latest reading is shown against the measure’s own average with a trend. Scores and percentages get the full treatment; counts get trend plus vs-typical; categorical statuses are excluded.','Simon, Emil, Cathy, 20 Jul','Built'),
+ row('F5','Data currency is explicit: every area header carries the moment in time its data reflects, and the selected reporting window is stated in the header and updates when changed. The default window is last 6 months.','Peta, 20 Jul','Built'),
+ row('F6','Multi-manager visibility is a data scope, not a persona: an all-reports scope on the Practice Leader and Team Manager experiences, following the reporting structure direct and indirect, enabled per organisation by an administrator.','Simon; Peta gating; locked 28 Jul','Built'),
+ row('F7','The Practice Leader sees everything, including person profiles (full 360) and enablement conversations. Persona experiences differ by which blocks lead, never by narrowing Practice Leader access.','Suren, 28 Jul','Built'),
+ row('F8','Billing and non-billing filtering is available and kept discreet; a filter combination that would produce an empty cohort falls back rather than rendering an empty view.','Simon, 20 Jul','Built'),
+ row('F9','The P&amp;C / Ops experience leads with compliance, registers, participation and keyword flags, firm-wide by default.','Personas doc; Peta, Cathy','Partly built'),
+ row('F10','Every people list drills into the person profile; the profile shows factor movement (latest, direction and magnitude), not period averages alone.','Cathy; recency principle','Built'),
+ row('F11','Eli chips support summarise and next-action prompts on the dashboard. Generated board-report or PDF export from Eli is excluded from the MVP.','Suren pitch; Alok ruling, 20 Jul','Built'),
+ ];
+ var X=[
+ row('X1','MVP noise discipline: an element earns its place only if a named persona uses it for a named job. Fewer, higher-value elements for the few high-value people.','Simon, Randy, 20 Jul','Rule'),
+ row('X2','Framework UX debt is fixed before any structural regrouping: information density, nested sidebar scrollbars, and icon affordance (drill-in versus new page must be visually distinct).','Alex; Cathy usability test','To build'),
+ row('X3','Thematic tab regrouping (wellbeing and risk, accountability, productivity) happens only after X2 lands.','Peta, 20 Jul','To build'),
+ row('X4','No user-facing widget customisation at launch. Three curated experiences: a teaching dashboard was chosen over build-your-own, and customisation worsens the noise, performance and complexity problems raised.','Alok, Alex, 20 Jul','Rule'),
+ row('X5','"Viewing as client" is a backend flag for staff, not a user-facing control. The prototype’s switcher exists for demonstration only.','Alok, 20 Jul','Rule'),
+ ];
+ var D=[
+ row('D1','A customer governance and housekeeping checklist (maintained user lists, current productivity targets at financial-year change) is the upstream dependency for every number shown. Owners: Peta and Emil.','Peta, Emil, 20 Jul','To build'),
+ row('D2','Multi-answer semantics must be decided before recency is trusted: when the same question is answered several times in a period, define what the dashboard shows (latest, distribution, or both). Candidate: chronological distribution view.','Cathy, 20 Jul','Open'),
+ row('D3','Dashboard data source: raw tables versus prepared summary tables into the new store. The front end may change with this decision.','Suren, Alok (pending)','Open'),
+ row('D4','The prototype uses labelled seed history where product history does not yet exist; production series must derive entirely from stored history, with the same as-of stamps.','Build note, 28 Jul','Rule'),
+ ];
+ var O=[
+ row('O1','Configurable framework versus bespoke build. Engineering leans configurable (cheaper iteration, lower risk, V1 code portable, at the cost of roughly two-thirds of effort spent on flexibility). Divergence evidence from the persona builds feeds this call.','Alex analysis; Wade + Suren to decide','Open'),
+ row('O2','Multi-answer display semantics (D2).','Cathy','Open'),
+ row('O3','Data source for the dashboard (D3).','Suren + Alok','Open'),
+ row('O4','Order of the remaining persona builds after Team Manager (Practice Leader versus P&amp;C first).','Product + engineering','Open'),
+ ];
+ var S=[
+ row('S1','Third-party data connectors (for example Xero). A sprint in itself; the dashboard shows the data we have.','Alex, 20 Jul','Out'),
+ row('S2','User-customisable widgets and layouts. Enterprise-tier conversation for later, not MVP.','Alok, Emil, Randy','Out'),
+ row('S3','PDF or board-report export, including Eli-generated documents.','Alok, 20 Jul','Out'),
+ row('S4','An individual-contributor persona. ICs are served by Reports, limited to their own measures (released 3.6.3).','Locked 28 Jul','Out'),
+ row('S5','Inbox structural consolidation (pulses and signals auto-flowing into the inbox with auto-complete and archive). Deferred structural work; the combined list on the home screen covers the MVP need.','Wade, 13 Jul','Out'),
+ row('S6','Link-sharing of dashboard views to drive people into the app. Parked idea, revisit after MVP.','Emil, 20 Jul','Out'),
+ ];
+ return '<div class="docwrap">'
+ +'<h1>People Performance Dashboard: requirements</h1>'
+ +'<div class="dmeta">Draft v0.1 &middot; 28 July 2026 &middot; Owner: Product &middot; Companions: Definition and User personas (sidebar)</div>'
+ +'<p>The requirements of record for the dashboard MVP. Every row traces to a named decision from the 13 July requirements meeting, the 20 July red pen session, the 20 July definition discussion, or a decision locked on 28 July. Status meanings: <strong>Built</strong> exists in the prototype today; <strong>Partly built</strong> exists in part; <strong>To build</strong> agreed, not started; <strong>Rule</strong> a standing constraint, enforced continuously; <strong>Open</strong> a decision that gates build; <strong>Out</strong> excluded from the MVP.</p>'
+ +'<h2>1. Functional requirements</h2>'+tbl(F)
+ +'<h2>2. Experience rules</h2>'+tbl(X)
+ +'<h2>3. Data requirements</h2>'+tbl(D)
+ +'<h2>4. Open decisions that gate build</h2>'+tbl(O)
+ +'<h2>5. Out of scope for the MVP</h2>'+tbl(S)
+ +'<div class="dfoot"><span>Changes to this page happen by decision only: a named person, a date, and the requirement row updated. No silent edits.</span></div>'
+ +'</div>';
+}
 function docPersonasHTML(){
   function card(ini,name,pos,q,jobs,pains,opens,cad,afs){
     return '<div class="pcard2"><div class="ph"><span class="pin">'+ini+'</span><div><h3>'+name+'</h3><div class="pp">'+pos+'</div></div></div>'
@@ -2870,7 +2925,7 @@ function docPersonasHTML(){
   +'<div class="dfoot"><span>Terminology per system convention: role means the permission level only. Personas describe position and job.</span><span>Draft for review: Suren Kandasamy</span></div>'
   +'</div>';
 }
-function setView(v){view=v;var a=document.getElementById('vt-today'),b=document.getElementById('vt-dash');if(a)a.classList.toggle('on',v==='today');if(b)b.classList.toggle('on',v==='dash');var _isdoc=(v==='docdef'||v==='docpersonas');if(!_isdoc)window._lastView=v;document.body.classList.toggle('docmode',_isdoc);var _ndash=document.getElementById('nav-dash');if(_ndash)_ndash.classList.toggle('on',!_isdoc);if(v==='docdef'||v==='docpersonas'){window.scrollTo(0,0);}var nd=document.getElementById('nd-def'),np=document.getElementById('nd-per');if(nd)nd.classList.toggle('on',v==='docdef');if(np)np.classList.toggle('on',v==='docpersonas');renderCards();renderCanvas();}
+function setView(v){view=v;var a=document.getElementById('vt-today'),b=document.getElementById('vt-dash');if(a)a.classList.toggle('on',v==='today');if(b)b.classList.toggle('on',v==='dash');var _isdoc=(v==='docdef'||v==='docpersonas'||v==='docreq');if(!_isdoc)window._lastView=v;document.body.classList.toggle('docmode',_isdoc);var _ndash=document.getElementById('nav-dash');if(_ndash)_ndash.classList.toggle('on',!_isdoc);if(_isdoc){window.scrollTo(0,0);}var nd=document.getElementById('nd-def'),np=document.getElementById('nd-per'),nr=document.getElementById('nd-req');if(nd)nd.classList.toggle('on',v==='docdef');if(np)np.classList.toggle('on',v==='docpersonas');if(nr)nr.classList.toggle('on',v==='docreq');renderCards();renderCanvas();}
 function goArea(k,sub){sel=k;if(sub&&k==='experience')subEP=sub;setView('dash');}
 function todayHTML(){
   var P=activePeople();var V=VOICE;var km=computeKPI(P);var vals=km.vals;
@@ -2983,7 +3038,7 @@ function epReveal(){
  if(!window._epio){window._epio=new IntersectionObserver(function(ents){ents.forEach(function(en){if(en.isIntersecting){en.target.classList.add('ep-in');en.target.classList.remove('ep-o');window._epio.unobserve(en.target);animateCounts(en.target);}});},{threshold:.12,rootMargin:'0px 0px -30px 0px'});}
  [].forEach.call(els,function(e){if(e.classList.contains('ep-in')||e.classList.contains('ep-o'))return;e.classList.add('ep-o');window._epio.observe(e);});
 }
-function renderCanvas(){updateBtype();if(typeof view!=='undefined'&&(view==='docdef'||view==='docpersonas')){var _hl=document.getElementById('hpclegend');if(_hl)_hl.innerHTML='';var _dc=document.getElementById('canvas');_dc.innerHTML=(view==='docdef'?docDefHTML():docPersonasHTML());return;}renderHPCBar();if(typeof view!=='undefined'&&view==='today'){var _cv=document.getElementById('canvas');_cv.innerHTML=todayHTML();epReveal();return;}var P=activePeople();var h='';
+function renderCanvas(){updateBtype();if(typeof view!=='undefined'&&(view==='docdef'||view==='docpersonas'||view==='docreq')){var _hl=document.getElementById('hpclegend');if(_hl)_hl.innerHTML='';var _dc=document.getElementById('canvas');_dc.innerHTML=(view==='docdef'?docDefHTML():(view==='docreq'?docReqHTML():docPersonasHTML()));return;}renderHPCBar();if(typeof view!=='undefined'&&view==='today'){var _cv=document.getElementById('canvas');_cv.innerHTML=todayHTML();epReveal();return;}var P=activePeople();var h='';
   if(sel==='experience'){
     var esubs=SUBCARDS.filter(function(s){return clientType!=='nonbilling'||s.key!=='productivity';});
     var ecur=subEP; if(clientType==='nonbilling'&&ecur==='productivity')ecur='pulse';
