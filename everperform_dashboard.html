@@ -2927,6 +2927,9 @@ function docPersonasHTML(){
 }
 function setView(v){view=v;var a=document.getElementById('vt-today'),b=document.getElementById('vt-dash');if(a)a.classList.toggle('on',v==='today');if(b)b.classList.toggle('on',v==='dash');var _isdoc=(v==='docdef'||v==='docpersonas'||v==='docreq');if(!_isdoc)window._lastView=v;document.body.classList.toggle('docmode',_isdoc);var _ndash=document.getElementById('nav-dash');if(_ndash)_ndash.classList.toggle('on',!_isdoc);if(_isdoc){window.scrollTo(0,0);}var nd=document.getElementById('nd-def'),np=document.getElementById('nd-per'),nr=document.getElementById('nd-req');if(nd)nd.classList.toggle('on',v==='docdef');if(np)np.classList.toggle('on',v==='docpersonas');if(nr)nr.classList.toggle('on',v==='docreq');renderCards();renderCanvas();}
 function goArea(k,sub){sel=k;if(sub&&k==='experience')subEP=sub;setView('dash');}
+// ESB-1926 Phase 1: Enablement conversations is deferred a couple of sprints; Signals holds its Summary slot.
+// Set to true to restore the Enablement conversations card (the card and its data build are kept intact).
+var SHOW_ENABLEMENT_CONVERSATIONS=false;
 function todayHTML(){
   var P=activePeople();var V=VOICE;var km=computeKPI(P);var vals=km.vals;
   var atrisk=P.filter(function(p){return p.status!=='ok';});
@@ -2959,6 +2962,13 @@ function todayHTML(){
   if(!riskRows.length)riskRows=[{t:'All registers actioned',pri:null,meta:''}];
   var inboxCard=dirCard('Inbox','inbox',inboxRows,'View all in inbox');
   var convCard=dirCard('Enablement conversations','enablement',convRows,'View all');
+  // ESB-1926 Phase 1: Enablement conversations ships a couple of sprints later. Signals holds its slot.
+  // Flip SHOW_ENABLEMENT_CONVERSATIONS (declared just above todayHTML) to true to restore the conv card; nothing is deleted.
+  var sigCand=P.filter(function(p){return (p.sigs||0)>0;}).sort(function(a,c){return (c.sigs||0)-(a.sigs||0);});
+  var sigRows=sigCand.slice(0,3).map(function(p){var sc=p.sigs||0;return {t:p.name+', '+sc+' active signal'+(sc>1?'s':''),pri:sc>=3?0:(sc>=2?1:2),meta:(3+sc)+'d open'};});
+  if(!sigRows.length)sigRows=[{t:'No active signals in this view',pri:null,meta:''}];
+  var sigCard=dirCard('Signals','signals',sigRows,'View all');
+  var convOrSig=(typeof SHOW_ENABLEMENT_CONVERSATIONS!=='undefined'&&SHOW_ENABLEMENT_CONVERSATIONS)?convCard:sigCard;
   var compCard=dirCard('Compliance &amp; Audit','compliance',compRows,'View all');
   var riskCard=dirCard('Risk registers','risk',riskRows,'View all');
   var topPpl=P.slice().sort(function(a,c){return (c.safety||0)-(a.safety||0);}).slice(0,4);
@@ -3024,7 +3034,7 @@ function todayHTML(){
   var linkCard='<div class="tdnav"><span class="tdnavl">Where to go</span>'+links.map(function(l){return '<button class="qlink" onclick="goArea(\''+l[0]+'\')"><span class="material-symbols-outlined">'+l[2]+'</span>'+l[1]+'</button>';}).join('')+'</div>';
   var _tstrip='';if(lens.view==='mgr'){var _tp=P.filter(function(p){return !p.isSelf;});_tstrip='<div class="pcard"><div class="cardlbl">My team &middot; profiles (full 360)</div><div class="tmstrip">'+_tp.map(function(p){var _i=ROSTER.indexOf(p);var _c=ragScore(p.idx||p.safety||0);return '<div class="tmpp"'+(_i>=0?' onclick="openProfile('+_i+')"':'')+'><span class="av2" style="background:'+_c+'1a;color:'+_c+'">'+(p.id||'')+'</span><div class="tmppn">'+p.name+'<div class="tmppr">'+(p.role||'')+'</div></div><b style="color:'+_c+'">'+(p.idx||p.safety||'')+'</b>'+((p.sigs||0)>0?'<span class="tmppsig">'+p.sigs+' sig</span>':'')+'</div>';}).join('')+'</div></div>';}
    var _asofbar='<div class="asofbar"><span class="asofl">Data currency</span>'+asofChip('pulse')+asofChip('timesheet')+asofChip('live')+'<span class="asof" title="The default reporting window"><span class="material-symbols-outlined" style="font-size:13px">date_range</span>Default range: last 6 months ('+dateRangeLabel()+')</span></div>';
-   return '<div class="today">'+_asofbar+tiles+'<div class="grid g2 tdgrid">'+(lens.view==='pnc'?inboxCard+compCard:inboxCard+convCard)+'</div>'+(lens.view==='mgr'?_tstrip:(lens.view==='pnc'?'<div class="grid g2 tdgrid">'+riskCard+convCard+'</div>':'<div class="grid g2 tdgrid">'+compCard+riskCard+'</div>'))+(lens.view==='pnc'?'':'<div class="grid g2 tdgrid">'+topPplCard+declPplCard+'</div>')+'<div class="grid g2 tdgrid">'+actCard+upcCard+'</div><div class="grid g2 tdgrid">'+suggCard+trCard+'</div>'+linkCard+'</div>';
+   return '<div class="today">'+_asofbar+tiles+'<div class="grid g2 tdgrid">'+(lens.view==='pnc'?inboxCard+compCard:inboxCard+convOrSig)+'</div>'+(lens.view==='mgr'?_tstrip:(lens.view==='pnc'?'<div class="grid g2 tdgrid">'+riskCard+convOrSig+'</div>':'<div class="grid g2 tdgrid">'+compCard+riskCard+'</div>'))+(lens.view==='pnc'?'':'<div class="grid g2 tdgrid">'+topPplCard+declPplCard+'</div>')+'<div class="grid g2 tdgrid">'+actCard+upcCard+'</div><div class="grid g2 tdgrid">'+suggCard+trCard+'</div>'+linkCard+'</div>';
 }
 var EP_COUNT_SEL='.tdtv,.kv,.lsv,.hbval,.pmv,.fnval,.stkval,.fv,.pv,.cmp td:nth-child(2)';
 function animateCounts(root){
