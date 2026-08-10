@@ -428,6 +428,7 @@ body.docmode .topsub{display:none}
 .dirrow{display:flex;align-items:center;gap:11px;padding:11px 12px;border:1px solid #edeef4;border-radius:10px;margin-bottom:8px;cursor:pointer;transition:background .12s}
 .dirrow:hover{background:#f6f7fb}
 .dirpri{font-size:10.5px;font-weight:800;border-radius:20px;padding:3px 9px;white-space:nowrap;flex:0 0 auto}
+.dirtag{font-size:10px;font-weight:700;border-radius:20px;padding:3px 8px;white-space:nowrap;flex:0 0 auto;background:#eef0f6;color:#5a6072;letter-spacing:.01em}
 .dirtx{flex:1;font-size:13.5px;font-weight:600;color:var(--text)}
 .dirsrc{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:600;color:var(--faint);white-space:nowrap}
 .dirsrc .material-symbols-outlined{font-size:15px}
@@ -2927,8 +2928,9 @@ function docPersonasHTML(){
 }
 function setView(v){view=v;var a=document.getElementById('vt-today'),b=document.getElementById('vt-dash');if(a)a.classList.toggle('on',v==='today');if(b)b.classList.toggle('on',v==='dash');var _isdoc=(v==='docdef'||v==='docpersonas'||v==='docreq');if(!_isdoc)window._lastView=v;document.body.classList.toggle('docmode',_isdoc);var _ndash=document.getElementById('nav-dash');if(_ndash)_ndash.classList.toggle('on',!_isdoc);if(_isdoc){window.scrollTo(0,0);}var nd=document.getElementById('nd-def'),np=document.getElementById('nd-per'),nr=document.getElementById('nd-req');if(nd)nd.classList.toggle('on',v==='docdef');if(np)np.classList.toggle('on',v==='docpersonas');if(nr)nr.classList.toggle('on',v==='docreq');renderCards();renderCanvas();}
 function goArea(k,sub){sel=k;if(sub&&k==='experience')subEP=sub;setView('dash');}
-// ESB-1926 Phase 1: Enablement conversations is deferred a couple of sprints; Signals holds its Summary slot.
-// Set to true to restore the Enablement conversations card (the card and its data build are kept intact).
+// ESB-1926 (10 Aug): the separate Enablement conversations card is retired outright. Enablement conversations
+// surface inside the Inbox card as a ticket type label; Signals holds the top-right slot permanently.
+// Flag kept only so the old card can be previewed for reference.
 var SHOW_ENABLEMENT_CONVERSATIONS=false;
 function todayHTML(){
   var P=activePeople();var V=VOICE;var km=computeKPI(P);var vals=km.vals;
@@ -2945,12 +2947,14 @@ function todayHTML(){
 
   // directory cards + people (unified, one component)
   var priLab=['Critical','High','Medium'];var priCol=[C.bad,'#f97316',C.warn];
-  function dirRow(t,pri,meta,go){return '<div class="dirrow" onclick="'+go+'">'+(pri!=null?'<span class="dirpri" style="background:'+priCol[pri]+'1f;color:'+priCol[pri]+'">'+priLab[pri]+'</span>':'')+'<span class="dirtx">'+t+'</span>'+(meta?'<span class="dirod">'+meta+'</span>':'')+'<span class="material-symbols-outlined dirchev">chevron_right</span></div>';}
-  function dirCard(title,area,rows,allLabel){var body=rows.slice(0,3).map(function(r){return dirRow(r.t,r.pri,r.meta,"goArea('"+area+"')");}).join('');return '<div class="pcard tddir"><div class="cardlbl tddirhd"><span>'+title+'</span><button class="tddirall" onclick="goArea(\''+area+'\')">'+(allLabel||'View all')+'<span class="material-symbols-outlined">arrow_forward</span></button></div>'+body+'</div>';}
+  function dirRow(t,pri,meta,go,tag){return '<div class="dirrow" onclick="'+go+'">'+(pri!=null?'<span class="dirpri" style="background:'+priCol[pri]+'1f;color:'+priCol[pri]+'">'+priLab[pri]+'</span>':'')+(tag?'<span class="dirtag">'+tag+'</span>':'')+'<span class="dirtx">'+t+'</span>'+(meta?'<span class="dirod">'+meta+'</span>':'')+'<span class="material-symbols-outlined dirchev">chevron_right</span></div>';}
+  function dirCard(title,area,rows,allLabel){var body=rows.slice(0,3).map(function(r){return dirRow(r.t,r.pri,r.meta,"goArea('"+area+"')",r.tag);}).join('');return '<div class="pcard tddir"><div class="cardlbl tddirhd"><span>'+title+'</span><button class="tddirall" onclick="goArea(\''+area+'\')">'+(allLabel||'View all')+'<span class="material-symbols-outlined">arrow_forward</span></button></div>'+body+'</div>';}
   var firmRater=Math.round(P.reduce(function(a,p){return a+(p.rater||0);},0)/(P.length||1));
   var devN=P.filter(function(p){return (100-(p.util||0))>40;}).length;
   var ibPeople=P.filter(function(p){return ((p.inbox&&p.inbox.overdue)||0)>0;}).sort(function(a,c){return ((c.inbox&&c.inbox.overdue)||0)-((a.inbox&&a.inbox.overdue)||0);});
-  var inboxRows=ibPeople.slice(0,3).map(function(p){var oc=(p.inbox&&p.inbox.overdue)||0;return {t:p.name+', '+oc+' overdue inbox item'+(oc>1?'s':''),pri:oc>=4?0:(oc>=2?1:2),meta:(4+oc)+'d overdue'};});
+  // ESB-1926 (10 Aug): every Inbox row carries its ticket type label; enablement conversations surface here as a type, no separate card.
+  var TTYPES=['Enablement','Experience','Incident','Matter','Action'];
+  var inboxRows=ibPeople.slice(0,3).map(function(p,i){var oc=(p.inbox&&p.inbox.overdue)||0;return {t:p.name+', '+oc+' overdue inbox item'+(oc>1?'s':''),pri:oc>=4?0:(oc>=2?1:2),meta:(4+oc)+'d overdue',tag:TTYPES[(p.name.length+i)%TTYPES.length]};});
   if(!inboxRows.length)inboxRows=[{t:'No overdue inbox items in this view',pri:null,meta:''}];
   var convCand=P.filter(function(p){return p.status!=='ok';}).sort(function(a,c){return (c.sigs||0)-(a.sigs||0);});
   var CTYPE=function(p){var bd=en.eband?en.eband(p):'';return (bd==='declining'||bd==='inconsistent')?'Accountability conversation':(bd==='monitoring'?'Wellbeing check-in':'Coaching conversation');};
