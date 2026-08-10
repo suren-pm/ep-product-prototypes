@@ -2961,7 +2961,11 @@ function todayHTML(){
   var CTYPE=function(p){var bd=en.eband?en.eband(p):'';return (bd==='declining'||bd==='inconsistent')?'Accountability conversation':(bd==='monitoring'?'Wellbeing check-in':'Coaching conversation');};
   var convRows=convCand.slice(0,3).map(function(p){return {t:CTYPE(p)+' with '+p.name,pri:(p.sigs||0)>=3?0:1,meta:(5+(p.sigs||0))+'d overdue'};});
   if(!convRows.length)convRows=[{t:(en.overdue||0)+' conversations to complete',pri:1,meta:''}];
-  var compRows=[{t:regOverdue+' risk registers not yet actioned',pri:1,meta:''},{t:'Rater compliance '+firmRater+'% vs 80% target',pri:(firmRater<80?1:2),meta:''},{t:devN+' billing and data deviations to review',pri:2,meta:''}];
+  // ESB-1926 (validated in code): rater compliance is a PARTICIPATION RATE with no settable target
+  // (rf_044_custom_report_pulse_requests.sql:852 = completed raters / raters * 100; group value = avg of those %).
+  // The old "billing and data deviations" row is REMOVED; replaced by service lines below their productivity target.
+  var linesBelow=AFS.lines.filter(function(l){return l.productivityActual<(l.productivityTarget||80);}).length;
+  var compRows=[{t:regOverdue+' risk registers not yet actioned',pri:1,meta:''},{t:'Rater compliance '+firmRater+'%',pri:(firmRater<70?0:(firmRater<85?1:2)),meta:''},{t:linesBelow+' service line'+(linesBelow===1?'':'s')+' below target',pri:(linesBelow>2?1:2),meta:''}];
   var riskReg=REG.filter(function(r){return r.status==='To Do'||r.status==='Not Started';});
   var riskRows=riskReg.slice(0,3).map(function(r){return {t:r.h,pri:(r.rating==='High'?0:(r.rating==='Medium'?1:2)),meta:(r.status==='Not Started'?'not started':'to do')};});
   if(!riskRows.length)riskRows=[{t:'All registers actioned',pri:null,meta:''}];
@@ -3023,16 +3027,31 @@ function todayHTML(){
   var actCard='<div class="pcard"><div class="cardlbl">Recently active</div>'+acts.map(function(a){return '<div class="tdactrow"><span class="tddot"></span><span class="tdacttx">'+a[0]+'</span><span class="tdactt">'+a[1]+'</span></div>';}).join('')+'</div>';
 
   // upcoming
-  var upc=[['Next Team Health pulse opens','in 5 days','event'],[regOverdue+' registers due for mitigation','this week','shield'],['Monthly performance summary','end of month','description'],[en.pendMgr+' conversations awaiting sign-off','ongoing','school']];
+  // ESB-1926: monthly summary -> next signal run; conversations sign-off -> next smart alert.
+  // Both read a real stored next_send_at in the product (SignalAutomation / InsightAutomation).
+  var upc=[['Next Team Health pulse opens','in 5 days','event'],[regOverdue+' registers due for mitigation','this week','shield'],['Next signal run','in 3 days','notifications_active'],['Next smart alert &middot; Engagement','12 Aug','bolt']];
   var upcCard='<div class="pcard"><div class="cardlbl">Upcoming</div>'+upc.map(function(u){return '<div class="tdactrow"><span class="material-symbols-outlined tdupi">'+u[2]+'</span><span class="tdacttx">'+u[0]+'</span><span class="tdactt">'+u[1]+'</span></div>';}).join('')+'</div>';
 
   // suggested for you
-  var sugg=[];
-  if(worst)sugg.push(['Book a workload check-in with '+worst.name,"goArea('signals')"]);
-  sugg.push(['Review '+lowLine.name.replace(' Services','')+', lowest productivity at '+lowLine.productivityActual+'%',"goArea('experience')"]);
-  sugg.push(['Clear '+ibOverdue+' overdue inbox items',"goArea('inbox')"]);
-  sugg.push(['Progress '+regOverdue+' registers to mitigation',"goArea('risk')"]);
-  var suggCard='<div class="pcard"><div class="cardlbl">Recommendations</div>'+sugg.slice(0,4).map(function(s){return '<div class="dirrow sugg" onclick="'+s[1]+'"><span class="material-symbols-outlined suggi">bolt</span><span class="dirtx">'+s[0]+'</span><span class="material-symbols-outlined dirchev">chevron_right</span></div>';}).join('')+'</div>';
+  // ESB-1926 (rewritten): pool the priority_recommendations the AI summary already produces for the
+  // LAST 3 CLOSED PULSES (any survey type, not the same series), order highest priority first,
+  // dedupe identical titles keeping the highest, take 4. Priority enum: highest/high/medium/low/lowest.
+  var PRIO_RANK={highest:0,high:1,medium:2,low:3,lowest:4};
+  var RECS=[
+   {t:'Revitalise performance feedback processes',p:'highest',src:'Team Health &middot; May'},
+   {t:'Review and adjust workload expectations',p:'highest',src:'Team Health &middot; May'},
+   {t:'Prioritise personal development conversations',p:'high',src:'Engagement &middot; Apr'},
+   {t:'Assess and address resource restrictions',p:'medium',src:'Engagement &middot; Apr'},
+   {t:'Revitalise performance feedback processes',p:'high',src:'Psychosocial &middot; Mar'},
+   {t:'Acknowledge and leverage positive contributions',p:'low',src:'Psychosocial &middot; Mar'}
+  ];
+  var _rk=function(p){return (p in PRIO_RANK)?PRIO_RANK[p]:9;};
+  var _seen={};var sugg=RECS.slice().sort(function(a,b){return _rk(a.p)-_rk(b.p);})
+   .filter(function(r){if(_seen[r.t])return false;_seen[r.t]=1;return true;})
+   .slice(0,4).map(function(r){return [r.t,"goArea('inbox')",r.p];});
+  var _pl={highest:'Highest',high:'High',medium:'Medium',low:'Low',lowest:'Lowest'};
+  var _pc={highest:C.bad,high:'#f97316',medium:C.warn,low:C.faint,lowest:C.faint};
+  var suggCard='<div class="pcard"><div class="cardlbl">Recommendations</div>'+(sugg.length?sugg.map(function(s){var pr=s[2]||'medium';return '<div class="dirrow sugg" onclick="'+s[1]+'"><span class="material-symbols-outlined suggi">bolt</span><span class="dirtag" style="background:'+_pc[pr]+'1f;color:'+_pc[pr]+'">'+_pl[pr]+'</span><span class="dirtx">'+s[0]+'</span><span class="material-symbols-outlined dirchev">chevron_right</span></div>';}).join(''):'<div class="pempty">Nothing needs your attention right now</div>')+'</div>';
 
   // trending
   var themes=V.themes||[];
@@ -3040,9 +3059,16 @@ function todayHTML(){
   var falling=themes.slice().sort(function(a,b){return a.tr-b.tr;})[0];
   var tr=[];
   tr.push(['Wellbeing '+(trendDir<0?('down '+Math.abs(trendDir)+' over 5 waves'):(trendDir>0?('up '+trendDir+' over 5 waves'):'flat over 5 waves')),trendDir<0?C.bad:(trendDir>0?C.ok:C.faint),trendDir<0?'trending_down':(trendDir>0?'trending_up':'trending_flat')]);
-  if(falling)tr.push([falling.t+' sentiment falling',C.bad,'trending_down']);
-  if(rising)tr.push([rising.t+' sentiment rising',C.ok,'trending_up']);
-  tr.push(['Net sentiment '+(net>=0?'+':'')+net+', '+V.coverage+'% coverage',net>=10?C.ok:C.warn,'insights']);
+  // ESB-1926: "theme" is not an entity in the product (only an LLM narrative split on newlines).
+  // Use FACTOR CATEGORIES, which are real and scored. Aggregate each category's factor movement.
+  var _pil=(AFS.org&&AFS.org.pillars)||{};
+  var _cats=Object.keys(_pil).map(function(k){return {name:k,d:(typeof _pil[k].var==='number')?_pil[k].var:0};}).sort(function(a,b){return a.d-b.d;});
+  var _fallCat=_cats[0],_riseCat=_cats[_cats.length-1];
+  if(_fallCat&&_fallCat.d<0)tr.push([_fallCat.name+' falling '+Math.abs(_fallCat.d).toFixed(1),C.bad,'trending_down']);
+  if(_riseCat&&_riseCat.d>0)tr.push([_riseCat.name+' rising '+_riseCat.d.toFixed(1),C.ok,'trending_up']);
+  else if(_cats.length>1)tr.push([_cats[_cats.length-1].name+' holding, smallest fall',C.faint,'trending_flat']);
+  // Coverage removed: it does not exist anywhere in the API or web code (ESB-1926 open question 3).
+  tr.push(['Net sentiment '+(net>=0?'+':'')+net,net>=10?C.ok:C.warn,'insights']);
   var trCard='<div class="pcard"><div class="cardlbl">Trending</div>'+tr.map(function(x){return '<div class="tdactrow"><span class="material-symbols-outlined" style="font-size:17px;color:'+x[1]+'">'+x[2]+'</span><span class="tdacttx">'+x[0]+'</span></div>';}).join('')+'</div>';
 
 
