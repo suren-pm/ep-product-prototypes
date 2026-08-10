@@ -3023,7 +3023,10 @@ function todayHTML(){
   }
 
   // recently active
-  var acts=[['Team Health pulse closed, '+V.coverage+'% responded','2d'],[flags+' active signals across '+atrisk.length+' at-risk people','today'],[vals.inbox[0]+' open inbox items awaiting action','today'],[REG.length+' psychosocial registers, all assessed','1w']];
+  // ESB-1926 card 7: rows carry a real age and the card orders MOST RECENT FIRST.
+  var _ageDays=function(a){if(a==='today')return 0;var m=/^(\d+)(d|w|mo)$/.exec(a);if(!m)return 999;var n=+m[1];return m[2]==='d'?n:(m[2]==='w'?n*7:n*30);};
+  var acts=[['Team Health pulse closed, '+V.coverage+'% responded','2d'],[flags+' active signals across '+atrisk.length+' at-risk people','today'],[vals.inbox[0]+' open inbox items awaiting action','today'],[REG.length+' psychosocial registers, all assessed','1w']]
+    .sort(function(a,b){return _ageDays(a[1])-_ageDays(b[1]);});
   var actCard='<div class="pcard"><div class="cardlbl">Recently active</div>'+acts.map(function(a){return '<div class="tdactrow"><span class="tddot"></span><span class="tdacttx">'+a[0]+'</span><span class="tdactt">'+a[1]+'</span></div>';}).join('')+'</div>';
 
   // upcoming
@@ -3058,7 +3061,9 @@ function todayHTML(){
   var rising=themes.slice().sort(function(a,b){return b.tr-a.tr;})[0];
   var falling=themes.slice().sort(function(a,b){return a.tr-b.tr;})[0];
   var tr=[];
-  tr.push(['Wellbeing '+(trendDir<0?('down '+Math.abs(trendDir)+' over 5 waves'):(trendDir>0?('up '+trendDir+' over 5 waves'):'flat over 5 waves')),trendDir<0?C.bad:(trendDir>0?C.ok:C.faint),trendDir<0?'trending_down':(trendDir>0?'trending_up':'trending_flat')]);
+  // Row 1 is the OVERALL score trend. Named distinctly so it cannot be confused with the
+  // Wellbeing factor-category row below it (both read "Wellbeing" before ESB-1926 audit).
+  tr.push(['Overall score '+(trendDir<0?('down '+Math.abs(trendDir)+' over 5 waves'):(trendDir>0?('up '+trendDir+' over 5 waves'):'flat over 5 waves')),trendDir<0?C.bad:(trendDir>0?C.ok:C.faint),trendDir<0?'trending_down':(trendDir>0?'trending_up':'trending_flat')]);
   // ESB-1926: "theme" is not an entity in the product (only an LLM narrative split on newlines).
   // Use FACTOR CATEGORIES, which are real and scored. Aggregate each category's factor movement.
   var _pil=(AFS.org&&AFS.org.pillars)||{};
