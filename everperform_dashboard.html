@@ -2976,15 +2976,19 @@ function todayHTML(){
   var convOrSig=(typeof SHOW_ENABLEMENT_CONVERSATIONS!=='undefined'&&SHOW_ENABLEMENT_CONVERSATIONS)?convCard:sigCard;
   var compCard=dirCard('Compliance &amp; Audit','compliance',compRows,'View all');
   var riskCard=dirCard('Risk registers','risk',riskRows,'View all');
-  // ESB-1926 (10 Aug): both people cards run on the experience and wellbeing index, the one
-  // metric that carries per-person history here (p.trend, oldest first). Current = last point,
-  // window start = first point. Top ranks highest current; Declining is NOT simply the lowest
-  // four: a person must have fallen across the window, and qualifiers then order lowest first.
-  function _idxNow(p){var t=p.trend;return (t&&t.length)?t[t.length-1]:(p.idx||p.safety||0);}
-  function _idxStart(p){var t=p.trend;return (t&&t.length>1)?t[0]:null;}
-  var topPpl=P.slice().sort(function(a,c){return _idxNow(c)-_idxNow(a);}).slice(0,4);
-  var declPpl=P.filter(function(p){var s=_idxStart(p);return s!=null&&_idxNow(p)<s;})
-               .sort(function(a,c){return _idxNow(a)-_idxNow(c);}).slice(0,4);
+  // ESB-1926 (10 Aug): window is the person's LAST 5 PULSES THEY RESPONDED TO, any survey type.
+  // Not calendar dates, not waves of one series, so the Dates filter does not move these cards.
+  // Displayed score = the average across that window. Declining = the most recent responded pulse
+  // scores below the oldest one in the window, then qualifiers order by lowest average first.
+  // Non-response needs no guard here: a thinner window just means fewer points, and rater
+  // compliance on the Compliance & Audit card carries the participation story.
+  var PULSE_WINDOW=5;
+  function _win(p){var t=p.trend;return (t&&t.length)?t.slice(-PULSE_WINDOW):[];}
+  function _score(p){var w=_win(p);if(!w.length)return (p.idx||p.safety||0);return Math.round(w.reduce(function(a,v){return a+v;},0)/w.length);}
+  function _fell(p){var w=_win(p);return w.length>1&&w[w.length-1]<w[0];}
+  var topPpl=P.filter(function(p){return _win(p).length>0;}).sort(function(a,c){return _score(c)-_score(a);}).slice(0,4);
+  var declPpl=P.filter(_fell).sort(function(a,c){return _score(a)-_score(c);}).slice(0,4);
+  var _idxNow=_score;
   var topPplCard='<div class="pcard"><div class="cardlbl">Top performing individuals</div>'+(topPpl.length?peopleList(topPpl,_idxNow):'<div class="pempty">No people in this view</div>')+'</div>';
   var declPplCard='<div class="pcard"><div class="cardlbl">Declining individuals &middot; needs attention</div>'+(declPpl.length?peopleList(declPpl,_idxNow):'<div class="pempty">No sustained declines in this view</div>')+'</div>';
 
