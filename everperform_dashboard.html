@@ -429,6 +429,7 @@ body.docmode .topsub{display:none}
 .dirrow:hover{background:#f6f7fb}
 .dirpri{font-size:10.5px;font-weight:800;border-radius:20px;padding:3px 9px;white-space:nowrap;flex:0 0 auto}
 .dirtag{font-size:10px;font-weight:700;border-radius:20px;padding:3px 8px;white-space:nowrap;flex:0 0 auto;background:#eef0f6;color:#5a6072;letter-spacing:.01em}
+.pempty{font-size:12.5px;color:var(--faint);padding:14px 2px 4px}
 .dirtx{flex:1;font-size:13.5px;font-weight:600;color:var(--text)}
 .dirsrc{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:600;color:var(--faint);white-space:nowrap}
 .dirsrc .material-symbols-outlined{font-size:15px}
@@ -2975,10 +2976,17 @@ function todayHTML(){
   var convOrSig=(typeof SHOW_ENABLEMENT_CONVERSATIONS!=='undefined'&&SHOW_ENABLEMENT_CONVERSATIONS)?convCard:sigCard;
   var compCard=dirCard('Compliance &amp; Audit','compliance',compRows,'View all');
   var riskCard=dirCard('Risk registers','risk',riskRows,'View all');
-  var topPpl=P.slice().sort(function(a,c){return (c.safety||0)-(a.safety||0);}).slice(0,4);
-  var declPpl=P.slice().sort(function(a,c){return (a.safety||0)-(c.safety||0);}).slice(0,4);
-  var topPplCard='<div class="pcard"><div class="cardlbl">Top performing individuals</div>'+peopleList(topPpl,function(p){return p.safety;})+'</div>';
-  var declPplCard='<div class="pcard"><div class="cardlbl">Declining individuals &middot; needs attention</div>'+peopleList(declPpl,function(p){return p.safety;})+'</div>';
+  // ESB-1926 (10 Aug): both people cards run on the experience and wellbeing index, the one
+  // metric that carries per-person history here (p.trend, oldest first). Current = last point,
+  // window start = first point. Top ranks highest current; Declining is NOT simply the lowest
+  // four: a person must have fallen across the window, and qualifiers then order lowest first.
+  function _idxNow(p){var t=p.trend;return (t&&t.length)?t[t.length-1]:(p.idx||p.safety||0);}
+  function _idxStart(p){var t=p.trend;return (t&&t.length>1)?t[0]:null;}
+  var topPpl=P.slice().sort(function(a,c){return _idxNow(c)-_idxNow(a);}).slice(0,4);
+  var declPpl=P.filter(function(p){var s=_idxStart(p);return s!=null&&_idxNow(p)<s;})
+               .sort(function(a,c){return _idxNow(a)-_idxNow(c);}).slice(0,4);
+  var topPplCard='<div class="pcard"><div class="cardlbl">Top performing individuals</div>'+(topPpl.length?peopleList(topPpl,_idxNow):'<div class="pempty">No people in this view</div>')+'</div>';
+  var declPplCard='<div class="pcard"><div class="cardlbl">Declining individuals &middot; needs attention</div>'+(declPpl.length?peopleList(declPpl,_idxNow):'<div class="pempty">No sustained declines in this view</div>')+'</div>';
 
   // metrics (kept)
   function tile(lbl,val,sub,key,col,icon,tr,navsub){var foot='';if(tr){var up=tr.d>=0;var tc=tr.good?C.ok:C.bad;var ar=up?'arrow_upward':'arrow_downward';foot='<div class="tdt-foot"><span class="tdt-trend" style="color:'+tc+'"><span class="material-symbols-outlined">'+ar+'</span>'+Math.abs(tr.d)+'</span><span class="tdt-cmp">'+tr.cmp+'</span></div>';}var oc=navsub?("goArea('"+key+"','"+navsub+"')"):("goArea('"+key+"')");return '<div class="tdtile" onclick="'+oc+'"><div class="tdt-top"><span class="tdtl"><span class="material-symbols-outlined tdt-ic">'+icon+'</span>'+lbl+'</span><span class="material-symbols-outlined tdt-go">arrow_outward</span></div><div class="tdtv" style="color:'+(col||C.brand)+'">'+val+'</div><div class="tdts">'+sub+'</div>'+foot+'</div>';}
