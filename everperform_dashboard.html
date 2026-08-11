@@ -2968,7 +2968,8 @@ function todayHTML(){
   var CTYPE=function(p){var bd=en.eband?en.eband(p):'';return (bd==='declining'||bd==='inconsistent')?'Accountability conversation':(bd==='monitoring'?'Wellbeing check-in':'Coaching conversation');};
   var convRows=convCand.slice(0,3).map(function(p){return {t:CTYPE(p)+' with '+p.name,pri:(p.sigs||0)>=3?0:1,meta:(5+(p.sigs||0))+'d overdue'};});
   if(!convRows.length)convRows=[{t:(en.overdue||0)+' conversations to complete',pri:1,meta:''}];
-  // ESB-1926 (validated in code): rater compliance is a PARTICIPATION RATE with no settable target
+  // ESB-1926: rater compliance and participation are THE SAME MEASURE, and the page uses the
+  // product's own label, "Participation". It is a participation rate with no settable target
   // (rf_044_custom_report_pulse_requests.sql:852 = completed raters / raters * 100; group value = avg of
   // those %, taken across PULSES not people, at org level). The old "billing and data deviations" row is
   // REMOVED; replaced by teams below their productivity target.
@@ -2985,7 +2986,7 @@ function todayHTML(){
     return v<l.productivityTarget;
   };
   var linesBelow=AFS.lines.filter(_teamBelow).length;
-  var compRows=[{t:regOverdue+' risk registers not yet actioned',pri:1,meta:''},{t:'Rater compliance '+firmRater+'%',pri:(firmRater<70?0:(firmRater<85?1:2)),meta:''},{t:linesBelow+' service line'+(linesBelow===1?'':'s')+' below target',pri:(linesBelow>2?1:2),meta:''}];
+  var compRows=[{t:regOverdue+' risk registers not yet actioned',pri:1,meta:''},{t:'Participation '+firmRater+'%',pri:(firmRater<70?0:(firmRater<85?1:2)),meta:''},{t:linesBelow+' service line'+(linesBelow===1?'':'s')+' below target',pri:(linesBelow>2?1:2),meta:''}];
   var riskReg=REG.filter(function(r){return r.status==='To Do'||r.status==='Not Started';});
   var riskRows=riskReg.slice(0,3).map(function(r){return {t:r.h,pri:(r.rating==='High'?0:(r.rating==='Medium'?1:2)),meta:(r.status==='Not Started'?'not started':'to do')};});
   var inboxCard=dirCard('Inbox','inbox',inboxRows,'View all in inbox');
