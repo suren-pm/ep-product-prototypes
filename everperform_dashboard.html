@@ -429,7 +429,7 @@ body.docmode .topsub{display:none}
 .dirrow:hover{background:#f6f7fb}
 .dirpri{font-size:10.5px;font-weight:800;border-radius:20px;padding:3px 9px;white-space:nowrap;flex:0 0 auto}
 .dirtag{font-size:10px;font-weight:700;border-radius:20px;padding:3px 8px;white-space:nowrap;flex:0 0 auto;background:#eef0f6;color:#5a6072;letter-spacing:.01em}
-.pempty{font-size:12.5px;color:var(--faint);padding:14px 2px 4px}
+.pempty{font-size:12.5px;color:var(--faint);padding:14px 2px 4px;display:flex;align-items:center;justify-content:center;min-height:132px;text-align:center}
 .dirtx{flex:1;font-size:13.5px;font-weight:600;color:var(--text)}
 .dirsrc{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:600;color:var(--faint);white-space:nowrap}
 .dirsrc .material-symbols-outlined{font-size:15px}
@@ -666,7 +666,7 @@ body.docmode .topsub{display:none}
     <div class="fsec" id="mgrSec" style="display:none"><div class="fsec-t">Managers</div><div id="mgrList"></div></div>
     <div class="fsec" id="personSec" style="display:none"><div class="fsec-t" id="personSecT">People</div><div id="personList" class="fpeople"></div></div>
     <div class="fsec" id="teamSec" style="display:none"><div class="fsec-t">Team</div><div id="teamList"></div></div>
-    <div class="fsec"><div class="fsec-t">Dates</div><div id="dates"><div class="fopt" data-d="1" data-off="0">This month</div><div class="fopt" data-d="1" data-off="1">Last month</div><div class="fopt" data-d="3" data-off="0">Last 3 months</div><div class="fopt on" data-d="6" data-off="0">Last 6 months</div><div class="fopt" data-d="12" data-off="0">Last 12 months</div><div class="fopt" data-d="custom">Custom range</div></div><div id="customDates" style="display:none;margin-top:8px"><input type="month" id="cdFrom" class="selbox" value="2025-12" style="width:100%;margin-bottom:6px"><input type="month" id="cdTo" class="selbox" value="2026-05" style="width:100%"></div></div>
+    <div class="fsec"><div class="fsec-t">Dates</div><div id="dates"><div class="fopt" data-d="1" data-off="0">This month</div><div class="fopt" data-d="1" data-off="1">Last month</div><div class="fopt on" data-d="3" data-off="0">Last 3 months</div><div class="fopt" data-d="6" data-off="0">Last 6 months</div><div class="fopt" data-d="12" data-off="0">Last 12 months</div><div class="fopt" data-d="custom">Custom range</div></div><div id="customDates" style="display:none;margin-top:8px"><input type="month" id="cdFrom" class="selbox" value="2025-12" style="width:100%;margin-bottom:6px"><input type="month" id="cdTo" class="selbox" value="2026-05" style="width:100%"></div></div>
   </aside>
   <div class="main">
     <div class="top">
@@ -2412,7 +2412,7 @@ LZDATA.measures={"Productive Hours":[{"m":"2025-07","a":68.5,"t":58.2},{"m":"202
 var MEAS_GROUPS=[{"base":"Productive Hours YTD","unit":"h","win":{"all":"Productive Hours YTD"},"splits":{},"cat":"Performance"},{"base":"Annual Leave Hours","unit":"h","win":{"mth":"Annual Leave Hours (mth)","ytd":"Annual Leave Hours (ytd)","fy":"Annual Leave Hours (fy)"},"splits":{},"cat":"Time Measures"},{"base":"Available Hours","unit":"h","win":{"fy":"Available Hours (fy)","mth":"Available Hours (mth)","ytd":"Available Hours (ytd)"},"splits":{},"cat":"Time Measures"},{"base":"Leave Hours","unit":"h","win":{"fy":"Leave Hours (fy)","ytd":"Leave Hours (ytd)","mth":"Leave Hours (mth)"},"splits":{},"cat":"Time Measures"},{"base":"Nonbillable Hours","unit":"h","win":{"fy":"Nonbillable Hours (fy)","mth":"Nonbillable Hours (mth)","ytd":"Nonbillable Hours (ytd)"},"splits":{},"cat":"Time Measures"},{"base":"Productive Hours","unit":"h","win":{"all":"Productive Hours","fy":"Productive Hours (fy)","day":"Productive Hours (day)","ytd":"Productive Hours (ytd)","mth":"Productive Hours (mth)"},"splits":{},"cat":"Time Measures"},{"base":"Productive Hours MTD","unit":"h","win":{"mth":"Productive Hours MTD (mth)","fy":"Productive Hours MTD (fy)","ytd":"Productive Hours MTD (ytd)"},"splits":{},"cat":"Time Measures"},{"base":"Productive Hours Variance","unit":"h","win":{"mth":"Productive Hours Variance (mth)","fy":"Productive Hours Variance (fy)","ytd":"Productive Hours Variance (ytd)"},"splits":{},"cat":"Time Measures"},{"base":"Productive Hours Variance MTD","unit":"h","win":{"fy":"Productive Hours Variance MTD (fy)","mth":"Productive Hours Variance MTD (mth)","ytd":"Productive Hours Variance MTD (ytd)"},"splits":{},"cat":"Time Measures"},{"base":"Productivity %","unit":"%","win":{"ytd":"Productivity % (ytd)","fy":"Productivity % (fy)","mth":"Productivity % (mth)"},"splits":{},"cat":"Time Measures"},{"base":"Productivity Write Off % Adj","unit":"%","win":{"fy":"Productivity Write Off % Adj (fy)"},"splits":{},"cat":"Time Measures"},{"base":"Timesheet Hours","unit":"h","win":{"mth":"Timesheet Hours (mth)","ytd":"Timesheet Hours (ytd)","fy":"Timesheet Hours (fy)"},"splits":{},"cat":"Time Measures"},{"base":"Billing $","unit":"$","win":{"fy":"Billing $ (fy)","ytd":"Billing $ (ytd)","mth":"Billing $ (mth)"},"splits":{},"cat":"Effectiveness"},{"base":"Billing $ Projected","unit":"$","win":{"ytd":"Billing $ Projected (ytd)","mth":"Billing $ Projected (mth)","fy":"Billing $ Projected (fy)"},"splits":{},"cat":"Effectiveness"},{"base":"Billing $ inv this period","unit":"$","win":{"mth":"Billing $ inv this period (mth)","fy":"Billing $ inv this period (fy)","ytd":"Billing $ inv this period (ytd)"},"splits":{},"cat":"Effectiveness"},{"base":"Productivity Variance $","unit":"$","win":{"mth":"Productivity Variance $ (mth)","ytd":"Productivity Variance $ (ytd)","fy":"Productivity Variance $ (fy)"},"splits":{},"cat":"Effectiveness"},{"base":"Productivity Variance $ MTD","unit":"$","win":{"ytd":"Productivity Variance $ MTD (ytd)","mth":"Productivity Variance $ MTD (mth)","fy":"Productivity Variance $ MTD (fy)"},"splits":{},"cat":"Effectiveness"},{"base":"Rate Charged","unit":"$","win":{"mth":"Rate Charged (mth)","ytd":"Rate Charged (ytd)","fy":"Rate Charged (fy)"},"splits":{},"cat":"Effectiveness"},{"base":"Rate Recovered","unit":"$","win":{"fy":"Rate Recovered (fy)","ytd":"Rate Recovered (ytd)","mth":"Rate Recovered (mth)"},"splits":{},"cat":"Effectiveness"},{"base":"Rate Recovered Projected","unit":"$","win":{"mth":"Rate Recovered Projected (mth)","ytd":"Rate Recovered Projected (ytd)","fy":"Rate Recovered Projected (fy)"},"splits":{},"cat":"Effectiveness"},{"base":"WIP $ Charged","unit":"$","win":{"fy":"WIP $ Charged (fy)","ytd":"WIP $ Charged (ytd)","mth":"WIP $ Charged (mth)"},"splits":{},"cat":"Effectiveness"},{"base":"WIP $ Outstanding","unit":"$","win":{"mth":"WIP $ Outstanding (mth)","fy":"WIP $ Outstanding (fy)","ytd":"WIP $ Outstanding (ytd)"},"splits":{},"cat":"Effectiveness"},{"base":"WIP % Outstanding","unit":"%","win":{"fy":"WIP % Outstanding (fy)","mth":"WIP % Outstanding (mth)","ytd":"WIP % Outstanding (ytd)"},"splits":{},"cat":"Effectiveness"},{"base":"Write Off $","unit":"$","win":{"fy":"Write Off $ (fy)","mth":"Write Off $ (mth)","ytd":"Write Off $ (ytd)"},"splits":{},"cat":"Effectiveness"},{"base":"Write Off $ inv this period","unit":"$","win":{"fy":"Write Off $ inv this period (fy)","ytd":"Write Off $ inv this period (ytd)","mth":"Write Off $ inv this period (mth)"},"splits":{},"cat":"Effectiveness"},{"base":"Write Off %","unit":"%","win":{"fy":"Write Off % (fy)","ytd":"Write Off % (ytd)","mth":"Write Off % (mth)"},"splits":{},"cat":"Effectiveness"},{"base":"% Work Time","unit":"%","win":{},"splits":{"mth":[["Client","% Work Time (mth) - Client"],["Team","% Work Time (mth) - Team"],["Firm","% Work Time (mth) - Firm"],["Operational","% Work Time (mth) - Operational"],["Admin/Support","% Work Time (mth) - Admin/Support"],["Personal","% Work Time (mth) - Personal"],["Non-Productive","% Work Time (mth) - Non-Productive"]],"fy":[["Client","% Work Time (fy) - Client"],["Team","% Work Time (fy) - Team"],["Firm","% Work Time (fy) - Firm"],["Operational","% Work Time (fy) - Operational"],["Admin/Support","% Work Time (fy) - Admin/Support"],["Personal","% Work Time (fy) - Personal"],["Non-Productive","% Work Time (fy) - Non-Productive"]]},"cat":"Non Billables"},{"base":"Non Billable Hours","unit":"h","win":{},"splits":{"mth":[["Client","Non Billable Hours (mth) - Client"],["Team","Non Billable Hours (mth) - Team"],["Firm","Non Billable Hours (mth) - Firm"],["Operational","Non Billable Hours (mth) - Operational"],["Admin/Support","Non Billable Hours (mth) - Admin/Support"],["Personal","Non Billable Hours (mth) - Personal"],["Non-Productive","Non Billable Hours (mth) - Non-Productive"]],"fy":[["Client","Non Billable Hours (fy) - Client"],["Team","Non Billable Hours (fy) - Team"],["Firm","Non Billable Hours (fy) - Firm"],["Operational","Non Billable Hours (fy) - Operational"],["Admin/Support","Non Billable Hours (fy) - Admin/Support"],["Personal","Non Billable Hours (fy) - Personal"],["Non-Productive","Non Billable Hours (fy) - Non-Productive"]]},"cat":"Non Billables"},{"base":"Opportunity Cost","unit":"$","win":{},"splits":{"mth":[["Client","Opportunity Cost (mth) - Client"],["Team","Opportunity Cost (mth) - Team"],["Firm","Opportunity Cost (mth) - Firm"],["Operational","Opportunity Cost (mth) - Operational"],["Admin/Support","Opportunity Cost (mth) - Admin/Support"],["Personal","Opportunity Cost (mth) - Personal"],["Non-Productive","Opportunity Cost (mth) - Non-Productive"]],"fy":[["Client","Opportunity Cost (fy) - Client"],["Team","Opportunity Cost (fy) - Team"],["Firm","Opportunity Cost (fy) - Firm"],["Operational","Opportunity Cost (fy) - Operational"],["Admin/Support","Opportunity Cost (fy) - Admin/Support"],["Personal","Opportunity Cost (fy) - Personal"],["Non-Productive","Opportunity Cost (fy) - Non-Productive"]]},"cat":"Non Billables"},{"base":"Pulse Compliance %","unit":"%","win":{"fy":"Pulse Compliance % (fy)","mth":"Pulse Compliance % (mth)","ytd":"Pulse Compliance % (ytd)"},"splits":{},"cat":"Engagement"}];
 var MEAS_COUNT=121;
 var FTREND={"Ability to do meaningful work":{"cur":62.5,"d":-12.5,"dir":-1,"spk":[75.0,62.5,62.5,62.5,50.0,62.5]},"Learning opportunities":{"cur":62.5,"d":0.0,"dir":0,"spk":[62.5,75.0,62.5,75.0,62.5,62.5]},"Performance Accountability":{"cur":62.5,"d":0.0,"dir":0,"spk":[62.5,75.0,62.5,50.0,50.0,62.5]},"Goal Clarity & Alignment":{"cur":45.0,"d":-20.0,"dir":-1,"spk":[65.0,66.7,70.0,55.0,25.0,45.0]},"Resource Availability":{"cur":0.0,"d":-50.0,"dir":-1,"spk":[50.0,50.0,50.0,25.0,0.0,0.0]},"Workload Management":{"cur":50.0,"d":-25.0,"dir":-1,"spk":[75.0,50.0,50.0,50.0,0.0,50.0]},"Fatigue":{"cur":30.0,"d":-35.0,"dir":-1,"spk":[65.0,50.0,40.0,45.0,17.9,30.0]},"Feedback & Recognition":{"cur":50.0,"d":-8.3,"dir":-1,"spk":[58.3,50.0,50.0,50.0,41.7,50.0]},"Manager support":{"cur":37.5,"d":-12.5,"dir":-1,"spk":[50.0,75.0,75.0,50.0,50.0,37.5]},"Workload satisfaction":{"cur":12.5,"d":-50.0,"dir":-1,"spk":[62.5,45.0,37.5,33.3,3.1,12.5]},"Collaboration & Teamwork":{"cur":75.0,"d":0.0,"dir":0,"spk":[75.0,75.0,50.0,75.0,50.0,75.0]},"Psychological safety":{"cur":50.0,"d":-25.0,"dir":-1,"spk":[75.0,50.0,50.0,50.0,50.0,50.0]},"Training and development":{"cur":50.0,"d":0.0,"dir":0,"spk":[50.0,50.0,50.0,50.0,37.5,50.0]},"Poor change management":{"cur":50.0,"d":0.0,"dir":0,"spk":[50.0,50.0,75.0,75.0,50.0,50.0]},"Work-life balance":{"cur":0.0,"d":-50.0,"dir":-1,"spk":[50.0,50.0,50.0,50.0,25.0,0.0]},"Colleague relationships":{"cur":50.0,"d":0.0,"dir":0,"spk":[50.0,50.0,50.0,50.0,50.0,50.0]},"Relationships with colleagues":{"cur":50.0,"d":-25.0,"dir":-1,"spk":[75.0,75.0,75.0,50.0,50.0,50.0]},"Job expectations clarity":{"cur":25.0,"d":-50.0,"dir":-1,"spk":[75.0,75.0,75.0,75.0,50.0,25.0]}};
-var winMonths=6,winOffset=0,curPerson=0,curProfile=null;function winSlice(arr){var end=arr.length-(winOffset||0);var start=Math.max(0,end-winMonths);return arr.slice(start,Math.max(start,end));}
+var winMonths=3,winOffset=0,curPerson=0,curProfile=null;function winSlice(arr){var end=arr.length-(winOffset||0);var start=Math.max(0,end-winMonths);return arr.slice(start,Math.max(start,end));}
 function profileNav(dir){if(typeof activePeople!=='function')return;var list=activePeople();if(!list.length)return;var cur=ROSTER[curPerson];var i=list.indexOf(cur);if(i<0)i=0;i=(i+dir+list.length)%list.length;openProfile(ROSTER.indexOf(list[i]));}
 function swMW(id,w,btn){var c=document.getElementById(id);if(!c)return;[].forEach.call(c.querySelectorAll('.mgc'),function(x){x.hidden=(x.getAttribute('data-w')!==w);});[].forEach.call(c.querySelectorAll('.mwbtn'),function(b){b.classList.toggle('on',b===btn);});}
 function openProfile(i){var P=(typeof ROSTER!=='undefined'&&ROSTER[i])?ROSTER[i]:null;if(!P)return;curPerson=i;curProfile={t:'p',i:i};var d=document.getElementById('pdrawer');d.innerHTML=profileHTML(P);d.classList.add('on');d.scrollTop=0;epReveal();}
@@ -2941,60 +2941,73 @@ function todayHTML(){
   var ibOverdue=P.reduce(function(a,p){return a+((p.inbox&&p.inbox.overdue)||0);},0);
   var regOverdue=REG.filter(function(r){return r.status==='To Do'||r.status==='Not Started';}).length;
   var net=V.net;
-  var wvv=EP.pulseWaves;var trendDir=(wvv&&wvv.length>1)?(wvv[wvv.length-1].overall-wvv[0].overall):0;
+  // ESB-1926 (11 Aug, SUPERSEDES "last 5 closed waves of the same series"): Trending row 1 is now
+  // DATE-RANGE BASED at ORG LEVEL. Take every pulse that closed inside the selected range, use each
+  // wave's overall score (which IS the whole-scope average across every person), compare FIRST to
+  // LAST, and state the pulse count that the range actually contains. Needs >=2 pulses in range.
+  var wvv=winSlice(EP.pulseWaves||[]);
+  var trendDir=(wvv.length>1)?+(wvv[wvv.length-1].overall-wvv[0].overall).toFixed(1):null;
   var worst=atrisk.slice().sort(function(a,b){return (b.sigs||0)-(a.sigs||0);})[0];
   var lowLine=AFS.lines.slice().sort(function(a,b){return a.productivityActual-b.productivityActual;})[0];
   var topTheme=(V.themes||[]).slice().sort(function(a,b){return b.neg-a.neg;})[0]||{t:'Workload'};
 
   // directory cards + people (unified, one component)
   var priLab=['Critical','High','Medium'];var priCol=[C.bad,'#f97316',C.warn];
+  // ESB-1926 (11 Aug): ONE standard empty message on every tile. No bespoke per-card wording,
+  // no blank tiles, no collapsing. The tile keeps its header and its height.
+  var EMPTY_MSG='<div class="pempty">No current data to display</div>';
   function dirRow(t,pri,meta,go,tag){return '<div class="dirrow" onclick="'+go+'">'+(pri!=null?'<span class="dirpri" style="background:'+priCol[pri]+'1f;color:'+priCol[pri]+'">'+priLab[pri]+'</span>':'')+(tag?'<span class="dirtag">'+tag+'</span>':'')+'<span class="dirtx">'+t+'</span>'+(meta?'<span class="dirod">'+meta+'</span>':'')+'<span class="material-symbols-outlined dirchev">chevron_right</span></div>';}
-  function dirCard(title,area,rows,allLabel){var body=rows.slice(0,3).map(function(r){return dirRow(r.t,r.pri,r.meta,"goArea('"+area+"')",r.tag);}).join('');return '<div class="pcard tddir"><div class="cardlbl tddirhd"><span>'+title+'</span><button class="tddirall" onclick="goArea(\''+area+'\')">'+(allLabel||'View all')+'<span class="material-symbols-outlined">arrow_forward</span></button></div>'+body+'</div>';}
+  function dirCard(title,area,rows,allLabel){var body=rows.length?rows.slice(0,3).map(function(r){return dirRow(r.t,r.pri,r.meta,"goArea('"+area+"')",r.tag);}).join(''):EMPTY_MSG;return '<div class="pcard tddir"><div class="cardlbl tddirhd"><span>'+title+'</span><button class="tddirall" onclick="goArea(\''+area+'\')">'+(allLabel||'View all')+'<span class="material-symbols-outlined">arrow_forward</span></button></div>'+body+'</div>';}
   var firmRater=Math.round(P.reduce(function(a,p){return a+(p.rater||0);},0)/(P.length||1));
   var devN=P.filter(function(p){return (100-(p.util||0))>40;}).length;
   var ibPeople=P.filter(function(p){return ((p.inbox&&p.inbox.overdue)||0)>0;}).sort(function(a,c){return ((c.inbox&&c.inbox.overdue)||0)-((a.inbox&&a.inbox.overdue)||0);});
   // ESB-1926 (10 Aug): every Inbox row carries its ticket type label; enablement conversations surface here as a type, no separate card.
   var TTYPES=['Enablement','Experience','Incident','Matter','Action'];
   var inboxRows=ibPeople.slice(0,3).map(function(p,i){var oc=(p.inbox&&p.inbox.overdue)||0;return {t:p.name+', '+oc+' overdue inbox item'+(oc>1?'s':''),pri:oc>=4?0:(oc>=2?1:2),meta:(4+oc)+'d overdue',tag:TTYPES[(p.name.length+i)%TTYPES.length]};});
-  if(!inboxRows.length)inboxRows=[{t:'No overdue inbox items in this view',pri:null,meta:''}];
   var convCand=P.filter(function(p){return p.status!=='ok';}).sort(function(a,c){return (c.sigs||0)-(a.sigs||0);});
   var CTYPE=function(p){var bd=en.eband?en.eband(p):'';return (bd==='declining'||bd==='inconsistent')?'Accountability conversation':(bd==='monitoring'?'Wellbeing check-in':'Coaching conversation');};
   var convRows=convCand.slice(0,3).map(function(p){return {t:CTYPE(p)+' with '+p.name,pri:(p.sigs||0)>=3?0:1,meta:(5+(p.sigs||0))+'d overdue'};});
   if(!convRows.length)convRows=[{t:(en.overdue||0)+' conversations to complete',pri:1,meta:''}];
   // ESB-1926 (validated in code): rater compliance is a PARTICIPATION RATE with no settable target
-  // (rf_044_custom_report_pulse_requests.sql:852 = completed raters / raters * 100; group value = avg of those %).
-  // The old "billing and data deviations" row is REMOVED; replaced by service lines below their productivity target.
-  var linesBelow=AFS.lines.filter(function(l){return l.productivityActual<(l.productivityTarget||80);}).length;
+  // (rf_044_custom_report_pulse_requests.sql:852 = completed raters / raters * 100; group value = avg of
+  // those %, taken across PULSES not people, at org level). The old "billing and data deviations" row is
+  // REMOVED; replaced by teams below their productivity target.
+  // 11 Aug: "service line" IS a team. There is no service_line entity in the product (grep returns
+  // nothing in either repo) - it is just what an accounting firm calls its teams, so AFS's five service
+  // lines are five teams. Build on teams/teams_users; render the row with the org's own word.
+  // The ||80 fallback is GONE: every line carries a real stored productivityTarget, and the ticket
+  // forbids inventing a threshold. The ticket also requires this count to be evaluated across the
+  // selected range; AFS seed data holds a single snapshot, so that part lives in the BE ticket.
+  var linesBelow=AFS.lines.filter(function(l){return l.productivityActual<l.productivityTarget;}).length;
   var compRows=[{t:regOverdue+' risk registers not yet actioned',pri:1,meta:''},{t:'Rater compliance '+firmRater+'%',pri:(firmRater<70?0:(firmRater<85?1:2)),meta:''},{t:linesBelow+' service line'+(linesBelow===1?'':'s')+' below target',pri:(linesBelow>2?1:2),meta:''}];
   var riskReg=REG.filter(function(r){return r.status==='To Do'||r.status==='Not Started';});
   var riskRows=riskReg.slice(0,3).map(function(r){return {t:r.h,pri:(r.rating==='High'?0:(r.rating==='Medium'?1:2)),meta:(r.status==='Not Started'?'not started':'to do')};});
-  if(!riskRows.length)riskRows=[{t:'All registers actioned',pri:null,meta:''}];
   var inboxCard=dirCard('Inbox','inbox',inboxRows,'View all in inbox');
   var convCard=dirCard('Enablement conversations','enablement',convRows,'View all');
   // ESB-1926 Phase 1: Enablement conversations ships a couple of sprints later. Signals holds its slot.
   // Flip SHOW_ENABLEMENT_CONVERSATIONS (declared just above todayHTML) to true to restore the conv card; nothing is deleted.
   var sigCand=P.filter(function(p){return (p.sigs||0)>0;}).sort(function(a,c){return (c.sigs||0)-(a.sigs||0);});
   var sigRows=sigCand.slice(0,3).map(function(p){var sc=p.sigs||0;return {t:p.name+', '+sc+' active signal'+(sc>1?'s':''),pri:sc>=3?0:(sc>=2?1:2),meta:(3+sc)+'d open'};});
-  if(!sigRows.length)sigRows=[{t:'No active signals in this view',pri:null,meta:''}];
   var sigCard=dirCard('Signals','signals',sigRows,'View all');
   var convOrSig=(typeof SHOW_ENABLEMENT_CONVERSATIONS!=='undefined'&&SHOW_ENABLEMENT_CONVERSATIONS)?convCard:sigCard;
   var compCard=dirCard('Compliance &amp; Audit','compliance',compRows,'View all');
   var riskCard=dirCard('Risk registers','risk',riskRows,'View all');
-  // ESB-1926 (10 Aug): window is the person's LAST 5 PULSES THEY RESPONDED TO, any survey type.
-  // Not calendar dates, not waves of one series, so the Dates filter does not move these cards.
-  // Displayed score = the average across that window. Declining = the most recent responded pulse
-  // scores below the oldest one in the window, then qualifiers order by lowest average first.
-  // Non-response needs no guard here: a thinner window just means fewer points, and rater
-  // compliance on the Compliance & Audit card carries the participation story.
-  var PULSE_WINDOW=5;
-  function _win(p){var t=p.trend;return (t&&t.length)?t.slice(-PULSE_WINDOW):[];}
-  function _score(p){var w=_win(p);if(!w.length)return (p.idx||p.safety||0);return Math.round(w.reduce(function(a,v){return a+v;},0)/w.length);}
+  // ESB-1926 (11 Aug, SUPERSEDES the last-5-pulses window): the window is the PULSES THAT CLOSED
+  // INSIDE THE SELECTED DATE RANGE, any survey type mixing freely. Alok killed the pulse-count
+  // window: "what if the last five pulses were from four months ago?" A score on screen must
+  // belong to the period the user picked, so the Dates filter DOES move both people cards now.
+  // Score = the average across that range. Declining = last pulse in range below first pulse in
+  // range, tested WITHIN the range and never against a prior period, then lowest average first.
+  // Non-response needs no guard: a thinner window just means fewer points, and rater compliance
+  // on the Compliance & Audit card carries the participation story.
+  function _win(p){var t=p.trend;return (t&&t.length)?winSlice(t):[];}
+  function _score(p){var w=_win(p);if(!w.length)return 0;return Math.round(w.reduce(function(a,v){return a+v;},0)/w.length);}
   function _fell(p){var w=_win(p);return w.length>1&&w[w.length-1]<w[0];}
   var topPpl=P.filter(function(p){return _win(p).length>0;}).sort(function(a,c){return _score(c)-_score(a);}).slice(0,4);
   var declPpl=P.filter(_fell).sort(function(a,c){return _score(a)-_score(c);}).slice(0,4);
   var _idxNow=_score;
-  var topPplCard='<div class="pcard"><div class="cardlbl">Top performing individuals</div>'+(topPpl.length?peopleList(topPpl,_idxNow):'<div class="pempty">No people in this view</div>')+'</div>';
-  var declPplCard='<div class="pcard"><div class="cardlbl">Declining individuals &middot; needs attention</div>'+(declPpl.length?peopleList(declPpl,_idxNow):'<div class="pempty">No sustained declines in this view</div>')+'</div>';
+  var topPplCard='<div class="pcard"><div class="cardlbl">Top performing individuals</div>'+(topPpl.length?peopleList(topPpl,_idxNow):EMPTY_MSG)+'</div>';
+  var declPplCard='<div class="pcard"><div class="cardlbl">Declining individuals &middot; needs attention</div>'+(declPpl.length?peopleList(declPpl,_idxNow):EMPTY_MSG)+'</div>';
 
   // metrics (kept)
   function tile(lbl,val,sub,key,col,icon,tr,navsub){var foot='';if(tr){var up=tr.d>=0;var tc=tr.good?C.ok:C.bad;var ar=up?'arrow_upward':'arrow_downward';foot='<div class="tdt-foot"><span class="tdt-trend" style="color:'+tc+'"><span class="material-symbols-outlined">'+ar+'</span>'+Math.abs(tr.d)+'</span><span class="tdt-cmp">'+tr.cmp+'</span></div>';}var oc=navsub?("goArea('"+key+"','"+navsub+"')"):("goArea('"+key+"')");return '<div class="tdtile" onclick="'+oc+'"><div class="tdt-top"><span class="tdtl"><span class="material-symbols-outlined tdt-ic">'+icon+'</span>'+lbl+'</span><span class="material-symbols-outlined tdt-go">arrow_outward</span></div><div class="tdtv" style="color:'+(col||C.brand)+'">'+val+'</div><div class="tdts">'+sub+'</div>'+foot+'</div>';}
@@ -3036,34 +3049,43 @@ function todayHTML(){
   var upcCard='<div class="pcard"><div class="cardlbl">Upcoming</div>'+upc.map(function(u){return '<div class="tdactrow"><span class="material-symbols-outlined tdupi">'+u[2]+'</span><span class="tdacttx">'+u[0]+'</span><span class="tdactt">'+u[1]+'</span></div>';}).join('')+'</div>';
 
   // suggested for you
-  // ESB-1926 (rewritten): pool the priority_recommendations the AI summary already produces for the
-  // LAST 3 CLOSED PULSES (any survey type, not the same series), order highest priority first,
-  // dedupe identical titles keeping the highest, take 4. Priority enum: highest/high/medium/low/lowest.
+  // ESB-1926 (11 Aug, SUPERSEDES "last 3 closed pulses"): pool the priority_recommendations the AI
+  // summary already produces for the pulses that CLOSED INSIDE THE SELECTED DATE RANGE (any survey
+  // type, not the same series), order highest priority first, dedupe identical titles keeping the
+  // highest instance, take 4. Priority enum: highest/high/medium/low/lowest. Each rec carries mi =
+  // its pulse's month index, so the Dates filter genuinely narrows the pool.
   var PRIO_RANK={highest:0,high:1,medium:2,low:3,lowest:4};
+  var _MAY=2026*12+4,_APR=2026*12+3,_MAR=2026*12+2;
   var RECS=[
-   {t:'Revitalise performance feedback processes',p:'highest',src:'Team Health &middot; May'},
-   {t:'Review and adjust workload expectations',p:'highest',src:'Team Health &middot; May'},
-   {t:'Prioritise personal development conversations',p:'high',src:'Engagement &middot; Apr'},
-   {t:'Assess and address resource restrictions',p:'medium',src:'Engagement &middot; Apr'},
-   {t:'Revitalise performance feedback processes',p:'high',src:'Psychosocial &middot; Mar'},
-   {t:'Acknowledge and leverage positive contributions',p:'low',src:'Psychosocial &middot; Mar'}
+   {t:'Revitalise performance feedback processes',p:'highest',src:'Team Health &middot; May',mi:_MAY},
+   {t:'Review and adjust workload expectations',p:'highest',src:'Team Health &middot; May',mi:_MAY},
+   {t:'Prioritise personal development conversations',p:'high',src:'Engagement &middot; Apr',mi:_APR},
+   {t:'Assess and address resource restrictions',p:'medium',src:'Engagement &middot; Apr',mi:_APR},
+   {t:'Revitalise performance feedback processes',p:'high',src:'Psychosocial &middot; Mar',mi:_MAR},
+   {t:'Acknowledge and leverage positive contributions',p:'low',src:'Psychosocial &middot; Mar',mi:_MAR}
   ];
+  var _recEnd=_MAY-(winOffset||0),_recStart=_recEnd-(winMonths-1);
   var _rk=function(p){return (p in PRIO_RANK)?PRIO_RANK[p]:9;};
-  var _seen={};var sugg=RECS.slice().sort(function(a,b){return _rk(a.p)-_rk(b.p);})
+  var _seen={};var sugg=RECS.filter(function(r){return r.mi>=_recStart&&r.mi<=_recEnd;})
+   .sort(function(a,b){return _rk(a.p)-_rk(b.p);})
    .filter(function(r){if(_seen[r.t])return false;_seen[r.t]=1;return true;})
    .slice(0,4).map(function(r){return [r.t,"goArea('inbox')",r.p];});
   var _pl={highest:'Highest',high:'High',medium:'Medium',low:'Low',lowest:'Lowest'};
   var _pc={highest:C.bad,high:'#f97316',medium:C.warn,low:C.faint,lowest:C.faint};
-  var suggCard='<div class="pcard"><div class="cardlbl">Recommendations</div>'+(sugg.length?sugg.map(function(s){var pr=s[2]||'medium';return '<div class="dirrow sugg" onclick="'+s[1]+'"><span class="material-symbols-outlined suggi">bolt</span><span class="dirtag" style="background:'+_pc[pr]+'1f;color:'+_pc[pr]+'">'+_pl[pr]+'</span><span class="dirtx">'+s[0]+'</span><span class="material-symbols-outlined dirchev">chevron_right</span></div>';}).join(''):'<div class="pempty">Nothing needs your attention right now</div>')+'</div>';
+  var suggCard='<div class="pcard"><div class="cardlbl">Recommendations</div>'+(sugg.length?sugg.map(function(s){var pr=s[2]||'medium';return '<div class="dirrow sugg" onclick="'+s[1]+'"><span class="material-symbols-outlined suggi">bolt</span><span class="dirtag" style="background:'+_pc[pr]+'1f;color:'+_pc[pr]+'">'+_pl[pr]+'</span><span class="dirtx">'+s[0]+'</span><span class="material-symbols-outlined dirchev">chevron_right</span></div>';}).join(''):EMPTY_MSG)+'</div>';
 
   // trending
   var themes=V.themes||[];
   var rising=themes.slice().sort(function(a,b){return b.tr-a.tr;})[0];
   var falling=themes.slice().sort(function(a,b){return a.tr-b.tr;})[0];
   var tr=[];
-  // Row 1 is the OVERALL score trend. Named distinctly so it cannot be confused with the
-  // Wellbeing factor-category row below it (both read "Wellbeing" before ESB-1926 audit).
-  tr.push(['Overall score '+(trendDir<0?('down '+Math.abs(trendDir)+' over 5 waves'):(trendDir>0?('up '+trendDir+' over 5 waves'):'flat over 5 waves')),trendDir<0?C.bad:(trendDir>0?C.ok:C.faint),trendDir<0?'trending_down':(trendDir>0?'trending_up':'trending_flat')]);
+  // Row 1 is the OVERALL score trend, labelled distinctly so it cannot be confused with the
+  // Wellbeing factor-category row below it (both read "Wellbeing" before the ESB-1926 audit).
+  // Omitted entirely when the range holds fewer than 2 closed pulses: there is no movement to state.
+  if(trendDir!=null){
+    var _pn=wvv.length+' pulse'+(wvv.length===1?'':'s');
+    tr.push(['Overall score '+(trendDir<0?('down '+Math.abs(trendDir)+' over '+_pn):(trendDir>0?('up '+trendDir+' over '+_pn):'flat over '+_pn)),trendDir<0?C.bad:(trendDir>0?C.ok:C.faint),trendDir<0?'trending_down':(trendDir>0?'trending_up':'trending_flat')]);
+  }
   // ESB-1926: "theme" is not an entity in the product (only an LLM narrative split on newlines).
   // Use FACTOR CATEGORIES, which are real and scored. Aggregate each category's factor movement.
   var _pil=(AFS.org&&AFS.org.pillars)||{};
@@ -3073,14 +3095,19 @@ function todayHTML(){
   if(_riseCat&&_riseCat.d>0)tr.push([_riseCat.name+' rising '+_riseCat.d.toFixed(1),C.ok,'trending_up']);
   else if(_cats.length>1)tr.push([_cats[_cats.length-1].name+' holding, smallest fall',C.faint,'trending_flat']);
   // Coverage removed: it does not exist anywhere in the API or web code (ESB-1926 open question 3).
-  tr.push(['Net sentiment '+(net>=0?'+':'')+net,net>=10?C.ok:C.warn,'insights']);
-  var trCard='<div class="pcard"><div class="cardlbl">Trending</div>'+tr.map(function(x){return '<div class="tdactrow"><span class="material-symbols-outlined" style="font-size:17px;color:'+x[1]+'">'+x[2]+'</span><span class="tdacttx">'+x[0]+'</span></div>';}).join('')+'</div>';
+  // 11 Aug: net sentiment is SHARE-based (positive % minus negative %, in POINTS), which is what the
+  // seed already held (sent.pos 36 - sent.neg 23 = net 13). The raw counts now sit in brackets so the
+  // reader sees the volume behind the figure: +60 pts off five comments must not read like a mandate.
+  var _nPos=Math.round((V.total||0)*((V.sent&&V.sent.pos||0)/100));
+  var _nNeg=Math.round((V.total||0)*((V.sent&&V.sent.neg||0)/100));
+  tr.push(['Net sentiment '+(net>=0?'+':'')+net+' pts ('+_nPos+' positive, '+_nNeg+' negative)',net>=10?C.ok:C.warn,'insights']);
+  var trCard='<div class="pcard"><div class="cardlbl">Trending</div>'+(tr.length?tr.map(function(x){return '<div class="tdactrow"><span class="material-symbols-outlined" style="font-size:17px;color:'+x[1]+'">'+x[2]+'</span><span class="tdacttx">'+x[0]+'</span></div>';}).join(''):EMPTY_MSG)+'</div>';
 
 
   var links=[['experience','Experience','sentiment_satisfied'],['signals','Signals','notifications_active'],['inbox','Inbox','inbox'],['enablement','Enablement','school'],['risk','Risk register','shield'],['compliance','Compliance & Audit','fact_check']];
   var linkCard='<div class="tdnav"><span class="tdnavl">Where to go</span>'+links.map(function(l){return '<button class="qlink" onclick="goArea(\''+l[0]+'\')"><span class="material-symbols-outlined">'+l[2]+'</span>'+l[1]+'</button>';}).join('')+'</div>';
   var _tstrip='';if(lens.view==='mgr'){var _tp=P.filter(function(p){return !p.isSelf;});_tstrip='<div class="pcard"><div class="cardlbl">My team &middot; profiles (full 360)</div><div class="tmstrip">'+_tp.map(function(p){var _i=ROSTER.indexOf(p);var _c=ragScore(p.idx||p.safety||0);return '<div class="tmpp"'+(_i>=0?' onclick="openProfile('+_i+')"':'')+'><span class="av2" style="background:'+_c+'1a;color:'+_c+'">'+(p.id||'')+'</span><div class="tmppn">'+p.name+'<div class="tmppr">'+(p.role||'')+'</div></div><b style="color:'+_c+'">'+(p.idx||p.safety||'')+'</b>'+((p.sigs||0)>0?'<span class="tmppsig">'+p.sigs+' sig</span>':'')+'</div>';}).join('')+'</div></div>';}
-   var _asofbar='<div class="asofbar"><span class="asofl">Data currency</span>'+asofChip('pulse')+asofChip('timesheet')+asofChip('live')+'<span class="asof" title="The default reporting window"><span class="material-symbols-outlined" style="font-size:13px">date_range</span>Default range: last 6 months ('+dateRangeLabel()+')</span></div>';
+   var _asofbar='<div class="asofbar"><span class="asofl">Data currency</span>'+asofChip('pulse')+asofChip('timesheet')+asofChip('live')+'<span class="asof" title="The resolved reporting window for the selected Dates filter"><span class="material-symbols-outlined" style="font-size:13px">date_range</span>Range: '+dateRangeLabel()+'</span></div>';
    return '<div class="today">'+_asofbar+tiles+'<div class="grid g2 tdgrid">'+(lens.view==='pnc'?inboxCard+compCard:inboxCard+convOrSig)+'</div>'+(lens.view==='mgr'?_tstrip:(lens.view==='pnc'?'<div class="grid g2 tdgrid">'+riskCard+convOrSig+'</div>':'<div class="grid g2 tdgrid">'+compCard+riskCard+'</div>'))+(lens.view==='pnc'?'':'<div class="grid g2 tdgrid">'+topPplCard+declPplCard+'</div>')+'<div class="grid g2 tdgrid">'+actCard+upcCard+'</div><div class="grid g2 tdgrid">'+suggCard+trCard+'</div>'+linkCard+'</div>';
 }
 var EP_COUNT_SEL='.tdtv,.kv,.lsv,.hbval,.pmv,.fnval,.stkval,.fv,.pv,.cmp td:nth-child(2)';
@@ -3128,7 +3155,7 @@ document.getElementById('lens').addEventListener('click',function(e){var b=e.tar
 document.getElementById('lensSel').addEventListener('change',function(){lens.sel=this.value;hier.mgr=null;hier.person=null;renderHier();syncScope();renderCards();renderCanvas();});
 document.getElementById('btype').addEventListener('click',function(e){var b=e.target.closest('.fopt');if(!b)return;[].forEach.call(this.children,function(x){x.classList.remove('on');});b.classList.add('on');clientType=b.dataset.b;syncScope();renderCards();renderCanvas();renderHPCBar();});
 document.getElementById('dates').addEventListener('click',function(e){var b=e.target.closest('.fopt');if(!b)return;[].forEach.call(this.children,function(x){x.classList.remove('on');});b.classList.add('on');var cd=document.getElementById('customDates');if(b.dataset.d==='custom'){cd.style.display='';applyCustom();}else{cd.style.display='none';winMonths=+b.dataset.d;winOffset=+(b.dataset.off||0);syncScope();renderCards();renderCanvas();if(document.getElementById('pdrawer').classList.contains('on'))reopenProfile();}});
-function applyCustom(){var f=(document.getElementById('cdFrom')||{}).value,t=(document.getElementById('cdTo')||{}).value;var mi=function(x){var p=x.split('-');return (+p[0])*12+(+p[1]);};var L=mi('2026-05');if(t)winOffset=Math.max(0,L-mi(t));else winOffset=0;if(f&&t)winMonths=Math.max(1,mi(t)-mi(f)+1);else winMonths=6;renderCards();renderCanvas();if(document.getElementById('pdrawer').classList.contains('on'))reopenProfile();}
+function applyCustom(){var f=(document.getElementById('cdFrom')||{}).value,t=(document.getElementById('cdTo')||{}).value;var mi=function(x){var p=x.split('-');return (+p[0])*12+(+p[1]);};var L=mi('2026-05');if(t)winOffset=Math.max(0,L-mi(t));else winOffset=0;if(f&&t)winMonths=Math.max(1,mi(t)-mi(f)+1);else winMonths=3;renderCards();renderCanvas();if(document.getElementById('pdrawer').classList.contains('on'))reopenProfile();}
 document.getElementById('cdFrom').addEventListener('change',applyCustom);document.getElementById('cdTo').addEventListener('change',applyCustom);
 document.querySelector('.filterbar').addEventListener('click',function(e){var t=e.target.closest('.fsec-t');if(!t)return;t.parentElement.classList.toggle('collapsed');});
 /* person/team select removed — hierarchy filter replaces it */
